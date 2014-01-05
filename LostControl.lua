@@ -7,7 +7,7 @@ if(addonEnabled==true) then
 
 local LostControlFrame = CreateFrame("FRAME", nil, UIParent);
 LostControlFrame:Hide();
-local debugMode = false;
+local debugMode = true;
 local role = nil;
 local playerName = UnitName("player");
 
@@ -80,14 +80,14 @@ end
 local function checkCharSilence(char)
 	local silenced = 'null';
 	if isSilenced(char) then silenced = 'true' else silenced = 'false' end
-	if(silenced == 'true') then sendMsg('Silenced!') end
+	if(silenced == 'true') then sendMsg('Silenced!',false) end
 end
 
 local function announceStateChange(action)
 	updateRole();
 	local msgStart = role=='dps' and 'A DPS' or 'The '..role
 	local msg = msgStart..' ('..playerName..') has '..action
-	sendMsg(msg)
+	sendMsg(msg,false)
 	return msg
 end
 

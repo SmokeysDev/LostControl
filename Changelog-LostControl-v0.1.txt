@@ -1,0 +1,12 @@
+tag v0.1
+33e7edb2b97ef0a362d4f8443f644a0f11215b0b
+Matt Bacon <einstein.matt@gmail.com>
+2014-01-05 12:48:29 +0100
+
+Lost Control version 0.1
+
+
+--------------------
+
+Matt Bacon:
+	- Started first attempt

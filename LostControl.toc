@@ -1,0 +1,15 @@
+## Interface: 50001
+## Title:  Lost Control 0.1
+## Version:  0.1
+## Author: Matt Bacon
+## X-Email: einstein.maatt@gmail.com
+## X-Date: January 5th, 2014
+## Notes: Attempts to automatically detect loss of control and tell the party about it
+## SavedVariables: LostControl_Config
+## SavedVariablesPerCharacter: LCconfig
+## X-Curse-Packaged-Version: v0.1
+## X-Curse-Project-Name: Lost Control
+## X-Curse-Project-ID: lost-control
+## X-Curse-Repository-ID: wow/lost-control/mainline
+LostControl.lua
+LostControl.xml

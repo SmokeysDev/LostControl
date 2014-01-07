@@ -11,5 +11,6 @@
 ## X-Curse-Project-Name: Lost Control
 ## X-Curse-Project-ID: lost-control
 ## X-Curse-Repository-ID: wow/lost-control/mainline
+LCMessage.lua
 LostControl.lua
 LostControl.xml

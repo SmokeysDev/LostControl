@@ -8,22 +8,6 @@ if(addonEnabled==true) then
 
 local LostControlFrame = CreateFrame("FRAME", nil, UIParent);
 LostControlFrame:Hide();
-local role = nil;
-local playerName = UnitName("player");
-
---Send our message out
-
-local function updateRole()
-	role = string.lower(UnitGroupRolesAssigned("player"));
-	if(role == "none") then
-		local isLeader, isTank, isHealer, isDPS = GetLFGRoles();
-		if(isTank==true) 	then role = 'tank' end
-		if(isHealer==true)  then role = 'healer' end
-		if(isDPS==true) 	then role = 'dps' end
-		if(role=="none") 	then role = 'player' end
-	end
-	return role
-end
 
 local function _hasDebuff_(spell,who)
 	who = who or "player"
@@ -44,14 +28,6 @@ local function checkCharSilence(char)
 	local silenced = 'null';
 	if isSilenced(char) then silenced = 'true' else silenced = 'false' end
 	if(silenced == 'true') then sendMsg('Silenced!') end
-end
-
-local function announceStateChange(action)
-	updateRole();
-	local msgStart = role=='dps' and 'A DPS' or 'The '..role
-	local msg = msgStart..' ('..playerName..') has '..action
-	sendMsg(msg)
-	return msg
 end
 
 function inControl()
@@ -117,10 +93,6 @@ local function onUpdate(self,elapsed)
 		checkInControl()
 		updateDebuffs()
 		checkDebuffs()
-		if(isStunned()) then announceStateChange('been stunned')
-		elseif(isSlowed()) then announceStateChange('been slowed')
-		elseif(isFeared()) then announceStateChange('been feared')
-		elseif(isIncap()) then announceStateChange('been incapacitated') end
 		local falling = IsFalling()
         if(falling and charJumped==0 and fallAnnounced==0 and UnitAffectingCombat("player")==1) then
 			announceStateChange('been sent flying')

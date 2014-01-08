@@ -59,6 +59,15 @@ end
 
 local function inDebuffDesc(txt,debuff)
 	debuff = debuff or 'all';
+	if(type(txt)=='table') then
+		local ret = false;
+		local tmp = '';
+		for _,txt2 in pairs(txt) do
+			tmp = inDebuffDesc(txt2,debuff)
+			if(tmp == true) then ret = true; end
+		end
+		return ret;
+	end
 	if(debuff == 'all') then
 		local oneMatches = false
 		for k,debuff in pairs(debuffs) do
@@ -73,35 +82,35 @@ end
 local function hasStunDebuff()
 	local found = false;
 	for k,debuff in pairs(debuffs) do
-		if((inDebuffDesc(' [sS]tun',debuff) or inDebuffDesc('^Stun',debuff)) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
+		if(inDebuffDesc({' [sS]tun','^Stun'},debuff) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
 	end
 	return found;
 end
 local function hasFearDebuff()
 	local found = false;
 	for k,debuff in pairs(debuffs) do
-		if((inDebuffDesc(' [fF]ear',debuff) or inDebuffDesc('^Fear',debuff) or inDebuffDesc('[sS]cared',debuff)) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
+		if(inDebuffDesc({' [fF]ear','^Fear','[sS]cared'},debuff) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
 	end
 	return found;
 end
 local function hasIncapDebuff()
 	local found = false;
 	for k,debuff in pairs(debuffs) do
-		if((inDebuffDesc(' [iI]ncapacitat',debuff) or inDebuffDesc('^Incapacitated',debuff)) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
+		if(inDebuffDesc({' [iI]ncapacitat','^Incapacitated'},debuff) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
 	end
 	return found;
 end
 local function hasSilenceDebuff()
 	local found = false;
 	for k,debuff in pairs(debuffs) do
-		if((inDebuffDesc(' [sS]ilenced?',debuff) or inDebuffDesc('^Silenced',debuff)) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
+		if(inDebuffDesc({' [sS]ilenced?','^Silenced'},debuff) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
 	end
 	return found;
 end
 local function hasSlowDebuff()
 	local found = false;
 	for k,debuff in pairs(debuffs) do
-		if((inDebuffDesc(' [sS]low',debuff) or inDebuffDesc('^Slow',debuff) or inDebuffDesc(' [dD]azed?',debuff) or inDebuffDesc('^Dazed?',debuff)) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
+		if(inDebuffDesc({' [sS]low','^Slow',' [dD]azed?','^Dazed?'},debuff) and inDebuffDesc('[iI]mmun',debuff)==nil) then found = true end
 	end
 	return found;
 end
@@ -145,7 +154,8 @@ end
 local lastDebuffMessage = 0
 function checkDebuffs()
 	updateDebuffs()
-	if(#debuffs > 0 and GetTime()-lastDebuffMessage > 8 and LCDebugMode==true) then
+	--if(#debuffs > 0 and GetTime()-lastDebuffMessage > 8 and LCDebugMode==true) then
+	if(#debuffs > 0 and LCDebugMode==true) then
 		--LCMessage('In control? '..tostring(inControl()),nil,10)
 		for k,debuff in pairs(debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'
@@ -153,10 +163,16 @@ function checkDebuffs()
 			debuffMsg = debuffMsg..' ['..debuff.id..'] '
 			debuffMsg = debuffMsg..' ('..debuff.type..') '
 			debuffMsg = debuffMsg..' '..tostring(debuff.remaining)..' secs remaining.'
-			LCMessage(debuffMsg,nil,10);
+			LCMessage(debuffMsg,nil,round(debuff.remaining/2));
 			local controlMsg = inControl() and 'In Control' or 'Not In Control'
-			LCMessage(controlMsg,nil,10);
+			LCMessage(controlMsg,nil,round(debuff.remaining/2));
 		end
 		lastDebuffMessage = GetTime()
 	end
+	
+	if(isStunned()) then announceStateChange('been stunned')
+	elseif(isSlowed()) then announceStateChange('been slowed')
+	elseif(isFeared()) then announceStateChange('been feared')
+	elseif(isSilenced()) then announceStateChange('been silenced')
+	elseif(isIncap()) then announceStateChange('been incapacitated') end
 end

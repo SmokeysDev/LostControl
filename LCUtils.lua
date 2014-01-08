@@ -1,5 +1,19 @@
 addonName = "LostControl"
-local LCDebugMode = false;
+LCDebugMode = false;
+role = nil;
+playerName = UnitName("player");
+
+function updateRole()
+	role = string.lower(UnitGroupRolesAssigned("player"));
+	if(role == "none") then
+		local isLeader, isTank, isHealer, isDPS = GetLFGRoles();
+		if(isTank==true) 	then role = 'tank' end
+		if(isHealer==true)  then role = 'healer' end
+		if(isDPS==true) 	then role = 'dps' end
+		if(role=="none") 	then role = 'player' end
+	end
+	return role
+end
 
 function round(val, decimal)
   local exp = decimal and 10^decimal or 1
@@ -18,7 +32,15 @@ function sendMsg(msg,priv)
 	priv = priv or LCDebugMode
 	local chan = IsInGroup() and 'PARTY' or (IsInRaid() and 'RAID' or 'SAY')
 	if(priv == true) then print(msg)
-	else LCMessage(msg,chan,3) end --SendChatMessage(msg,chan) end
+	else LCMessage(msg,chan,2) end --SendChatMessage(msg,chan) end
+end
+
+function announceStateChange(action)
+	updateRole();
+	local msgStart = role=='dps' and 'A DPS' or 'The '..role
+	local msg = msgStart..' ('..playerName..') has '..action
+	sendMsg(msg)
+	return msg
 end
 
 

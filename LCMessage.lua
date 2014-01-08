@@ -101,11 +101,9 @@ end
 function LCMessage(msg,chan,minTimeBetweenCalls)
 	minTimeBetweenCalls = minTimeBetweenCalls or 1.5
 	local alreadyPosted = messageExists(msg,chan)
-	print("Already posted: "..tostring(alreadyPosted))
 	if(alreadyPosted==false) then
 		postMsg(msg,chan)
 	else
-		print("Already posted!")
 		local msgD = getMessageData(msg,chan)
 		local tDiff = msgD.time - GetTime()
 		if(tDiff > minTimeBetweenCalls) then postMsg(msg,chan) end

@@ -1,36 +1,17 @@
 -- LostControl
 
 -- Notifies party/raid members when you lose control of your character
-function round(val, decimal)
-  local exp = decimal and 10^decimal or 1
-  return math.ceil(val * exp - 0.5) / exp
-end
 
-local addonName = "LostControl"
+addonName = "LostControl"
 local addonEnabled = true;
 if(addonEnabled==true) then
 
 local LostControlFrame = CreateFrame("FRAME", nil, UIParent);
 LostControlFrame:Hide();
-local debugMode = false;
 local role = nil;
 local playerName = UnitName("player");
 
-
-local function str(val)
-	return tostring(val)
-end
-local function toboolean( value )
-  return not not value
-end
-
 --Send our message out
-local function sendMsg(msg,priv)
-	priv = priv or debugMode
-	local chan = IsInGroup() and 'PARTY' or (IsInRaid() and 'RAID' or 'SAY')
-	if(priv == true) then print(msg)
-	else LCMessage(msg,chan) end --SendChatMessage(msg,chan) end
-end
 
 local function updateRole()
 	role = string.lower(UnitGroupRolesAssigned("player"));
@@ -44,7 +25,7 @@ local function updateRole()
 	return role
 end
 
-local function hasDebuff(spell,who)
+local function _hasDebuff_(spell,who)
 	who = who or "player"
 	if(type(spell)=='table') then
 		local hasOne = false
@@ -54,37 +35,10 @@ local function hasDebuff(spell,who)
 		return hasOne
 	end
 	--local aura = UnitAura(who,spell,'HARMFUL')
-	local aura = UnitAura(who,spell)
+	local aura = UnitAura(who,spell,'HARMFUL')
 	return aura==spell and true or false
 end
 
-function lastDebuff()
-	local lastName = nil
-	for i=1,40 do
-		local n,_,_,_,_,_,expiry = UnitAura("player",i,"HELPFUL|HARMFUL")
-		if(n) then sendMsg('found aura: '..n) end
-	end
-	--sendMsg('last aura = '..lastName)
-end
-
-function isStunned(who)
-	who = who or "player"
-	return hasDebuff({'Stun','Stunned'},who) and true or false
-end
-
-function isIncap(who)
-	who = who or "player"
-	return hasDebuff({'Polymorph','Freeze','Fear','Hex','Hibernate'},who) and true or false
-end
-function isFeared(who)
-	who = who or "player"
-	return hasDebuff({'Fear','Feared','Psychic Scream'},who) and true or false
-end
-
-function isSilenced(who)
-	who = who or "player"
-	return hasDebuff({'Silence','Silenced','Strangulate'},who) and true or false
-end
 
 local function checkCharSilence(char)
 	local silenced = 'null';
@@ -100,12 +54,21 @@ local function announceStateChange(action)
 	return msg
 end
 
-local playerInControl = HasFullControl()==1
+function inControl()
+	local wowRet = HasFullControl()
+	if(type(wowRet)=="number" and wowRet==0) then return false
+	elseif(type(wowRet)=="number" and wowRet==1) then return true
+	elseif(type(wowRet)=="boolean" and wowRet==false) then return false
+	elseif(type(wowRet)=="boolean" and wowRet==true) then return true
+	else return nil end
+end
 
-local function OnAuraChange()
+local playerInControl = inControl()
+
+local function checkInControl()
 	checkCharSilence("player");
 	local lastCheck = playerInControl;
-	playerInControl = HasFullControl()==1
+	playerInControl = inControl()
 	local stateChanged = playerInControl~=lastCheck
 	if(stateChanged and playerInControl==false) then
 		local msg = 'lost control'
@@ -118,10 +81,10 @@ local function OnAuraChange()
 end
 
 function LostControl_OnEvent(self, event, arg1, arg2, arg3, arg4)
-	if(debugMode) then
+	if(LCDebugMode) then
 		sendMsg("Event received: "..event,true)
 	end
-	if(event == "UNIT_AURA") then OnAuraChange() end -- arg1 == player/target/focus
+	if(event == "UNIT_AURA" and arg1 == "player") then checkInControl() end -- arg1 == player/target/focus
 	if(event == "PLAYER_CONTROL_LOST") then announceStateChange('lost control') end
 	if(event == "PLAYER_CONTROL_GAINED") then announceStateChange('regained control') end
 	if(event == "PLAYER_DEAD") then announceStateChange('died') end
@@ -149,8 +112,15 @@ hooksecurefunc('JumpOrAscendStart',jumpAscendHook)
 local total = 0
 local function onUpdate(self,elapsed)
     total = total + elapsed
-    if total >= 0.5 then
-		OnAuraChange()
+	lastDebuff()
+    if total >= 0.25 then
+		checkInControl()
+		updateDebuffs()
+		checkDebuffs()
+		if(isStunned()) then announceStateChange('been stunned')
+		elseif(isSlowed()) then announceStateChange('been slowed')
+		elseif(isFeared()) then announceStateChange('been feared')
+		elseif(isIncap()) then announceStateChange('been incapacitated') end
 		local falling = IsFalling()
         if(falling and charJumped==0 and fallAnnounced==0 and UnitAffectingCombat("player")==1) then
 			announceStateChange('been sent flying')
@@ -168,44 +138,10 @@ local f = CreateFrame("frame")
 f:SetScript("OnUpdate", onUpdate)
 
 
--------------------------------------------------------------------------------
-SLASH_LostControl1 = "/lsctrl"
-SLASH_LostControl2 = "/lostcontrol"
-
-local SlashCmd = {}
-function SlashCmd:help()
-	print(addonName, "slash commands:")
-	print("    debug (on/off)")
-	--print("<unit> can be: player, pet, target, focus, party1 ... party4, arena1 ... arena5")
-end
-function SlashCmd:debug(value)
-	if value == "on" then
-		debugMode = true
-		print(addonName, "debugging enabled.")
-	elseif value == "off" then
-		debugMode = false
-		print(addonName, "debugging disabled.")
-	end
-end
-
-SlashCmdList[addonName] = function(cmd)
-	local args = {}
-	for word in cmd:lower():gmatch("%S+") do
-		tinsert(args, word)
-	end
-	if SlashCmd[args[1]] then
-		SlashCmd[args[1]](unpack(args))
-	else
-		print(addonName, ": Type \"/lc help\" for more options.")
-		InterfaceOptionsFrame_OpenToCategory(OptionsPanel)
-	end
-end
-
-
 ---
 --- GRAVEYARD
 ---
-local function oldOnAuraChange()
+local function oldcheckInControl()
 	local stunned = 'null';
 	if isStunned() then stunned = 'true' else stunned = 'false' end
 	local incap = 'null';

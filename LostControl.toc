@@ -1,6 +1,6 @@
-## Interface: 50001
-## Title:  Lost Control 0.1
-## Version:  0.1
+## Interface: 50400
+## Title:  Lost Control
+## Version:  0.2
 ## Author: Matt Bacon
 ## X-Email: einstein.maatt@gmail.com
 ## X-Date: January 5th, 2014
@@ -12,5 +12,7 @@
 ## X-Curse-Project-ID: lost-control
 ## X-Curse-Repository-ID: wow/lost-control/mainline
 LCMessage.lua
+LCUtils.lua
+watchDebuffs.lua
 LostControl.lua
 LostControl.xml

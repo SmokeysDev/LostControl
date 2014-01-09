@@ -14,28 +14,26 @@ Debuffs = {
 		end
 		return false;
 	end
-	,_getStunDebuff = function(who)
-		local namedDebuff = Debuffs.getByName({'Stun','Stunned','Charge','Stomp'},who);
+	,getDebuffByNameOrDesc = function(names,descs,who)
+		local namedDebuff = Debuffs.getByName(names,who);
 		if(namedDebuff ~= false) then
 			return namedDebuff;
 		else
 			for k,debuff in pairs(LCU[who].debuffs) do
-				if(Debuffs.getByDesc({' [sS]tun','^Stun'},debuff,who) and Debuffs.getByDesc('[iI]mmun',debuff,who)==nil) then return debuff; end
+				if(Debuffs.getByDesc(descs,debuff,who) and Debuffs.getByDesc('[iI]mmun',debuff,who)==nil) then return debuff; end
 			end
 			return false;
 		end
 	end
+	,_getStunDebuff = function(who)
+		return Debuffs.getDebuffByNameorDesc({'Stun','Stunned','Charge','Stomp'},{' [sS]tun','^Stun'},who);
+	end
 	,_getSlowDebuff = function(who)
-		local namedDebuff = Debuffs.getByName({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},who);
-		if(namedDebuff ~= false) then
-			return namedDebuff;
-		else
-			for k,debuff in pairs(LCU[who].debuffs) do
-				if(Debuffs.getByDesc({' [sS]low','^Slow',' [dD]azed?','^Dazed?'},debuff,who) and Debuffs.getByDesc('[iI]mmun',debuff,who)==nil) then return debuff; end
-			end
-			return false;
-		end
-		--string.match(str,'%d?%d%%') --get perc slowed
+		local debuff = Debuffs.getDebuffByNameorDesc({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},{' [sS]low','^Slow',' [dD]azed?','^Dazed?'},who);
+		local extraInfo = string.match(debuff.desc,'reduced by %d?%d%%'); --get perc slowed
+		extraInfo = extraInfo and string.gsub(extraInfo,'reduced ',' ') or '';
+		debuff.extraInfo = extraInfo;
+		return debuff;
 	end
 	,getByType = function(debuffType,who)
 		who = who or "player";
@@ -192,7 +190,7 @@ end
 function slowCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('slow');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been slowed for '..slowCheck.remaining..' seconds');
+	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been slowed'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
 	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the slow effect');
 end
 

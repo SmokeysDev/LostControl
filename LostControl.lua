@@ -73,7 +73,6 @@ local function onUpdate(self,elapsed)
 	Debuffs.latest();
     if total >= 0.25 then
 		checkInControl()
-		Debuffs.update()
 		checkDebuffs()
 		local falling = IsFalling()
         if(falling and charJumped==0 and fallAnnounced==0 and UnitAffectingCombat("player")==1) then

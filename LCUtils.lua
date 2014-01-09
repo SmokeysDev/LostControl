@@ -22,6 +22,10 @@ LCU.round = function(val, decimal)
   return math.ceil(val * exp - 0.5) / exp;
 end
 
+LCU.upperFirst = function(str)
+	return str:gsub("^%l", string.upper)
+end
+
 LCU.str = function(val)
 	return tostring(val);
 end

@@ -3,48 +3,84 @@ Debuffs = {
 	getByName = function(spellName,who)
 		who = who or "player"
 		if(type(spellName)=='table') then
-			local hasOne = false
 			for key,value in pairs(spellName) do
-				if(Debuffs.getByName(value,who)) then hasOne = true end
+				local getD = Debuffs.getByName(value,who);
+				if(getD ~= false) then return getD; end
 			end
-			return hasOne
+			return false;
 		end
-		local debuffFound = false
-		for k,d in pairs(LCU.player.debuffs) do
-			if(d.name == spellName) then debuffFound = true end
+		for k,d in pairs(LCU[who].debuffs) do
+			if(d.name == spellName) then return d; end
 		end
-		return debuffFound
+		return false;
 	end
-	,getByID = function(spellID,who)
-		who = who or "player"
-		if(type(spellID)=='table') then
-			local hasOne = false
-			for key,value in pairs(spellID) do
-				if(Debuffs.getByID(value,who)) then hasOne = true end
+	,_getStunDebuff = function(who)
+		local namedDebuff = Debuffs.getByName({'Stun','Stunned','Charge','Stomp'},who);
+		if(namedDebuff ~= false) then
+			return namedDebuff;
+		else
+			for k,debuff in pairs(LCU[who].debuffs) do
+				if(Debuffs.getByDesc({' [sS]tun','^Stun'},debuff,who) and Debuffs.getByDesc('[iI]mmun',debuff,who)==nil) then return debuff; end
 			end
-			return hasOne
+			return false;
 		end
-		local debuffFound = false
-		for k,d in pairs(LCU.player.debuffs) do
-			if(d.id == spellID) then debuffFound = true end
+	end
+	,_getSlowDebuff = function(who)
+		local namedDebuff = Debuffs.getByName({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},who);
+		if(namedDebuff ~= false) then
+			return namedDebuff;
+		else
+			for k,debuff in pairs(LCU[who].debuffs) do
+				if(Debuffs.getByDesc({' [sS]low','^Slow',' [dD]azed?','^Dazed?'},debuff,who) and Debuffs.getByDesc('[iI]mmun',debuff,who)==nil) then return debuff; end
+			end
+			return false;
 		end
-		return debuffFound
+		--string.match(str,'%d?%d%%') --get perc slowed
 	end
-	,getByDesc = function(txt)
+	,getByType = function(debuffType,who)
+		who = who or "player";
+		local funcName = '_get'..LCU.upperFirst(debuffType)..'Debuff'
+		if(type(Debuffs[funcName])=="function") then
+			return Debuffs[funcName](who);
+		end
+		return false;
 	end
-	,update = function()
+	,getByDesc = function(txt,debuff,who)
+		who = who or "player";
+		debuff = debuff or 'all';
+		if(type(txt)=='table') then
+			local ret = false;
+			local tmp = '';
+			for _,txt2 in pairs(txt) do
+				tmp = Debuffs.getByDesc(txt2,debuff)
+				if(tmp == true) then ret = true; end
+			end
+			return ret;
+		end
+		if(debuff == 'all') then
+			for k,debuff in pairs(LCU[who].debuffs) do
+				if(string.find(debuff.desc,txt)~=nil) then oneMatches = true end
+			end
+			return oneMatches;
+		else
+			if(string.find(debuff.desc,txt)~=nil) then return true end
+		end
+	end
+	,get = function(who)
+		who = who or "player";
 		local debuffs = {}
 		for i=1,40 do
-			local n,_,_,_,dbType,duration,expires,_,_,_,id = UnitDebuff("player",i)
+			local n,_,_,_,dbType,duration,expires,_,_,_,id = UnitDebuff(who,i)
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or ''
 				debuffs[#debuffs+1] = {name=n,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id}
 			end
 		end
-		LCU.player.debuffs = debuffs;
+		LCU[who]['debuffs'] = debuffs;
+		return debuffs;
 	end
 	,latest = function()
-		--Debuffs.update();
+		--Debuffs.get();
 		--return LCU.player.debuffs[#LCU.player.debuffs] or false;
 		local lastName = nil
 		local lastExpiry = nil
@@ -137,8 +173,14 @@ end
 function isStunned(who)
 	who = who or "player"
 	local hasNamedDebuff = Debuffs.getByName({'Stun','Stunned','Charge','Stomp'},who)
-	local hasDescKeyword = hasFearDebuff()
+	local hasDescKeyword = hasStunDebuff()
 	return (hasNamedDebuff or hasDescKeyword)
+end
+function stunCheck(who)
+	who = who or "player"
+	local theDebuff = Debuffs.getByType('stun');
+	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been stunned for '..slowCheck.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the stun effect');
 end
 
 function isSlowed(who)
@@ -146,6 +188,12 @@ function isSlowed(who)
 	local hasNamedDebuff = Debuffs.getByName({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},who)
 	local hasDescKeyword = hasSlowDebuff()
 	return (hasNamedDebuff or hasDescKeyword)
+end
+function slowCheck(who)
+	who = who or "player"
+	local theDebuff = Debuffs.getByType('slow');
+	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been slowed for '..slowCheck.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the slow effect');
 end
 
 function isIncap(who)
@@ -171,7 +219,7 @@ end
 
 local lastDebuffMessage = 0
 function checkDebuffs()
-	Debuffs.update()
+	Debuffs.get()
 	--if(#debuffs > 0 and GetTime()-lastDebuffMessage > 8 and LCU.debugMode==true) then
 	if(#LCU.player.debuffs > 0 and LCU.debugMode==true) then
 		--LCMessage('In control? '..tostring(LCU.player.isInControl()),nil,10)
@@ -188,8 +236,9 @@ function checkDebuffs()
 		lastDebuffMessage = GetTime()
 	end
 	
+	slowCheck();
+	--elseif(isSlowed()) then LCU.announceStateChange('been slowed')
 	if(isStunned()) then LCU.announceStateChange('been stunned')
-	elseif(isSlowed()) then LCU.announceStateChange('been slowed')
 	elseif(isFeared()) then LCU.announceStateChange('been feared')
 	elseif(isSilenced()) then LCU.announceStateChange('been silenced')
 	elseif(isIncap()) then LCU.announceStateChange('been incapacitated') end

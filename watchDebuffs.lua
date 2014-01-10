@@ -86,10 +86,10 @@ Debuffs = {
 		who = who or "player";
 		local debuffs = {}
 		for i=1,40 do
-			local n,_,_,_,dbType,duration,expires,_,_,_,id = UnitDebuff(who,i)
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitDebuff(who,i)
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or ''
-				debuffs[#debuffs+1] = {name=n,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''}
+				debuffs[#debuffs+1] = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''}
 			end
 		end
 		LCU[who]['debuffs'] = debuffs;

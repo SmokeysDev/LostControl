@@ -25,7 +25,6 @@ end
 local playerInControl = LCU.player.isInControl()
 
 local function checkInControl()
-	return true;
 	local lastCheck = playerInControl;
 	playerInControl = LCU.player.isInControl()
 	local stateChanged = playerInControl~=lastCheck
@@ -33,9 +32,9 @@ local function checkInControl()
 		local msg = 'lost control'
 		if(isStunned()) then msg = msg .. ' (stunned)' end
 		if(isFeared()) then msg = msg .. ' (feared)' end
-		LCU.announceStateChange(msg)
+		--LCU.announceStateChange(msg)
 	end
-	if(stateChanged and playerInControl) then LCU.announceStateChange('regained control') end
+	--if(stateChanged and playerInControl) then LCU.announceStateChange('regained control') end
 	return false
 end
 
@@ -44,8 +43,8 @@ function LostControl_OnEvent(self, event, arg1, arg2, arg3, arg4)
 		LCU.sendMsg("Event received: "..event,true)
 	end
 	if(event == "UNIT_AURA" and arg1 == "player") then checkInControl() end -- arg1 == player/target/focus
-	if(event == "PLAYER_CONTROL_LOST") then LCU.announceStateChange('lost control') end
-	if(event == "PLAYER_CONTROL_GAINED") then LCU.announceStateChange('regained control') end
+	--if(event == "PLAYER_CONTROL_LOST") then LCU.announceStateChange('lost control') end
+	--if(event == "PLAYER_CONTROL_GAINED") then LCU.announceStateChange('regained control') end
 	if(event == "PLAYER_DEAD") then LCU.announceStateChange('died') end
 end
 

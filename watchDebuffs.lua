@@ -29,7 +29,7 @@ Debuffs = {
 		return Debuffs.getDebuffByNameOrDesc({'Fear','Feared','Scare','Scared','Psychic Scream'},{' [fF]ear','^Fear','[sS]cared'},who);
 	end
 	,_getIncapDebuff = function(who)
-		return Debuffs.getDebuffByNameOrDesc({'Polymorph','Freeze','Fear','Hex','Hibernate'},{' [iI]ncapacitat','^Incapacitated',''},who);
+		return Debuffs.getDebuffByNameOrDesc({'Polymorph','Freeze','Fear','Hex','Hibernate'},{' [iI]ncapacitat','^Incapacitated'},who);
 	end
 	,_getRootDebuff = function(who)
 		return Debuffs.getDebuffByNameOrDesc({'Freeze','Root','Entangling Roots','Frozen'},{' [rR]oot','^Rooted','[fF]rozen'},who);
@@ -38,7 +38,7 @@ Debuffs = {
 		return Debuffs.getDebuffByNameOrDesc({'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'},{' [sS]ilenced?','^Silenced'},who);
 	end
 	,_getSlowDebuff = function(who)
-		local debuff = Debuffs.getDebuffByNameOrDesc({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},{' [sS]low','^Slow',' [dD]azed?','^Dazed?'},who);
+		local debuff = Debuffs.getDebuffByNameOrDesc({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},{' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'},who);
 		if(debuff ~= false) then
 			local extraInfo = string.match(debuff.desc,'reduced by %d%d%%'); --get perc slowed
 			--print('slow desc = '..tostring(debuff.desc)); --"speed by $s1%"

@@ -1,6 +1,46 @@
 LCU.player.debuffs = {} --debuffs
 Debuffs = {
-	getByName = function(spellName,who)
+	types = {
+		fear = {
+			debuffs = {}
+			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
+			,descTerms = {' [fF]ear','^Fear','[sS]cared'}
+			,message = 'is feared for [remaining] seconds	'
+			,recoverMessage = 'is no longer feared'
+		}
+		,incap = {
+			debuffs = {}
+			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
+			,descTerms = {' [iI]ncapacitat','^Incapacitated'}
+			,message = 'is incapacitated for [remaining] seconds ({SPELL_LINK})'
+			,recoverMessage = 'is no longer incapacitated'
+		}
+		,slow = {
+			debuffs = {}
+			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
+			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
+			,extraInfo = function(debuff)
+				local extraInfo = string.match(debuff.desc,'reduced by %d%d%%'); --get perc slowed
+				--print('slow desc = '..tostring(debuff.desc)); --"speed by $s1%"
+				--print('slow match = '..tostring(extraInfo));
+				extraInfo = extraInfo and string.gsub(extraInfo,'reduced ',' ') or '';
+				return extraInfo;
+			end
+			,message = function(debuff)
+				return 'has been slowed'..debuff.extraInfo..' for [remaining] seconds';
+			end
+			,recoverMessage = 'is no longer slowed'
+		}
+	}
+	,getLink = function(debuff)
+		if(type(debuff)=="number") then
+			local name,rank = GetSpellInfo(debuff);
+			debuff = {id=debuff,name=name,rank=rank};
+		end
+		if(debuff.rank~='') then debuff.rank = ' '..tostring(debuff.rank); end
+		return "|Hspell:" .. debuff.id .."|h|r|cff71d5ff[" .. debuff.name .. debuff.rank .. "]|r|h";
+	end
+	,getByName = function(spellName,who)
 		who = who or "player"
 		if(type(spellName)=='table') then
 			for key,value in pairs(spellName) do
@@ -185,7 +225,7 @@ function checkDebuffs()
 		end
 		lastDebuffMessage = GetTime()
 	end
-	
+
 	fearCheck();
 	incapCheck();
 	rootCheck();

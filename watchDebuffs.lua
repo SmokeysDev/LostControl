@@ -5,20 +5,20 @@ Debuffs = {
 			debuffs = {}
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared'}
-			,message = 'is feared for [remaining] seconds	'
+			,message = 'is feared for [remaining] seconds'
 			,recoverMessage = 'is no longer feared'
 		}
 		,incap = {
 			debuffs = {}
 			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
-			,descTerms = {' [iI]ncapacitat','^Incapacitated'}
+			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented'}
 			,message = 'is incapacitated for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer incapacitated'
 		}
 		,root = {
 			debuffs = {}
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
-			,descTerms = {' [rR]oot','^Rooted','[fF]rozen'}
+			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobili[sz]ed'}
 			,message = 'has been rooted for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer rooted'
 		}
@@ -48,7 +48,7 @@ Debuffs = {
 		,stun = {
 			debuffs = {}
 			,names = {'Stun','Stunned','Charge','Stomp'}
-			,descTerms = {' [sS]tun','^Stun','[iI]mmobili[sz]ed'}
+			,descTerms = {' [sS]tun','^Stun'}
 			,message = 'has been stunned for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer stunned'
 		}
@@ -92,19 +92,19 @@ Debuffs = {
 			if(#info.debuffs >= 1) then
 				local debuff = info.debuffs[1];
 				local message = info.message;
-				local lastAnnounce = info.lastAnnounce or -10;
+				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();
-				local repeatLimit = info.repeatLimit or 3;
-				if(theTime - lastAnnounce >= repeatLimit) then
-					if(type(message)=="function") then message = message(debuff); end
-					local recoverMessage = info.recoverMessage;
-					if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
-					message = Debuffs.fillMsg(message,debuff);
-					recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
-					if(debuff.remaining>0 and debuff.remaining%2==0) then LCU.announcePlayer(message);
-					elseif(debuff.remaining==0) then LCU.announcePlayer(recoverMessage) end
-					Debuffs.types[dbType].lastAnnounce = theTime;
-				end
+				local repeatLimit = info.repeatLimit or 2;
+				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
+				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(); end
+				if(type(message)=="function") then message = message(debuff); end
+				local recoverMessage = info.recoverMessage;
+				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
+				message = Debuffs.fillMsg(message,debuff);
+				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
+				if(debuff.remaining>0 and debuff.remaining%2==0 and safeToAnnounce) then LCU.announcePlayer(message);
+				elseif(debuff.remaining==0) then LCU.announcePlayer(recoverMessage) end
+				Debuffs.types[dbType].lastAnnounce = theTime;
 			end
 		end
 	end
@@ -306,10 +306,10 @@ function checkDebuffs()
 		lastDebuffMessage = GetTime()
 	end
 
-	fearCheck();
-	incapCheck();
-	rootCheck();
-	silenceCheck();
-	slowCheck();
-	stunCheck();
+	--fearCheck();
+	--incapCheck();
+	--rootCheck();
+	--silenceCheck();
+	--slowCheck();
+	--stunCheck();
 end

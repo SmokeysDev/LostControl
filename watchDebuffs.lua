@@ -26,23 +26,32 @@ Debuffs = {
 		end
 	end
 	,_getFearDebuff = function(who)
-		return Debuffs.getDebuffByNameorDesc({'Fear','Feared','Scare','Scared','Psychic Scream'},{' [fF]ear','^Fear','[sS]cared'},who);
+		return Debuffs.getDebuffByNameOrDesc({'Fear','Feared','Scare','Scared','Psychic Scream'},{' [fF]ear','^Fear','[sS]cared'},who);
 	end
 	,_getIncapDebuff = function(who)
-		return Debuffs.getDebuffByNameorDesc({'Polymorph','Freeze','Fear','Hex','Hibernate'},{' [iI]ncapacitat','^Incapacitated'},who);
+		return Debuffs.getDebuffByNameOrDesc({'Polymorph','Freeze','Fear','Hex','Hibernate'},{' [iI]ncapacitat','^Incapacitated',''},who);
+	end
+	,_getRootDebuff = function(who)
+		return Debuffs.getDebuffByNameOrDesc({'Freeze','Root','Entangling Roots','Frozen'},{' [rR]oot','^Rooted','[fF]rozen'},who);
 	end
 	,_getSilenceDebuff = function(who)
-		return Debuffs.getDebuffByNameorDesc({'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'},{' [sS]ilenced?','^Silenced'},who);
+		return Debuffs.getDebuffByNameOrDesc({'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'},{' [sS]ilenced?','^Silenced'},who);
 	end
 	,_getSlowDebuff = function(who)
-		local debuff = Debuffs.getDebuffByNameorDesc({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},{' [sS]low','^Slow',' [dD]azed?','^Dazed?'},who);
-		local extraInfo = string.match(debuff.desc,'reduced by %d?%d%%'); --get perc slowed
-		extraInfo = extraInfo and string.gsub(extraInfo,'reduced ',' ') or '';
-		debuff.extraInfo = extraInfo;
-		return debuff;
+		local debuff = Debuffs.getDebuffByNameOrDesc({'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'},{' [sS]low','^Slow',' [dD]azed?','^Dazed?'},who);
+		if(debuff ~= false) then
+			local extraInfo = string.match(debuff.desc,'reduced by %d%d%%'); --get perc slowed
+			--print('slow desc = '..tostring(debuff.desc)); --"speed by $s1%"
+			--print('slow match = '..tostring(extraInfo));
+			extraInfo = extraInfo and string.gsub(extraInfo,'reduced ',' ') or '';
+			debuff.extraInfo = extraInfo;
+			return debuff;
+		else
+			return false;
+		end
 	end
 	,_getStunDebuff = function(who)
-		return Debuffs.getDebuffByNameorDesc({'Stun','Stunned','Charge','Stomp'},{' [sS]tun','^Stun'},who);
+		return Debuffs.getDebuffByNameOrDesc({'Stun','Stunned','Charge','Stomp'},{' [sS]tun','^Stun','[iI]mmobili[sz]ed'},who);
 	end
 	,getByType = function(debuffType,who)
 		who = who or "player";
@@ -80,7 +89,7 @@ Debuffs = {
 			local n,_,_,_,dbType,duration,expires,_,_,_,id = UnitDebuff(who,i)
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or ''
-				debuffs[#debuffs+1] = {name=n,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id}
+				debuffs[#debuffs+1] = {name=n,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''}
 			end
 		end
 		LCU[who]['debuffs'] = debuffs;
@@ -122,32 +131,38 @@ end
 function fearCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('fear');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been feared'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
-	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the fear effect');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been feared'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the fear effect'); end
 end
 function incapCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('incap');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been incapacitated'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
-	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the incapacitation effect');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been incapacitated'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the incapacitation effect'); end
+end
+function rootCheck(who)
+	who = who or "player"
+	local theDebuff = Debuffs.getByType('root');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been rooted'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the root effect'); end
 end
 function silenceCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('silence');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been silenced'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
-	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the silence effect');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been silenced'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the silence effect'); end
 end
 function slowCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('slow');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been slowed'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
-	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the slow effect');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been slowed'..theDebuff.extraInfo..' for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the slow effect'); end
 end
 function stunCheck(who)
 	who = who or "player"
 	local theDebuff = Debuffs.getByType('stun');
-	if(theDebuff and theDebuff.remaining%2==0) then LCU.announceStateChange('been stunned for '..theDebuff.remaining..' seconds');
-	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the stun effect');
+	if(theDebuff and theDebuff.remaining%2==0 and theDebuff.remaining > 0) then LCU.announceStateChange('been stunned for '..theDebuff.remaining..' seconds');
+	elseif(theDebuff and theDebuff.remaining==0) then LCU.announceStateChange('recovered from the stun effect'); end
 end
 
 
@@ -173,6 +188,7 @@ function checkDebuffs()
 	
 	fearCheck();
 	incapCheck();
+	rootCheck();
 	silenceCheck();
 	slowCheck();
 	stunCheck();

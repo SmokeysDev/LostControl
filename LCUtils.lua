@@ -49,6 +49,14 @@ LCU.announceStateChange = function(action)
 	return msg
 end
 
+LCU.announcePlayer = function(action)
+	LCU.player.updateRole();
+	local msgStart = LCU.player.role=='dps' and 'A DPS' or 'The '..LCU.player.role
+	local msg = msgStart..' ('..LCU.player.name..') '..action
+	LCU.sendMsg(msg)
+	return msg
+end
+
 
 -------------------------------------------------------------------------------
 SLASH_LostControl1 = "/lsctrl"

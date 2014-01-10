@@ -90,29 +90,6 @@ end
 local f = CreateFrame("frame")
 f:SetScript("OnUpdate", onUpdate)
 
-
----
---- GRAVEYARD
----
-local function oldcheckInControl()
-	local stunned = 'null';
-	if isStunned() then stunned = 'true' else stunned = 'false' end
-	local incap = 'null';
-	if isIncap() then incap = 'true' else incap = 'false' end
-	local playerIsMoving = GetUnitSpeed("player") > 0 and 'true' or 'false'
-	--LCU.sendMsg(playerIsMoving,"SAY")
-	--LCU.sendMsg('moving: ' .. playerIsMoving,true);
-	--LCU.sendMsg('silenced: ' .. silenced,true);
-	--LCU.sendMsg('stunned: ' .. stunned,true);
-	--LCU.sendMsg('incapacitated: ' .. LCU.str(isIncap()),true);
-	--if(hasDebuff('Blessing of Kings')) then LCU.sendMsg('BoK is on')
-	--else LCU.sendMsg('BoK is off') end
-	if(stunned == 'true') then LCU.sendMsg('Stunned!') end
-	if(incap == 'true') then LCU.sendMsg('Incapacitated!') end
-	if(HasFullControl() == 0) then LCU.sendMsg('Lost control') end
-	--if(HasFullControl() == 1) then LCU.sendMsg('In control') end
-end
-
 end
 if(addonEnabled==false) then
 	function LostControlOptions_OnLoad()

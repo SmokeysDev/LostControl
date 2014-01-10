@@ -1,6 +1,6 @@
 ## Interface: 50400
 ## Title:  Lost Control
-## Version:  0.2
+## Version:  0.8a
 ## Author: Matt Bacon
 ## X-Email: einstein.maatt@gmail.com
 ## X-Date: January 5th, 2014

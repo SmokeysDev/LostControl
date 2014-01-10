@@ -25,6 +25,7 @@ end
 local playerInControl = LCU.player.isInControl()
 
 local function checkInControl()
+	return true;
 	local lastCheck = playerInControl;
 	playerInControl = LCU.player.isInControl()
 	local stateChanged = playerInControl~=lastCheck

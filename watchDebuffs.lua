@@ -94,8 +94,8 @@ Debuffs = {
 				local message = info.message;
 				local lastAnnounce = info.lastAnnounce or -10;
 				local theTime = GetTime();
-				local repeatLimit = info.repeatLimit or 5;
-				if(theTime - lastAnnounce > repeatLimit) then
+				local repeatLimit = info.repeatLimit or 3;
+				if(theTime - lastAnnounce >= repeatLimit) then
 					if(type(message)=="function") then message = message(debuff); end
 					local recoverMessage = info.recoverMessage;
 					if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end

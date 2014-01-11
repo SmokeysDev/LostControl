@@ -18,7 +18,7 @@ Debuffs = {
 		,root = {
 			debuff = false
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
-			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobili[sz]ed'}
+			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobiliz'}
 			,message = 'has been rooted for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer rooted'
 		}

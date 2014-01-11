@@ -57,8 +57,9 @@ LCU.announcePlayer = function(action)
 	return msg
 end
 
-
--------------------------------------------------------------------------------
+--------------------------------------
+--- REGISTERING CHAT SLASH COMMANDS
+--------------------------------------
 SLASH_LostControl1 = "/lsctrl"
 SLASH_LostControl2 = "/lostcontrol"
 

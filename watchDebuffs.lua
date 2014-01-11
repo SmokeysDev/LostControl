@@ -5,28 +5,28 @@ Debuffs = {
 			debuff = false
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
-			,message = 'is feared for [remaining] seconds'
+			,message = 'is feared for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer feared'
 		}
 		,incap = {
 			debuff = false
 			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented'}
-			,message = 'is incapacitated for [remaining] seconds ({SPELL_LINK})'
+			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer incapacitated'
 		}
 		,root = {
 			debuff = false
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobili[sz]ed'}
-			,message = 'has been rooted for [remaining] seconds ({SPELL_LINK})'
+			,message = 'has been rooted for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer rooted'
 		}
 		,silence = {
 			debuff = false
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
 			,descTerms = {' [sS]ilenced?','^Silenced'}
-			,message = 'has been silenced for [remaining] seconds ({SPELL_LINK})'
+			,message = 'has been silenced for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer silenced'
 		}
 		,slow = {
@@ -41,7 +41,7 @@ Debuffs = {
 				return extraInfo;
 			end
 			,message = function(debuff)
-				return 'has been slowed'..debuff.extraInfo..' for [remaining] seconds';
+				return 'has been slowed'..debuff.extraInfo..' for [remaining] seconds - {SPELL_LINK}';
 			end
 			,recoverMessage = 'is no longer slowed'
 		}
@@ -49,7 +49,7 @@ Debuffs = {
 			debuff = false
 			,names = {'Stun','Stunned','Charge','Stomp'}
 			,descTerms = {' [sS]tun','^Stun'}
-			,message = 'has been stunned for [remaining] seconds ({SPELL_LINK})'
+			,message = 'has been stunned for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer stunned'
 		}
 		,friendly = {
@@ -57,7 +57,8 @@ Debuffs = {
 			,names = {'Mark of the Wild','Blessing of Kings'}
 			,descTerms = {'increased by'}
 			,message = 'is buffed by {SPELL_LINK}'
-			,recoverMessage = 'has lost his buff'
+			,recoverMessage = 'has lost his buff - {SPELL_LINK}'
+			,repeatLimit = 10
 		}
 	}
 	,emptyTypeCache = function()

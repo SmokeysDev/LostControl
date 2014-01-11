@@ -21,19 +21,23 @@ end
 hooksecurefunc('JumpOrAscendStart',jumpAscendHook)
 
 local total = 0
+local fallingFrames = 0;
 local function onUpdate(self,elapsed)
     total = total + elapsed
 	Debuffs.latest();
     if total >= 0.25 then
 		checkDebuffs()
 		local falling = IsFalling()
-        if(falling and charJumped==0 and fallAnnounced==0 and UnitAffectingCombat("player")==1) then
-			LCU.announceStateChange('been sent flying')
+		if falling then fallingFrames = fallingFrames+1; end
+        if(falling and charJumped==0 and fallAnnounced==0 and fallingFrames >= 5) then
+			LCU.announcePlayer('is airborne')
 			fallAnnounced = 1
 		end
 		if(falling == nil) then
 			charJumped = 0
 			fallAnnounced = 0
+			if(fallingFrames>8) then LCU.announcePlayer('has landed'); end
+			fallingFrames = 0
 		end
         total = 0
     end

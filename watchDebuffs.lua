@@ -102,9 +102,10 @@ Debuffs = {
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
-				if(debuff.remaining>0 and debuff.remaining%2==0 and safeToAnnounce) then LCU.announcePlayer(message);
-				elseif(debuff.remaining==0) then LCU.announcePlayer(recoverMessage) end
-				Debuffs.types[dbType].lastAnnounce = theTime;
+				if(debuff.remaining>0 and debuff.remaining%2==0 and safeToAnnounce) then
+					LCU.announcePlayer(message);
+					Debuffs.types[dbType].lastAnnounce = theTime;
+				elseif(debuff.remaining<=0) then LCU.announcePlayer(recoverMessage) end
 			end
 		end
 	end
@@ -130,7 +131,7 @@ Debuffs = {
 				local dbType = Debuffs.getType(debuff);
 				if(dbType~=false) then
 					local currD = Debuffs.types[dbType].debuff;
-					if(currD==false or currD.remaining < debuff.remaining) then
+					if(currD==false or currD.remaining < debuff.remaining or (debuff.remaining<currD.remaining and debuff.id==currD.id)) then
 						Debuffs.types[dbType].debuff = debuff;
 					end
 				end
@@ -167,7 +168,7 @@ function checkDebuffs()
 	Debuffs.get()
 	Debuffs.checkDebuffs()
 	--if(#LCU.player.debuffs > 0 and LCU.debugMode==true) then
-	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage > 8 and LCU.debugMode==true) then
+	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
 		for k,debuff in pairs(LCU.player.debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'
 			debuffMsg = debuffMsg..' "'..debuff.name..'" '

@@ -1,16 +1,14 @@
 ## Interface: 50400
-## Title:  Lost Control
-## Version:  0.8a
+## Title:  LostControl
+## Version:  1
 ## Author: Matt Bacon
-## X-Email: einstein.maatt@gmail.com
-## X-Date: January 5th, 2014
-## Notes: Attempts to automatically detect loss of control and tell the party about it
-## SavedVariables: LostControl_Config
-## SavedVariablesPerCharacter: LCconfig
-## X-Curse-Packaged-Version: v0.1
-## X-Curse-Project-Name: Lost Control
-## X-Curse-Project-ID: lost-control
-## X-Curse-Repository-ID: wow/lost-control/mainline
+## X-Email: einstein.matt@gmail.com
+## X-Date: January 11th, 2014
+## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
+## X-Curse-Packaged-Version: v1
+## X-Curse-Project-Name: LostControl
+## X-Curse-Project-ID: lostcontrol
+## X-Curse-Repository-ID: wow/lostcontrol/mainline
 LCMessage.lua
 LCUtils.lua
 watchDebuffs.lua

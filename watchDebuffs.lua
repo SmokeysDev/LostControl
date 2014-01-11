@@ -4,7 +4,7 @@ Debuffs = {
 		fear = {
 			debuffs = {}
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
-			,descTerms = {' [fF]ear','^Fear','[sS]cared'}
+			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
 			,message = 'is feared for [remaining] seconds'
 			,recoverMessage = 'is no longer feared'
 		}

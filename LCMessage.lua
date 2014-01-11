@@ -105,7 +105,7 @@ function LCMessage(msg,chan,minTimeBetweenCalls)
 		postMsg(msg,chan)
 	else
 		local msgD = getMessageData(msg,chan)
-		local tDiff = msgD.time - GetTime()
+		local tDiff = GetTime() - msgD.time;
 		if(tDiff > minTimeBetweenCalls) then postMsg(msg,chan) end
 	end
 end

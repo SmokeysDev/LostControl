@@ -66,19 +66,19 @@ Debuffs = {
 			Debuffs.types[type].debuffs = {}
 		end
 	end
-	,isType = function(debuff,type)
-		if(Debuffs.types[type]==nil) then return false; end
-		for k,v in pairs(Debuffs.types[type].names) do
+	,isType = function(debuff,dbType)
+		if(Debuffs.types[dbType]==nil) then return false; end
+		for k,v in pairs(Debuffs.types[dbType].names) do
 			if(debuff.name == v) then return true; end
 		end
-		for k,v in pairs(Debuffs.types[type].descTerms) do
-			if(string.find(debuff.desc,v)~=nil) then return true; end
+		for k,v in pairs(Debuffs.types[dbType].descTerms) do
+			if(string.match(debuff.desc,v)~=nil) then return true; end
 		end
 		return false;
 	end
 	,getType = function(debuff)
-		for type in pairs(Debuffs.types) do
-			if(Debuffs.isType(debuff,type)) then return type; end
+		for dbType in pairs(Debuffs.types) do
+			if(Debuffs.isType(debuff,dbType)) then return dbType; end
 		end
 		return false;
 	end

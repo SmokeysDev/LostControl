@@ -2,35 +2,35 @@ LCU.player.debuffs = {} --debuffs
 Debuffs = {
 	types = {
 		fear = {
-			debuffs = {}
+			debuff = false
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
 			,message = 'is feared for [remaining] seconds'
 			,recoverMessage = 'is no longer feared'
 		}
 		,incap = {
-			debuffs = {}
+			debuff = false
 			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented'}
 			,message = 'is incapacitated for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer incapacitated'
 		}
 		,root = {
-			debuffs = {}
+			debuff = false
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobili[sz]ed'}
 			,message = 'has been rooted for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer rooted'
 		}
 		,silence = {
-			debuffs = {}
+			debuff = false
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
 			,descTerms = {' [sS]ilenced?','^Silenced'}
 			,message = 'has been silenced for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer silenced'
 		}
 		,slow = {
-			debuffs = {}
+			debuff = false
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
 			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
 			,extraInfo = function(debuff)
@@ -46,14 +46,14 @@ Debuffs = {
 			,recoverMessage = 'is no longer slowed'
 		}
 		,stun = {
-			debuffs = {}
+			debuff = false
 			,names = {'Stun','Stunned','Charge','Stomp'}
 			,descTerms = {' [sS]tun','^Stun'}
 			,message = 'has been stunned for [remaining] seconds ({SPELL_LINK})'
 			,recoverMessage = 'is no longer stunned'
 		}
 		,friendly = {
-			debuffs = {}
+			debuff = false
 			,names = {'Mark of the Wild','Blessing of Kings'}
 			,descTerms = {'increased by'}
 			,message = 'is buffed by {SPELL_LINK}'
@@ -89,14 +89,14 @@ Debuffs = {
 	end
 	,checkDebuffs = function()
 		for dbType,info in pairs(Debuffs.types) do
-			if(#info.debuffs >= 1) then
-				local debuff = info.debuffs[1];
-				local message = info.message;
+			if(#info.debuff ~= false) then
+				local debuff = info.debuff;
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();
 				local repeatLimit = info.repeatLimit or 2;
 				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(); end
+				local message = info.message;
 				if(type(message)=="function") then message = message(debuff); end
 				local recoverMessage = info.recoverMessage;
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
@@ -128,7 +128,12 @@ Debuffs = {
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
 				debuffs[#debuffs+1] = debuff;
 				local dbType = Debuffs.getType(debuff);
-				if(dbType~=false) then table.insert(Debuffs.types[dbType].debuffs,debuff); end
+				if(dbType~=false) then
+					local currD = Debuffs.types[dbType].debuff;
+					if(currD==false or currD.remaining < debuff.remaining) then
+						Debuffs.types[dbType].debuff = debuff;
+					end
+				end
 			end
 		end
 		LCU[who]['debuffs'] = debuffs;

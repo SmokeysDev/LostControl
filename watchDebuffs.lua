@@ -96,7 +96,7 @@ Debuffs = {
 				local theTime = GetTime();
 				local repeatLimit = info.repeatLimit or 2;
 				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
-				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(); end
+				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
 				local message = info.message;
 				if(type(message)=="function") then message = message(debuff); end
 				local recoverMessage = info.recoverMessage;

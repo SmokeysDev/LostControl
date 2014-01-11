@@ -130,6 +130,7 @@ Debuffs = {
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
 				debuffs[#debuffs+1] = debuff;
 				local dbType = Debuffs.getType(debuff);
+				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
 				if(dbType~=false) then
 					local currD = Debuffs.types[dbType].debuff;
 					if(currD==false or currD.remaining < debuff.remaining or (debuff.remaining<currD.remaining and debuff.id==currD.id)) then

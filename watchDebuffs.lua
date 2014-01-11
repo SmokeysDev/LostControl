@@ -89,6 +89,7 @@ Debuffs = {
 		return ret;
 	end
 	,checkDebuffs = function()
+		local auraType = LCU.debugMode and 'HELPFUL' or 'HARMFUL';
 		for dbType,info in pairs(Debuffs.types) do
 			if(info.debuff ~= false) then
 				local debuff = info.debuff;
@@ -103,10 +104,18 @@ Debuffs = {
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
-				if(debuff.remaining>0 and debuff.remaining%2==0 and safeToAnnounce) then
+				local stillThere = false;
+				for _,d in pairs(LCU.player.debuffs) do
+					if(d.name == debuff.name) then stillThere = true; end
+				end
+				if(debuff.remaining>0 and safeToAnnounce) then
 					LCU.announcePlayer(message);
 					Debuffs.types[dbType].lastAnnounce = theTime;
-				elseif(debuff.remaining<=0) then LCU.announcePlayer(recoverMessage) end
+				elseif(debuff.remaining<=0 or stillThere==false) then
+					LCU.announcePlayer(recoverMessage);
+					Debuffs.types[dbType].lastAnnounce = 0;
+					Debuffs.types[dbType].debuff = false;
+				end
 			end
 		end
 	end

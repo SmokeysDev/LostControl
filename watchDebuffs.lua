@@ -85,7 +85,7 @@ Debuffs = {
 	,fillMsg = function(msg,debuff)
 		local ret = msg;
 		ret = ret:gsub('%[remaining%]',tostring(debuff.remaining));
-		ret = ret:gsub('%{SPELL_LINK%}',Debuffs.getLink(debuff));
+		ret = ret:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
 		return ret;
 	end
 	,checkDebuffs = function()

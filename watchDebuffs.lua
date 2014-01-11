@@ -89,7 +89,7 @@ Debuffs = {
 	end
 	,checkDebuffs = function()
 		for dbType,info in pairs(Debuffs.types) do
-			if(#info.debuff ~= false) then
+			if(info.debuff ~= false) then
 				local debuff = info.debuff;
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();

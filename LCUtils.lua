@@ -1,6 +1,6 @@
 LCU = {};
 LCU.addonName = "LostControl"
-LCU.addonVer = GetAddonMetadata("LostControl","Version");
+LCU.addonVer = GetAddOnMetadata("LostControl","Version");
 LCU.debugMode = false;
 LCU.player = {
 	role = nil
@@ -20,7 +20,7 @@ LCU.player = {
 		return role;
 	end
 }
-LCU.player.udpateRole();
+LCU.player.updateRole();
 LCU.round = function(val, decimal)
   local exp = decimal and 10^decimal or 1;
   return math.ceil(val * exp - 0.5) / exp;

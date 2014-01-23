@@ -9,7 +9,6 @@ local LostControlFrame = CreateFrame("FRAME", nil, UIParent);
 LostControlFrame:Hide();
 
 function LostControlOptions_OnLoad()
-	LCU.player.updateRole();
 end
 
 

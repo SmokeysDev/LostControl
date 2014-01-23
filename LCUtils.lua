@@ -100,8 +100,14 @@ function SlashCmd:disable(value)
 	end
 end
 function SlashCmd:status(value)
-	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
-		print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and 'enabled' or 'disabled'));
+	if(type(value)=="string") then
+		if(Debuffs and Debuffs.types and Debuffs.types[value]) then
+			print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and 'enabled' or 'disabled'));
+		end
+	else
+		for k,v in pairs(Debuffs.types) do
+			print('"'..LCU.upperFirst(k)..'" checks are currently '..(v.enabled and 'enabled' or '- disabled -'));
+		end
 	end
 end
 

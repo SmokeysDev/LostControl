@@ -70,7 +70,10 @@ SLASH_LostControl2 = "/lostcontrol"
 local SlashCmd = {}
 function SlashCmd:help()
 	print(LCU.addonName, "slash commands:")
-	print("    debug (on/off)")
+	print('  -  debug [on/off]')
+	print('  -  disable [debuff type] (e.g. '..SLASH_LostControl1..' disable silence)')
+	print('  -  enable [debuff type] (e.g. '..SLASH_LostControl1..' enable slow)')
+	print('  -  status [debuff type] (e.g. '..SLASH_LostControl1..' status incap)')
 	--print("<unit> can be: player, pet, target, focus, party1 ... party4, arena1 ... arena5")
 end
 function SlashCmd:debug(value)
@@ -82,6 +85,25 @@ function SlashCmd:debug(value)
 		print(LCU.addonName, "debugging disabled.")
 	end
 end
+function SlashCmd:enable(value)
+	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
+		local prevVal = Debuffs.types[value].enabled;
+		Debuffs.types[value].enabled = true;
+		if(Debuffs.types[value].enabled and not prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been enabled'); end
+	end
+end
+function SlashCmd:disable(value)
+	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
+		local prevVal = Debuffs.types[value].enabled;
+		Debuffs.types[value].enabled = false;
+		if(not Debuffs.types[value].enabled and prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been disabled'); end
+	end
+end
+function SlashCmd:status(value)
+	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
+		print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and 'enabled' or 'disabled'));
+	end
+end
 
 SlashCmdList[LCU.addonName] = function(cmd)
 	local args = {}
@@ -91,7 +113,6 @@ SlashCmdList[LCU.addonName] = function(cmd)
 	if SlashCmd[args[1]] then
 		SlashCmd[args[1]](unpack(args))
 	else
-		print(LCU.addonName, ": Type \"/lc help\" for more options.")
-		InterfaceOptionsFrame_OpenToCategory(OptionsPanel)
+		print(LCU.addonName, ': Type "'..SLASH_LostControl1..' help" for more options.')
 	end
 end

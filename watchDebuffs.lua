@@ -3,6 +3,7 @@ Debuffs = {
 	types = {
 		fear = {
 			debuff = false
+			,enabled = true
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
 			,message = 'is feared for [remaining] seconds - {SPELL_LINK}'
@@ -10,6 +11,7 @@ Debuffs = {
 		}
 		,incap = {
 			debuff = false
+			,enabled = true
 			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented'}
 			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
@@ -17,6 +19,7 @@ Debuffs = {
 		}
 		,root = {
 			debuff = false
+			,enabled = true
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobiliz'}
 			,message = 'has been rooted for [remaining] seconds - {SPELL_LINK}'
@@ -24,6 +27,7 @@ Debuffs = {
 		}
 		,silence = {
 			debuff = false
+			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
 			,descTerms = {' [sS]ilenced?','^Silenced'}
 			,message = 'has been silenced for [remaining] seconds - {SPELL_LINK}'
@@ -31,6 +35,7 @@ Debuffs = {
 		}
 		,slow = {
 			debuff = false
+			,enabled = false
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
 			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
 			,extraInfo = function(debuff)
@@ -47,6 +52,7 @@ Debuffs = {
 		}
 		,stun = {
 			debuff = false
+			,enabled = true
 			,names = {'Stun','Stunned','Charge','Stomp'}
 			,descTerms = {' [sS]tun','^Stun'}
 			,message = 'has been stunned for [remaining] seconds - {SPELL_LINK}'
@@ -59,7 +65,7 @@ Debuffs = {
 		end
 	end
 	,isType = function(debuff,dbType)
-		if(Debuffs.types[dbType]==nil) then return false; end
+		if(Debuffs.types[dbType]==nil or Debuffs.types[dbType].enabled==false) then return false; end
 		for k,v in pairs(Debuffs.types[dbType].names) do
 			if(debuff.name == v) then return true; end
 		end
@@ -140,6 +146,7 @@ Debuffs = {
 				end
 			end
 		end
+		if(not LCU[who]) then LCU[who] = {}; end
 		LCU[who]['debuffs'] = debuffs;
 		return debuffs;
 	end
@@ -168,7 +175,9 @@ Debuffs = {
 
 local lastDebuffMessage = 0
 function checkDebuffs()
-	Debuffs.get()
+	local who = 'player';
+	--if((UnitName("focus"))~=nil and LCU.player.role=='dps' and LCU.player.updateRole("focus")=="tank") then who = "focus"; end
+	Debuffs.get(who)
 	Debuffs.checkDebuffs()
 	--if(#LCU.player.debuffs > 0 and LCU.debugMode==true) then
 	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then

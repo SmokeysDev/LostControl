@@ -5,9 +5,10 @@ LCU.debugMode = false;
 LCU.player = {
 	role = nil
 	,name = UnitName("player")
-	,updateRole = function()
-		local role = string.lower(UnitGroupRolesAssigned("player"));
-		if(role == "none") then
+	,updateRole = function(who)
+		who = who or "player";
+		local role = string.lower(UnitGroupRolesAssigned(who));
+		if(role == "none" and who == "player") then
 			local isLeader, isTank, isHealer, isDPS = GetLFGRoles();
 			if(isTank==true) 	then role = 'tank' end
 			if(isHealer==true)  then role = 'healer' end
@@ -15,9 +16,11 @@ LCU.player = {
 			if(role=="none") 	then role = 'player' end
 		end
 		LCU.player.role = role;
+		LCU.player.name = UnitName(who);
 		return role;
 	end
 }
+LCU.player.udpateRole();
 LCU.round = function(val, decimal)
   local exp = decimal and 10^decimal or 1;
   return math.ceil(val * exp - 0.5) / exp;

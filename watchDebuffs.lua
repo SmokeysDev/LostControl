@@ -52,14 +52,6 @@ Debuffs = {
 			,message = 'has been stunned for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer stunned'
 		}
-		,friendly = {
-			debuff = false
-			,names = {'Mark of the Wild','Blessing of Kings'}
-			,descTerms = {'increased by'}
-			,message = 'is buffed by {SPELL_LINK}'
-			,recoverMessage = 'has lost his buff - {SPELL_LINK}'
-			,repeatLimit = 10
-		}
 	}
 	,emptyTypeCache = function()
 		for type,info in pairs(Debuffs.types) do

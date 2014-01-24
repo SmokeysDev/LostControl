@@ -27,14 +27,14 @@ local function onUpdate(self,elapsed)
 		checkDebuffs()
 		local falling = IsFalling()
 		if falling then fallingFrames = fallingFrames+1; end
-        if(falling and charJumped==0 and fallAnnounced==0 and fallingFrames >= 5) then
+        if(falling and charJumped==0 and fallAnnounced==0 and fallingFrames >= 10) then
 			LCU.announcePlayer('is airborne')
 			fallAnnounced = 1
 		end
 		if(falling == nil) then
 			charJumped = 0
 			fallAnnounced = 0
-			if(fallingFrames>8) then LCU.announcePlayer('has landed'); end
+			if(fallingFrames>15) then LCU.announcePlayer('has landed'); end
 			fallingFrames = 0
 		end
         total = 0

@@ -79,7 +79,6 @@ function SlashCmd:help()
 	print('  -  disable [debuff type] (e.g. '..SLASH_LostControl1..' disable silence)')
 	print('  -  enable [debuff type] (e.g. '..SLASH_LostControl1..' enable slow)')
 	print('  -  status [debuff type] (e.g. '..SLASH_LostControl1..' status incap)')
-	--print("<unit> can be: player, pet, target, focus, party1 ... party4, arena1 ... arena5")
 end
 function SlashCmd:debug(value)
 	if value == "on" then

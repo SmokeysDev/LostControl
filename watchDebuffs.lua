@@ -1,4 +1,4 @@
-LCU.player.debuffs = {} --debuffs
+LCU.player.debuffs = {};
 Debuffs = {
 	types = {
 		fear = {
@@ -141,36 +141,13 @@ Debuffs = {
 		LCU[who]['debuffs'] = debuffs;
 		return debuffs;
 	end
-	,latest = function()
-		--Debuffs.get();
-		--return LCU.player.debuffs[#LCU.player.debuffs] or false;
-		local lastName = nil
-		local lastExpiry = nil
-		local lastDesc = nil
-		for i=1,40 do
-			local n,_,_,_,_,_,expiry,_,_,_,spellID = UnitAura("player",i,"HARMFUL")
-			if(n) then
-				lastName = n
-				lastExpiry = LCU.round(expiry - GetTime()) or 1
-				lastDesc = GetSpellDescription(spellID)
-			end
-		end
-		if(lastName ~= nil) then
-			if(lastExpiry ~= nil and lastExpiry > 120) then lastExpiry = LCU.round(LCU.round(lastExpiry,60)/60)..' minutes'
-			else lastExpiry = (lastExpiry or 1)..' seconds' end
-			if(LCU.debugMode) then LCU.sendMsg('Last debuff found = '..lastName..' - expiring in '..lastExpiry,true) end
-			--LCU.sendMsg('Last debuff desc: '..lastDesc,true)
-		end
-	end
 }
 
 local lastDebuffMessage = 0
 function checkDebuffs()
 	local who = 'player';
-	--if((UnitName("focus"))~=nil and LCU.player.role=='dps' and LCU.player.updateRole("focus")=="tank") then who = "focus"; end
 	Debuffs.get(who)
 	Debuffs.checkDebuffs()
-	--if(#LCU.player.debuffs > 0 and LCU.debugMode==true) then
 	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
 		for k,debuff in pairs(LCU.player.debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'

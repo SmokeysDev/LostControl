@@ -23,7 +23,6 @@ local total = 0
 local fallingFrames = 0;
 local function onUpdate(self,elapsed)
     total = total + elapsed
-	Debuffs.latest();
     if total >= 0.25 then
 		checkDebuffs()
 		local falling = IsFalling()

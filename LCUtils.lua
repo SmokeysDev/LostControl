@@ -126,10 +126,10 @@ function SlashCmd:instchan(value)
 end
 function SlashCmd:raidchan(value)
 	if(value=="PARTY" or value=="RAID") then
-		LCcfg.instanceChat = value;
+		LCcfg.raidChat = value;
 	end
-	if(value=="p" or value=="P" or value=="party") then LCcfg.instanceChat = 'PARTY'; end
-	if(value=="r" or value=="R" or value=="raid") then LCcfg.instanceChat = 'RAID'; end
+	if(value=="p" or value=="P" or value=="party") then LCcfg.raidChat = 'PARTY'; end
+	if(value=="r" or value=="R" or value=="raid") then LCcfg.raidChat = 'RAID'; end
 end
 
 SlashCmdList[LCU.addonName] = function(cmd)

@@ -65,7 +65,7 @@ Debuffs = {
 		end
 	end
 	,isType = function(debuff,dbType)
-		if(Debuffs.types[dbType]==nil or Debuffs.types[dbType].enabled==false) then return false; end
+		if(Debuffs.types[dbType]==nil or LCcfg.disabledWatches[dbType]) then return false; end
 		for k,v in pairs(Debuffs.types[dbType].names) do
 			if(debuff.name == v) then return true; end
 		end

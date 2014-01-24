@@ -1,6 +1,7 @@
 LCcfg = type(LCcfg)=='table' and LCcfg or {};
 if(LCcfg.instanceChat==nil) then LCcfg.instanceChat = 'PARTY'; end
 if(LCcfg.raidChat==nil) then LCcfg.raidChat = 'PARTY'; end
+if(LCcfg.disabledWatches==nil) then LCcfg.disabledWatches = {'slow'=true}; end
 LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
@@ -93,6 +94,7 @@ function SlashCmd:enable(value)
 	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = true;
+		LCcfg.disabledWatches[value] = false;
 		if(Debuffs.types[value].enabled and not prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been enabled'); end
 	end
 end
@@ -100,6 +102,7 @@ function SlashCmd:disable(value)
 	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = false;
+		LCcfg.disabledWatches[value] = true;
 		if(not Debuffs.types[value].enabled and prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been disabled'); end
 	end
 end

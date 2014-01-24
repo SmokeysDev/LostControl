@@ -1,7 +1,7 @@
 LCcfg = type(LCcfg)=='table' and LCcfg or {};
 if(LCcfg.instanceChat==nil) then LCcfg.instanceChat = 'PARTY'; end
 if(LCcfg.raidChat==nil) then LCcfg.raidChat = 'PARTY'; end
-if(LCcfg.disabledWatches==nil) then LCcfg.disabledWatches = {'slow'=true}; end
+if(LCcfg.disabledWatches==nil) then LCcfg.disabledWatches = {slow=true}; end
 LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");

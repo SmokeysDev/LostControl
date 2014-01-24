@@ -61,12 +61,12 @@ local function postMsg(msg,chan)
 	if(chan == nil) then
 		chan = 'SAY'
 		if(LCU.player.inInstance and LCU.player.instanceType=='raid') then
-			if(LCcfg.raidChat=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
-			if(LCcfg.raidChat=='RAID') then chan = 'INSTANCE_CHAT'; end
+			if(LCcfg.get('raidChat')=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
+			if(LCcfg.get('raidChat')=='RAID') then chan = 'INSTANCE_CHAT'; end
 		end
 		if(LCU.player.inInstance and LCU.player.instanceType=='party') then
-			if(LCcfg.instanceChat=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
-			if(LCcfg.instanceChat=='INSTANCE_CHAT') then chan = 'INSTANCE_CHAT'; end
+			if(LCcfg.get('instanceChat')=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
+			if(LCcfg.get('instanceChat')=='INSTANCE_CHAT') then chan = 'INSTANCE_CHAT'; end
 		end
 		if(IsInGroup() and LCU.player.inInstance==nil) then chan = 'PARTY' end
 	end

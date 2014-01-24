@@ -1,7 +1,3 @@
-LCcfg = type(LCcfg)=='table' and LCcfg or {};
-if(LCcfg.instanceChat==nil) then LCcfg.instanceChat = 'PARTY'; end
-if(LCcfg.raidChat==nil) then LCcfg.raidChat = 'PARTY'; end
-if(LCcfg.disabledWatches==nil) then LCcfg.disabledWatches = {slow=true}; end
 LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
@@ -93,7 +89,7 @@ function SlashCmd:enable(value)
 	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = true;
-		LCcfg.disabledWatches[value] = false;
+		LCcfg.disableWatch(value,false);
 		if(Debuffs.types[value].enabled and not prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been enabled'); end
 	end
 end
@@ -101,7 +97,7 @@ function SlashCmd:disable(value)
 	if(Debuffs and Debuffs.types and Debuffs.types[value]) then
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = false;
-		LCcfg.disabledWatches[value] = true;
+		LCcfg.disableWatch(value,true);
 		if(not Debuffs.types[value].enabled and prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been disabled'); end
 	end
 end
@@ -111,24 +107,26 @@ function SlashCmd:status(value)
 			print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and 'enabled' or 'disabled'));
 		end
 	else
+		print('--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---');
 		for k,v in pairs(Debuffs.types) do
-			print('"'..LCU.upperFirst(k)..'" checks are currently '..(v.enabled and 'enabled' or '- disabled -'));
+			print('"'..LCU.upperFirst(k)..'" checks are currently '..(LCcfg.watching(k) and 'enabled' or '- disabled -'));
 		end
+		print('--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---');
 	end
 end
 function SlashCmd:instchan(value)
 	if(value=="PARTY" or value=="INSTANCE_CHAT") then
-		LCcfg.instanceChat = value;
+		LCcfg.set('instanceChat',value);
 	end
-	if(value=="p" or value=="P" or value=="party") then LCcfg.instanceChat = 'PARTY'; end
-	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.instanceChat = 'INSTANCE_CHAT'; end
+	if(value=="p" or value=="P" or value=="party") then LCcfg.set('instanceChat','PARTY'); end
+	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.set('instanceChat','INSTANCE_CHAT'); end
 end
 function SlashCmd:raidchan(value)
 	if(value=="PARTY" or value=="RAID") then
-		LCcfg.raidChat = value;
+		LCcfg.set('raidChat',value);
 	end
-	if(value=="p" or value=="P" or value=="party") then LCcfg.raidChat = 'PARTY'; end
-	if(value=="r" or value=="R" or value=="raid") then LCcfg.raidChat = 'RAID'; end
+	if(value=="p" or value=="P" or value=="party") then LCcfg.set('raidChat','PARTY'); end
+	if(value=="r" or value=="R" or value=="raid") then LCcfg.set('raidChat','RAID'); end
 end
 
 SlashCmdList[LCU.addonName] = function(cmd)

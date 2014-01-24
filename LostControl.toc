@@ -5,12 +5,13 @@
 ## X-Email: einstein.matt@gmail.com
 ## X-Date: January 24th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
-## SavedVariablesPerCharacter: LCcfg
+## SavedVariablesPerCharacter: LCcfgStore
 ## X-Curse-Packaged-Version: v1.4
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol
 ## X-Curse-Repository-ID: wow/lostcontrol/mainline
 LCMessage.lua
+LCcfg.lua
 LCUtils.lua
 watchDebuffs.lua
 LostControl.lua

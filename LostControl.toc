@@ -3,7 +3,7 @@
 ## Version:  1.4
 ## Author: Matt Bacon
 ## X-Email: einstein.matt@gmail.com
-## X-Date: January 11th, 2014
+## X-Date: January 24th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
 ## SavedVariablesPerCharacter: LCcfg
 ## X-Curse-Packaged-Version: v1.4

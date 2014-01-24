@@ -1,4 +1,4 @@
-Lost Control v1.4
+Lost Control v1.5
 
 This is my first addon that I've written, just because I couldn't find one that suited my needs.
 

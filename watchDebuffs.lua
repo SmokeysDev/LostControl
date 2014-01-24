@@ -38,16 +38,7 @@ Debuffs = {
 			,enabled = false
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
 			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
-			,extraInfo = function(debuff)
-				local extraInfo = string.match(debuff.desc,'reduced by %d%d%%'); --get perc slowed
-				--print('slow desc = '..tostring(debuff.desc)); --"speed by $s1%"
-				--print('slow match = '..tostring(extraInfo));
-				extraInfo = extraInfo and string.gsub(extraInfo,'reduced ',' ') or '';
-				return extraInfo;
-			end
-			,message = function(debuff)
-				return 'has been slowed'..debuff.extraInfo..' for [remaining] seconds - {SPELL_LINK}';
-			end
+			,message = 'has been slowed for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer slowed'
 		}
 		,stun = {

@@ -1,3 +1,5 @@
+LCcfg = type(LCcfg)=='table' and LCcfg or {};
+if(LCcfg.instanceChat==nil) then LCcfg.instanceChat = 'PARTY'; end
 LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
@@ -20,6 +22,7 @@ LCU.player = {
 		return role;
 	end
 }
+LCU.player.inInstance, LCU.player.instanceType = IsInInstance();
 LCU.player.updateRole();
 LCU.round = function(val, decimal)
   local exp = decimal and 10^decimal or 1;
@@ -109,6 +112,13 @@ function SlashCmd:status(value)
 			print('"'..LCU.upperFirst(k)..'" checks are currently '..(v.enabled and 'enabled' or '- disabled -'));
 		end
 	end
+end
+function SlashCmd:instchan(value)
+	if(value=="PARTY" or value=="INSTANCE_CHAT") then
+		LCcfg.instanceChat = value;
+	end
+	if(value=="p" or value=="P" or value=="party") then LCcfg.instanceChat = 'PARTY'; end
+	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.instanceChat = 'INSTANCE_CHAT'; end
 end
 
 SlashCmdList[LCU.addonName] = function(cmd)

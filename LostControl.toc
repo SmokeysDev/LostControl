@@ -5,6 +5,7 @@
 ## X-Email: einstein.matt@gmail.com
 ## X-Date: January 11th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
+## SavedVariablesPerCharacter: LCcfg
 ## X-Curse-Packaged-Version: v1.3
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol

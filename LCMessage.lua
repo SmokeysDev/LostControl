@@ -77,7 +77,10 @@ local function postMsg(msg,chan)
 	chan = chan or nil
 	if(chan == nil) then
 		chan = 'SAY'
-		if(LCU.player.inInstance and LCU.player.instanceType=='raid') then chan = 'RAID' end
+		if(LCU.player.inInstance and LCU.player.instanceType=='raid') then
+			if(LCcfg.raidChat=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
+			if(LCcfg.raidChat=='RAID') then chan = 'INSTANCE_CHAT'; end
+		end
 		if(LCU.player.inInstance and LCU.player.instanceType=='party') then
 			if(LCcfg.instanceChat=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
 			if(LCcfg.instanceChat=='INSTANCE_CHAT') then chan = 'INSTANCE_CHAT'; end

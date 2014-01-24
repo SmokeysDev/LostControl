@@ -1,5 +1,6 @@
 LCcfg = type(LCcfg)=='table' and LCcfg or {};
 if(LCcfg.instanceChat==nil) then LCcfg.instanceChat = 'PARTY'; end
+if(LCcfg.raidChat==nil) then LCcfg.raidChat = 'PARTY'; end
 LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
@@ -119,6 +120,13 @@ function SlashCmd:instchan(value)
 	end
 	if(value=="p" or value=="P" or value=="party") then LCcfg.instanceChat = 'PARTY'; end
 	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.instanceChat = 'INSTANCE_CHAT'; end
+end
+function SlashCmd:raidchan(value)
+	if(value=="PARTY" or value=="RAID") then
+		LCcfg.instanceChat = value;
+	end
+	if(value=="p" or value=="P" or value=="party") then LCcfg.instanceChat = 'PARTY'; end
+	if(value=="r" or value=="R" or value=="raid") then LCcfg.instanceChat = 'RAID'; end
 end
 
 SlashCmdList[LCU.addonName] = function(cmd)

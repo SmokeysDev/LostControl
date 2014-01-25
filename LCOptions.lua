@@ -19,6 +19,24 @@ local function AddText(text,parent,font,locx,locy,relTo)
 	return textEl;
 end
 
+local function AddDropdown(parent,name,title,data,selFunc,checkedFunc,locx,locy,relTo)
+	local dropDown = CreateFrame("Frame", "LCO_"..name, parent, "UIDropDownMenuTemplate")
+	if(relTo) then dropDown:SetPoint("TOPLEFT", relTo, "TOPLEFT", locx, locy)
+	else dropDown:SetPoint("TOPLEFT", locx, locy) end
+	dropDown.initialize = function()
+		local info = {};
+		for k,d in ipairs(data) do
+			info.text = d[1];
+			info.value = d[2];
+			info.func = selFunc;
+			info.checked = checkedFunc(d[2]);
+			UIDropDownMenu_AddButton(info);
+		end
+	end
+	getglobal(dropDown:GetName() .. 'Text'):SetText(title)
+	return dropDown;
+end
+
 function LCOptions(LostControlFrame)
 	local O = LCU.addonName .. "OptionsPanel";
 	local OptionsPanel = CreateFrame("Frame", O);
@@ -45,41 +63,23 @@ function LCOptions(LostControlFrame)
 		lastEl = OptionsPanel.elements[elKey];
 	end
 
-	OptionsPanel.elements.instChat = CreateFrame("Frame", "LCO_instChat", OptionsPanel, "UIDropDownMenuTemplate")
-	OptionsPanel.elements.instChat:SetPoint("TOPLEFT", OptionsPanel.elements.subTitle, "BOTTOMLEFT", 150, -20)
-	OptionsPanel.elements.instChat.initialize = function()
-		local info = {};
-		local values = {"PARTY", "INSTANCE_CHAT"}
-		local names = {"Party (/p)", "Instance (/i)"}
-		for i, val in next, values do
-			info.text = names[i]
-			info.value = val
-			info.func = function(self)
-				LCcfg.set('instanceChat',self.value);
-			end
-			info.checked = val == LCcfg.get('instanceChat');
-			UIDropDownMenu_AddButton(info)
-		end
-	end
-	getglobal(OptionsPanel.elements.instChat:GetName() .. 'Text'):SetText("5-Man Channel")
+	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
+		{
+			{"Party (/p)","PARTY"}
+			,{"Instance (/i)","INSTANCE_CHAT"}
+		}
+		,(function(self) LCcfg.set('instanceChat',self.value) end)
+		,(function(val) return val==LCcfg.get('instanceChat') end)
+		,150,-30,OptionsPanel.elements.subTitle);
 
-	OptionsPanel.elements.raidChat = CreateFrame("Frame", "LCO_raidChat", OptionsPanel, "UIDropDownMenuTemplate")
-	OptionsPanel.elements.raidChat:SetPoint("TOPLEFT", OptionsPanel.elements.instChat, "TOPRIGHT", 120, 0)
-	OptionsPanel.elements.raidChat.initialize = function()
-		local info = {};
-		local values = {"PARTY", "RAID"}
-		local names = {"Party (/p)", "Raid (/r)"}
-		for i, val in next, values do
-			info.text = names[i]
-			info.value = val
-			info.func = function(self)
-				LCcfg.set('raidChat',self.value);
-			end
-			info.checked = val == LCcfg.get('raidChat');
-			UIDropDownMenu_AddButton(info)
-		end
-	end
-	getglobal(OptionsPanel.elements.raidChat:GetName() .. 'Text'):SetText("Raid Channel")
+	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
+		{
+			{"Party (/p)","PARTY"}
+			,{"Raid (/r)","RAID"}
+		}
+		,(function(self) LCcfg.set('raidChat',self.value) end)
+		,(function(val) return val==LCcfg.get('raidChat') end)
+		,180,0,OptionsPanel.elements.instChat);
 
 	InterfaceOptions_AddCategory(OptionsPanel);
 	return OptionsPanel;

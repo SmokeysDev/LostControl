@@ -131,7 +131,7 @@ Debuffs = {
 				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
 				if(dbType~=false) then
 					local currD = Debuffs.types[dbType].debuff;
-					if(not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime'))) then
+					if(type(currD)=='table' and not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime'))) then
 						if(currD==false or currD.remaining < debuff.remaining or (debuff.remaining<currD.remaining and debuff.id==currD.id)) then
 							Debuffs.types[dbType].debuff = debuff;
 						end

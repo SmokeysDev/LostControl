@@ -47,12 +47,15 @@ function LCOptions(LostControlFrame)
 	local notes = GetAddOnMetadata(LCU.addonName,"Notes");
 	OptionsPanel.elements.subTitle = AddText(notes,OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.title);
 	OptionsPanel.elements.watchTypesTitle = AddText('Watch debuff types:',OptionsPanel,"GameFontNormal",0,-20,OptionsPanel.elements.subTitle);
+	OptionsPanel.elements.chanDropsTitle = AddText('Channel Selections:',OptionsPanel,"GameFontNormal",180,12,OptionsPanel.elements.watchTypesTitle);
 
 	local lastEl = OptionsPanel.elements.watchTypesTitle;
 	-- Loop through debuff types and create watch checkboxes for them
+	local i = 0;
 	for dbType in pairs(Debuffs.types) do
 		local elKey = 'watch'..LCU.upperFirst(dbType);
-		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, -8, LCU.upperFirst(dbType), 'Enable watching for '..dbType..' effects', lastEl);
+		local locY = i==0 and -12 or -5;
+		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, LCU.upperFirst(dbType), 'Enable watching for '..dbType..' effects', lastEl);
 		OptionsPanel.elements[elKey]:SetChecked(LCcfg.watching(dbType));
 		OptionsPanel.elements[elKey]:SetScript("OnClick",
 			function()
@@ -61,7 +64,18 @@ function LCOptions(LostControlFrame)
 			end
 		);
 		lastEl = OptionsPanel.elements[elKey];
+		i = i+1;
 	end
+
+	OptionsPanel.elements.debuffTime = AddDropdown(OptionsPanel,"debuffTime","Min Debuff Time",
+		{
+			{"Any",0}
+			,{"2 sec",2}
+			,{"3 sec",3}
+		}
+		,(function(self) LCcfg.set('minDebuffTime',self.value) end)
+		,(function(val) return val==LCcfg.get('minDebuffTime') end)
+		,-15,-40,lastEl);
 
 	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
 		{
@@ -70,7 +84,7 @@ function LCOptions(LostControlFrame)
 		}
 		,(function(self) LCcfg.set('instanceChat',self.value) end)
 		,(function(val) return val==LCcfg.get('instanceChat') end)
-		,150,-30,OptionsPanel.elements.subTitle);
+		,-20,-28,OptionsPanel.elements.chanDropsTitle);
 
 	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
 		{
@@ -79,7 +93,7 @@ function LCOptions(LostControlFrame)
 		}
 		,(function(self) LCcfg.set('raidChat',self.value) end)
 		,(function(val) return val==LCcfg.get('raidChat') end)
-		,180,0,OptionsPanel.elements.instChat);
+		,0,-35,OptionsPanel.elements.instChat);
 
 	InterfaceOptions_AddCategory(OptionsPanel);
 	return OptionsPanel;

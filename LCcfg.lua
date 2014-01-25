@@ -16,8 +16,11 @@ LCcfg = {
 	,watching = function(dbType)
 		return (LCcfgStore.disabledWatches[dbType]==nil or LCcfgStore.disabledWatches[dbType]==false);
 	end
+	,init = function()
+		LCcfg.setDefault('instanceChat','PARTY');
+		LCcfg.setDefault('raidChat','PARTY');
+		LCcfg.setDefault('disabledWatches',{slow=true});
+		LCcfg.setDefault('minDebuffTime',2);
+	end
 }
-
-LCcfg.setDefault('instanceChat','PARTY');
-LCcfg.setDefault('raidChat','PARTY');
-LCcfg.setDefault('disabledWatches',{slow=true});
+LCcfg.init();

@@ -13,6 +13,7 @@ end
 
 function LostControl_OnEvent(self,event,arg1)
 	if(event=="ADDON_LOADED" and arg1==LCU.addonName) then
+		LCcfg.init();
 		LCU.optionsPanel = LCOptions(LostControlFrame);
 	end
 end

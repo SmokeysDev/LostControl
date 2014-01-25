@@ -13,6 +13,7 @@
 LCMessage.lua
 LCcfg.lua
 LCUtils.lua
+LCOptions.lua
 watchDebuffs.lua
 LostControl.lua
 LostControl.xml

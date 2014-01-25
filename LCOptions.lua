@@ -45,6 +45,42 @@ function LCOptions(LostControlFrame)
 		lastEl = OptionsPanel.elements[elKey];
 	end
 
+	OptionsPanel.elements.instChat = CreateFrame("Frame", "LCO_instChat", OptionsPanel, "UIDropDownMenuTemplate")
+	OptionsPanel.elements.instChat:SetPoint("TOPLEFT", OptionsPanel.elements.subTitle, "BOTTOMLEFT", 150, -20)
+	OptionsPanel.elements.instChat.initialize = function()
+		local info = {};
+		local values = {"PARTY", "INSTANCE_CHAT"}
+		local names = {"Party (/p)", "Instance (/i)"}
+		for i, val in next, values do
+			info.text = names[i]
+			info.value = val
+			info.func = function(self)
+				LCcfg.set('instanceChat',self.value);
+			end
+			info.checked = val == LCcfg.get('instanceChat');
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+	getglobal(OptionsPanel.elements.instChat:GetName() .. 'Text'):SetText("5-Man Channel")
+
+	OptionsPanel.elements.raidChat = CreateFrame("Frame", "LCO_raidChat", OptionsPanel, "UIDropDownMenuTemplate")
+	OptionsPanel.elements.raidChat:SetPoint("TOPLEFT", OptionsPanel.elements.instChat, "TOPRIGHT", 120, 0)
+	OptionsPanel.elements.raidChat.initialize = function()
+		local info = {};
+		local values = {"PARTY", "RAID"}
+		local names = {"Party (/p)", "Raid (/r)"}
+		for i, val in next, values do
+			info.text = names[i]
+			info.value = val
+			info.func = function(self)
+				LCcfg.set('raidChat',self.value);
+			end
+			info.checked = val == LCcfg.get('raidChat');
+			UIDropDownMenu_AddButton(info)
+		end
+	end
+	getglobal(OptionsPanel.elements.raidChat:GetName() .. 'Text'):SetText("Raid Channel")
+
 	InterfaceOptions_AddCategory(OptionsPanel);
 	return OptionsPanel;
 end

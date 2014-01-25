@@ -11,6 +11,15 @@ LostControlFrame:Hide();
 function LostControlOptions_OnLoad()
 end
 
+function LostControl_OnEvent(self,event,arg1)
+	if(event=="ADDON_LOADED" and arg1==LCU.addonName) then
+		LCU.optionsPanel = LCOptions_new(LostControlFrame);
+	end
+end
+
+LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
+LostControlFrame:RegisterEvent("ADDON_LOADED");
+
 
 local charJumped = 0
 local fallAnnounced = 0

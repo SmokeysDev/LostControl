@@ -14,7 +14,7 @@ LCcfg = {
 		LCcfgStore.disabledWatches[dbType] = val;
 	end
 	,watching = function(dbType)
-		return (not LCcfgStore.disabledWatches[dbType]);
+		return (LCcfgStore.disabledWatches[dbType]==nil or LCcfgStore.disabledWatches[dbType]==false);
 	end
 }
 

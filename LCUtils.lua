@@ -138,5 +138,6 @@ SlashCmdList[LCU.addonName] = function(cmd)
 		SlashCmd[args[1]](unpack(args))
 	else
 		print(LCU.addonName, ': Type "'..SLASH_LostControl1..' help" for more options.')
+		InterfaceOptionsFrame_OpenToCategory(LCU.optionsPanel or LCU.addonName)
 	end
 end

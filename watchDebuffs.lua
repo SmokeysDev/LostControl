@@ -17,6 +17,14 @@ Debuffs = {
 			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer incapacitated'
 		}
+		,sleep = {
+			debuff = false
+			,enabled = true
+			,names = {'Sleep'}
+			,descTerms = {'[dD]eep slumber','[sS]lumber','[aA]sleep','[sS]leeping'}
+			,message = 'is asleep for [remaining] seconds - {SPELL_LINK}'
+			,recoverMessage = 'is no longer asleep'
+		}
 		,root = {
 			debuff = false
 			,enabled = true

@@ -52,7 +52,10 @@ function LCOptions(LostControlFrame)
 	local lastEl = OptionsPanel.elements.watchTypesTitle;
 	-- Loop through debuff types and create watch checkboxes for them
 	local i = 0;
-	for dbType in pairs(Debuffs.types) do
+	local debuffNames = {}
+	for dbType in pairs(Debuffs.types) do table.insert(debuffNames,dbType); end
+	table.sort(debuffNames);
+	for _,dbType in ipairs(debuffNames) do
 		local elKey = 'watch'..LCU.upperFirst(dbType);
 		local locY = i==0 and -12 or -5;
 		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, LCU.upperFirst(dbType), 'Enable watching for '..dbType..' effects', lastEl);

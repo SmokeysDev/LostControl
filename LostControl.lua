@@ -21,6 +21,21 @@ end
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
 LostControlFrame:RegisterEvent("ADDON_LOADED");
 
+StaticPopupDialogs["LC_DEBUFF_TEST"] = {
+	text = "Which debuff do you want to test?",
+	button1 = "Accept",
+	button2 = "Cancel",
+	OnAccept = function(self)
+		local dbType = self.editBox:GetText();
+		Debuffs.test(dbType);
+	end,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+	hasEditBox = true,
+	enterClicksFirstButton = true,
+}
 
 local charJumped = 0
 local fallAnnounced = 0

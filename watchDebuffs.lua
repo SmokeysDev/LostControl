@@ -101,7 +101,7 @@ Debuffs = {
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
-				local stillThere = false;
+				local stillThere = debuff.type=='test';
 				for _,d in pairs(LCU.player.debuffs) do
 					if(d.name == debuff.name) then stillThere = true; end
 				end
@@ -151,6 +151,24 @@ Debuffs = {
 		LCU[who]['debuffs'] = debuffs;
 		return debuffs;
 	end
+	,test = function(dbType)
+		local tests = {
+			slow = 31589 --Slow
+			,fear = 5782 --Fear
+			,incap = 115078 --Paralysis
+			,stun = 853 --Hammer of Justice
+			,sleep = 31298 --Sleep
+			,root = 339 --Entangling Roots
+			,silence = 15487 --Silence
+		}
+		if(tests[dbType] and Debuffs.types[dbType].debuff==false) then
+			local dbid = tests[dbType];
+			local desc = GetSpellDescription(dbid);
+			local spName,spRank = GetSpellInfo(dbid);
+			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
+			Debuffs.types[dbType].debuff = debuff;
+		end
+	end
 }
 
 local lastDebuffMessage = 0
@@ -158,6 +176,9 @@ function checkDebuffs()
 	local who = 'player';
 	Debuffs.get(who)
 	Debuffs.checkDebuffs()
+	for dbType,db in pairs(Debuffs.types) do
+		if(db.debuff and db.debuff.type == 'test') then db.debuff.remaining = db.debuff.remaining-0.25; end
+	end
 	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
 		for k,debuff in pairs(LCU.player.debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'

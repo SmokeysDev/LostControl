@@ -41,9 +41,8 @@ end
 
 LCU.sendMsg = function(msg,priv)
 	priv = priv or LCU.debugMode
-	local chan = IsInGroup() and 'PARTY' or (IsInRaid() and 'RAID' or 'SAY')
 	if(priv == true) then print(msg)
-	else LCMessage(msg,chan,2) end
+	else LCMessage(msg) end
 end
 
 LCU.announceStateChange = function(action)

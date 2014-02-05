@@ -1,8 +1,11 @@
 LCcfgStore = type(LCcfgStore)=='table' and LCcfgStore or {};
 
 LCcfg = {
-	get = function(name)
-		return LCcfgStore[name];
+	get = function(name,ifNil)
+		
+		local ret = LCcfgStore[name];
+		if(ret==nil) then return ifNil;
+		else return ret; end
 	end
 	,set = function(name,val)
 		LCcfgStore[name] = val;

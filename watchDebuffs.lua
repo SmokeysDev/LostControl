@@ -58,6 +58,14 @@ Debuffs = {
 			,recoverMessage = 'is no longer stunned'
 		}
 	}
+	,getDebuffMessage = function(dbType) {
+		if(Debuff.types[dbType]==nil) then return ''; end
+		return LCcfg.get('db_message_'..dbType,Debuff.types[dbType].message);
+	}
+	,getDebuffRecoverMessage = function(dbType) {
+		if(Debuff.types[dbType]==nil) then return ''; end
+		return LCcfg.get('db_recovermessage_'..dbType,Debuff.types[dbType].recoverMessage);
+	}
 	,emptyTypeCache = function()
 		for type,info in pairs(Debuffs.types) do
 			Debuffs.types[type].debuffs = {}
@@ -95,9 +103,9 @@ Debuffs = {
 				local repeatLimit = info.repeatLimit or 5;
 				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
-				local message = info.message;
+				local message = Debuffs.getDebuffMessage(dbType);
 				if(type(message)=="function") then message = message(debuff); end
-				local recoverMessage = info.recoverMessage;
+				local recoverMessage = Debuffs.getDebuffRecoverMessage(dbType);
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);

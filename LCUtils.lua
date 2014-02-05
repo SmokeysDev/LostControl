@@ -41,9 +41,8 @@ end
 
 LCU.sendMsg = function(msg,priv)
 	priv = priv or LCU.debugMode
-	local chan = IsInGroup() and 'PARTY' or (IsInRaid() and 'RAID' or 'SAY')
 	if(priv == true) then print(msg)
-	else LCMessage(msg,chan,2) end
+	else LCMessage(msg) end
 end
 
 LCU.announceStateChange = function(action)
@@ -71,7 +70,6 @@ SLASH_LostControl2 = "/lostcontrol"
 local SlashCmd = {}
 function SlashCmd:help()
 	print(LCU.addonName, "slash commands:")
-	print('  -  debug [on/off]')
 	print('  -  disable [debuff type] (e.g. '..SLASH_LostControl1..' disable silence)')
 	print('  -  enable [debuff type] (e.g. '..SLASH_LostControl1..' enable slow)')
 	print('  -  status [debuff type] (e.g. '..SLASH_LostControl1..' status incap)')

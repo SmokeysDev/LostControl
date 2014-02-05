@@ -13,7 +13,7 @@ Debuffs = {
 			debuff = false
 			,enabled = true
 			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
-			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented'}
+			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented','unable to act'}
 			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer incapacitated'
 		}
@@ -58,14 +58,14 @@ Debuffs = {
 			,recoverMessage = 'is no longer stunned'
 		}
 	}
-	,getDebuffMessage = function(dbType) {
+	,getDebuffMessage = function(dbType)
 		if(Debuff.types[dbType]==nil) then return ''; end
 		return LCcfg.get('db_message_'..dbType,Debuff.types[dbType].message);
-	}
-	,getDebuffRecoverMessage = function(dbType) {
+	end
+	,getDebuffRecoverMessage = function(dbType)
 		if(Debuff.types[dbType]==nil) then return ''; end
 		return LCcfg.get('db_recovermessage_'..dbType,Debuff.types[dbType].recoverMessage);
-	}
+	end
 	,emptyTypeCache = function()
 		for type,info in pairs(Debuffs.types) do
 			Debuffs.types[type].debuffs = {}

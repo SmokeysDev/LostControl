@@ -70,7 +70,6 @@ SLASH_LostControl2 = "/lostcontrol"
 local SlashCmd = {}
 function SlashCmd:help()
 	print(LCU.addonName, "slash commands:")
-	print('  -  debug [on/off]')
 	print('  -  disable [debuff type] (e.g. '..SLASH_LostControl1..' disable silence)')
 	print('  -  enable [debuff type] (e.g. '..SLASH_LostControl1..' enable slow)')
 	print('  -  status [debuff type] (e.g. '..SLASH_LostControl1..' status incap)')

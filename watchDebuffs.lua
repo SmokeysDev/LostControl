@@ -94,7 +94,6 @@ Debuffs = {
 		return ret;
 	end
 	,checkDebuffs = function()
-		local auraType = LCU.debugMode and 'HELPFUL' or 'HARMFUL';
 		for dbType,info in pairs(Debuffs.types) do
 			if(info.debuff ~= false) then
 				local debuff = info.debuff;
@@ -136,9 +135,8 @@ Debuffs = {
 		who = who or "player";
 		local debuffs = {}
 		Debuffs.emptyTypeCache();
-		local auraType = LCU.debugMode and 'HELPFUL' or 'HARMFUL';
 		for i=1,40 do
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or '';
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};

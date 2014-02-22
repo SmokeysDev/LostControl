@@ -59,12 +59,12 @@ Debuffs = {
 		}
 	}
 	,getDebuffMessage = function(dbType)
-		if(Debuff.types[dbType]==nil) then return ''; end
-		return LCcfg.get('db_message_'..dbType,Debuff.types[dbType].message);
+		if(Debuffs.types[dbType]==nil) then return ''; end
+		return LCcfg.get('db_message_'..dbType,Debuffs.types[dbType].message);
 	end
 	,getDebuffRecoverMessage = function(dbType)
-		if(Debuff.types[dbType]==nil) then return ''; end
-		return LCcfg.get('db_recovermessage_'..dbType,Debuff.types[dbType].recoverMessage);
+		if(Debuffs.types[dbType]==nil) then return ''; end
+		return LCcfg.get('db_recovermessage_'..dbType,Debuffs.types[dbType].recoverMessage);
 	end
 	,emptyTypeCache = function()
 		for type,info in pairs(Debuffs.types) do

@@ -15,5 +15,6 @@ LCcfg.lua
 LCUtils.lua
 LCOptions.lua
 watchDebuffs.lua
+debuffDB.lua
 LostControl.lua
 LostControl.xml

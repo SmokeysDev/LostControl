@@ -12,7 +12,7 @@ Debuffs = {
 		,incap = {
 			debuff = false
 			,enabled = true
-			,names = {'Polymorph','Freeze','Fear','Hex','Hibernate'}
+			,names = {'Polymorph','Freeze','Hex','Hibernate'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented','unable to act'}
 			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer incapacitated'
@@ -58,6 +58,34 @@ Debuffs = {
 			,recoverMessage = 'is no longer stunned'
 		}
 	}
+	,addName = function(dbType,name)
+		if(Debuffs.types[dbType]==nil) then return false; end
+		local found = false;
+		for k,v in pairs(Debuffs.types[dbType].names) do
+			if(v == name) then found = true; end
+		end
+		if(found == false) then table.insert(Debuffs.types[dbType].names,name); end
+	end
+	,addNames = function(dbType,names)
+		for k,name in pairs(names) do
+			Debuffs.addName(dbType,name);
+		end
+	end
+	,addDesc = function(dbType,desc)
+		if(Debuffs.types[dbType]==nil or type(desc)~='string') then return false; end
+		local found = false;
+		for k,v in pairs(Debuffs.types[dbType].descTerms) do
+			if(v == desc) then found = true; end
+		end
+		if(found == false) then
+			table.insert(Debuffs.types[dbType].descTerms,desc);
+		end
+	end
+	,addDescs = function(dbType,descs)
+		for k,desc in pairs(descs) do
+			Debuffs.addDesc(dbType,desc);
+		end
+	end
 	,getDebuffMessage = function(dbType)
 		if(Debuffs.types[dbType]==nil) then return ''; end
 		return LCcfg.get('db_message_'..dbType,Debuffs.types[dbType].message);
@@ -117,7 +145,7 @@ Debuffs = {
 					Debuffs.types[dbType].lastAnnounce = theTime;
 				elseif(debuff.remaining<=0 or stillThere==false) then
 					LCU.announcePlayer(recoverMessage);
-					Debuffs.types[dbType].lastAnnounce = 0;
+					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-1);
 					Debuffs.types[dbType].debuff = false;
 				end
 			end

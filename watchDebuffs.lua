@@ -142,7 +142,6 @@ Debuffs = {
 					LCU.announcePlayer(recoverMessage);
 					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-1);
 					Debuffs.types[dbType].debuff = false;
-					Debuffs._fakeAura = false;
 				end
 			end
 		end
@@ -170,6 +169,7 @@ Debuffs = {
 			duration = fakeA.length;
 			expires = GetTime()+fakeA.remaining;
 			id = fakeA.id;
+			Debuffs._fakeAura = false;
 			return n,rank,_,_,dbType,duration,expires,_,_,_,id;
 		else
 			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
@@ -178,9 +178,11 @@ Debuffs = {
 	end
 	,get = function(who)
 		who = who or "player";
-		local debuffs = {}
-		for i=1,40 do
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,i,'HARMFUL');
+		local debuffs = {};
+		local scanAuras = true;
+		local auraI = 1;
+		while(scanAuras==true) do
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or '';
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
@@ -196,6 +198,8 @@ Debuffs = {
 					end
 				end
 			end
+			if(n == nil or auraI >= 40) then scanAuras = false; end
+			auraI = auraI+1;
 		end
 		if(not LCU[who]) then LCU[who] = {}; end
 		LCU[who]['debuffs'] = debuffs;

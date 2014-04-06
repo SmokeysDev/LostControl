@@ -147,6 +147,7 @@ Debuffs = {
 					LCU.announcePlayer(recoverMessage);
 					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-1);
 					Debuffs.types[dbType].debuff = false;
+					Debuffs._fakeAura = false;
 				end
 			end
 		end
@@ -159,12 +160,33 @@ Debuffs = {
 		if(debuff.rank~='') then debuff.rank = ' '..tostring(debuff.rank); end
 		return "|Hspell:" .. debuff.id .."|h|r|cff71d5ff[" .. debuff.name .. debuff.rank .. "]|r|h";
 	end
+	,_fakeAura = false
+	,addFakeAura = function(type,auraData)
+		Debuffs._fakeAura = auraData;
+	end
+	,getAura = function(who,i,auraType)
+		local a = UnitAura(who,i,auraType);
+		if(a==nil and Debuffs._fakeAura) then
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id;
+			local fakeA = Debuffs._fakeAura;
+			n = fakeA.name;
+			rank = fakeA.rank;
+			dbType = fakeA.type;
+			duration = fakeA.length;
+			expires = GetTime()+fakeA.remaining;
+			id = fakeA.id;
+			return n,rank,_,_,dbType,duration,expires,_,_,_,id;
+		else
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
+			return n,rank,_,_,dbType,duration,expires,_,_,_,id;
+		end
+	end
 	,get = function(who)
 		who = who or "player";
 		local debuffs = {}
 		Debuffs.emptyTypeCache();
 		for i=1,40 do
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,'HARMFUL');
+			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,i,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or '';
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
@@ -173,7 +195,7 @@ Debuffs = {
 				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
 				if(dbType~=false) then
 					local currD = Debuffs.types[dbType].debuff;
-					if(type(currD)=='table' and not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime'))) then
+					if(currD==false or (type(currD)=='table' and not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime')))) then
 						if(currD==false or currD.remaining < debuff.remaining or (debuff.remaining<currD.remaining and debuff.id==currD.id)) then
 							Debuffs.types[dbType].debuff = debuff;
 						end
@@ -189,7 +211,8 @@ Debuffs = {
 		local tests = {
 			slow = 31589 --Slow
 			,fear = 5782 --Fear
-			,incap = 115078 --Paralysis
+			--,incap = 115078 --Paralysis
+			,incap = 115877 --Fully Petrified
 			,stun = 853 --Hammer of Justice
 			,sleep = 31298 --Sleep
 			,root = 339 --Entangling Roots
@@ -200,7 +223,7 @@ Debuffs = {
 			local desc = GetSpellDescription(dbid);
 			local spName,spRank = GetSpellInfo(dbid);
 			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
-			Debuffs.types[dbType].debuff = debuff;
+			Debuffs.addFakeAura('HARMFUL',debuff);
 		end
 	end
 }
@@ -213,6 +236,7 @@ function checkDebuffs()
 	for dbType,db in pairs(Debuffs.types) do
 		if(db.debuff and db.debuff.type == 'test') then db.debuff.remaining = db.debuff.remaining-0.25; end
 	end
+	if(Debuffs._fakeAura ~= false) then Debuffs._fakeAura.remaining = Debuffs._fakeAura.remaining-0.25; end
 	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
 		for k,debuff in pairs(LCU.player.debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'

@@ -41,6 +41,7 @@ local charJumped = 0
 local fallAnnounced = 0
 local function jumpAscendHook(arg1)
 	charJumped = 1
+	fallingFrames = 0
 end
 hooksecurefunc('JumpOrAscendStart',jumpAscendHook)
 

@@ -94,11 +94,6 @@ Debuffs = {
 		if(Debuffs.types[dbType]==nil) then return ''; end
 		return LCcfg.get('db_recovermessage_'..dbType,Debuffs.types[dbType].recoverMessage);
 	end
-	,emptyTypeCache = function()
-		for type,info in pairs(Debuffs.types) do
-			Debuffs.types[type].debuffs = {}
-		end
-	end
 	,isType = function(debuff,dbType)
 		if(Debuffs.types[dbType]==nil or not LCcfg.watching(dbType)) then return false; end
 		for k,v in pairs(Debuffs.types[dbType].names) do
@@ -184,7 +179,6 @@ Debuffs = {
 	,get = function(who)
 		who = who or "player";
 		local debuffs = {}
-		Debuffs.emptyTypeCache();
 		for i=1,40 do
 			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,i,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then

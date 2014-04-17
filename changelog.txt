@@ -1,0 +1,144 @@
+
+2014-02-22
+----------
+v: 2.3.1
+----------
+
+Fixed bug introduced in last update, blocking messages.
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-02-01
+----------
+v: 2.3
+----------
+
+Added 'sleep' debuff
+
+Made debuff list in config panel show in alphabetical order.
+
+Fixed bug wherein excessive jumping could proc either the 'airborne' or 'landed' message
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-02-01
+----------
+v: 2.2
+----------
+
+Reformatted some of the config page elements.
+
+Added config for "min debuff time" - current choices are "any", "2 sec", "3 sec" - this allows you to stop particularly short debuffs from being mentioned.
+
+Some behind-the-scenes improvements.
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-25
+----------
+v: 2.1
+----------
+
+Added GUI options in the Interface > Addons menu.
+
+There are now easy checkboxes to toggle certain debuff types, and selection boxes to choose what channel the messages should be broadcast to when in a 5-man instance or a raid
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-24
+----------
+v: 1.5
+----------
+
+Increased time airborne required to proc the "Player airborne" message
+
+Added ability to enable/disable certain debuff types
+
+Added ability to select whether you want the warnings to be broadcast to your party, or the instance/raid you are in (separate settings for instances and raids)
+
+Added ability to check the current status of specific or all debuff checks
+
+New commands:
+
+"/lsctrl disable fear" = Stops the addon looking for and alerting for fear related debuffs
+"/lsctrl enable slow" = Tells the addon to also check for slow effects (slow is disabled by default)
+"/lsctrl status root" = Tells you whether root effects are currently being watched or not
+"/lsctrl status" = Tells you the watch status of all debuff types
+"/lsctrl instchan i" = Broadcast to the /instance channel when you are in a 5-man instance
+"/lsctrl raidchan p" = Broadcast to the /party channel (the default for raid and instance)
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-11
+----------
+v: 1.3
+----------
+
+Fixed 'player been sent flying' announcement. No longer procs for short falls, message also changed to "is airborne"
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-11
+----------
+v: 1.2
+----------
+
+Bug fix for spell links in channel messages
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-11
+----------
+v: 1.1
+----------
+
+Major bug fix regarding follow up announcements from the same debuff/debuff category.
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-11
+----------
+v: 1
+----------
+
+Improved rooting detection and a slightly larger delay between repeated announcements.
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-10
+----------
+v: 0.8a
+----------
+
+Improved debuff detection accuracy
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
+2014-01-10
+----------
+
+First version
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+

@@ -4,7 +4,7 @@ Debuffs.addDescs('incap',{
 });
 
 Debuffs.addDescs('slow',{
-	'[rR]educes .+ movement speed'
+	'[rR]educes ?.* movement speed'
 	,'[mM]ovement speed reduced'
 });
 

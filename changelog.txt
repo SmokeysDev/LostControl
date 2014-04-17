@@ -1,4 +1,27 @@
 
+2014-04-17
+----------
+v: 2.4
+----------
+
+Some behind-the-scenes improvements and tidy ups
+
+Fixed a recurring bug with improperly procced "player falling" message when spamming jump
+
+Added this changelog, for those who might be interested
+
+Added separate lua file (debuffDB.lua) for managing additions to the matched names/descriptions.
+The idea behind this is to potentially set up a separate database update for this one file, rather than updating the whole addon via Curse just to add a new description
+Feel free to modify this yourself, but be aware that it will be overwritten when the addon updates
+
+[Future changes]
+I am hoping to add a custom debuff name and description matcher in the options panel at some point.
+This will mean that if a debuff doesn't get noticed by the addon, you can hover over the debuff and manually add it's name/description to your player's config
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2014-02-22
 ----------
 v: 2.3.1

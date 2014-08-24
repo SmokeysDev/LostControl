@@ -16,10 +16,14 @@ function LostControl_OnEvent(self,event,arg1)
 		LCcfg.init();
 		LCU.optionsPanel = LCOptions(LostControlFrame);
 	end
+	if(event=="PLAYER_ENTERING_WORLD") then
+		LCU.player.updateInstanceInfo();
+	end
 end
 
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
 LostControlFrame:RegisterEvent("ADDON_LOADED");
+LostControlFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {
 	text = "Which debuff do you want to test?",

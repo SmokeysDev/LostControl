@@ -19,8 +19,13 @@ LCU.player = {
 		LCU.player.name = UnitName(who);
 		return role;
 	end
+	,inInstance = nil
+	,instanceType = 'none'
+	,updateInstanceInfo = function()
+		LCU.player.inInstance, LCU.player.instanceType = IsInInstance();
+	end
 }
-LCU.player.inInstance, LCU.player.instanceType = IsInInstance();
+LCU.player.updateInstanceInfo();
 LCU.player.updateRole();
 LCU.round = function(val, decimal)
   local exp = decimal and 10^decimal or 1;

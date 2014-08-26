@@ -1,4 +1,15 @@
 
+2014-08-24
+----------
+v: 2.5
+----------
+
+Major bugfix: Fixed issue wherein the addon was incorrectly detecting a player's status regarding instances
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2014-04-17
 ----------
 v: 2.4

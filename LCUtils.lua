@@ -61,6 +61,11 @@ LCU.announcePlayer = function(action)
 	return msg
 end
 
+LCU.foreach = function(tbl,func,useIpairs)
+	if(useIpairs) then for k,v in ipairs(tbl) do func(v,k,tbl); end
+	else for k,v in pairs(tbl) do func(v,k,tbl); end end
+end
+
 --------------------------------------
 --- REGISTERING CHAT SLASH COMMANDS
 --------------------------------------

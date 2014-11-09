@@ -130,7 +130,16 @@ Debuffs = {
 				local debuff = info.debuff;
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();
-				local repeatLimit = info.repeatLimit or 5;
+				local repeatLimit = nil;
+				if(info.repeatLimit) then
+					repeatLimit = info.repeatLimit;
+				else
+					repeatLimit = 5;
+					if(debuff.remaining >= 20) then repeatLimit = 7.5; end
+					if(debuff.remaining >= 30) then repeatLimit = 10; end
+					if(debuff.remaining >= 50) then repeatLimit = 15; end
+					if(debuff.remaining >= 75) then repeatLimit = 20; end
+				end
 				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
 				local message = Debuffs.getDebuffMessage(dbType);
@@ -149,6 +158,7 @@ Debuffs = {
 				elseif(debuff.remaining<=0 or stillThere==false) then
 					LCU.announcePlayer(recoverMessage);
 					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-1);
+					--Debuffs.types[dbType].lastAnnounce = theTime;
 					Debuffs.types[dbType].debuff = false;
 				end
 			end

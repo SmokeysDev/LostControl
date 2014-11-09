@@ -10,6 +10,11 @@
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol
 ## X-Curse-Repository-ID: wow/lostcontrol/mainline
+LCLang.lua
+lang\en.lua
+lang\es.lua
+lang\fr.lua
+
 LCMessage.lua
 LCcfg.lua
 LCUtils.lua

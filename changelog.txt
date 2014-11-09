@@ -1,4 +1,21 @@
 
+2014-11-09
+----------
+v: 2.6
+----------
+
+Added detection of charm effects
+
+Changed the time between callouts to dynamically increase for longer debuffs
+
+Added the 'say' channel
+
+Some behind-the-scenes improvements
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2014-08-24
 ----------
 v: 2.5

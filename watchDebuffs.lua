@@ -45,7 +45,7 @@ Debuffs = {
 			debuff = false
 			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
-			,descTerms = {' [sS]ilenced?','^Silenced'}
+			,descTerms = {' ?[sS]ilence[ds]?'}
 			,message = 'has been silenced for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer silenced'
 		}

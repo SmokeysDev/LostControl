@@ -9,6 +9,14 @@ Debuffs = {
 			,message = 'is feared for [remaining] seconds - {SPELL_LINK}'
 			,recoverMessage = 'is no longer feared'
 		}
+		,charm = {
+			debuff = false
+			,enabled = true
+			,names = {'Charm','Charmed'}
+			,descTerms = {'[cC]harmed'}
+			,message = 'has been charmed for [remaining] seconds - {SPELL_LINK}'
+			,recoverMessage = 'is no longer charmed'
+		}
 		,incap = {
 			debuff = false
 			,enabled = true

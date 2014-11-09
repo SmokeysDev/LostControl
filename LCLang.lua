@@ -1,4 +1,5 @@
 LCLang = {};
+LCLang.data = {};
 LCLang.currentLang = 'en';
 LCLang.languages = {
 	en = 'English',
@@ -14,11 +15,11 @@ LCLang.get = function(key,lang)
 	if(lang ~= nil) then
 		local cLang = LCLang.currentLang;
 		LCLang.loadLang(lang);
-		local ret = LCLang[key];
+		local ret = LCLang.data[key]~= nil and LCLang.data[key] or key;
 		LCLang.loadLang(cLang);
 		return ret;
 	else
-		return LCLang[key];
+		return LCLang.data[key]~= nil and LCLang.data[key] or key;
 	end
 end
 LCLang.dynaGet = function(key,lang)

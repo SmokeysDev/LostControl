@@ -54,6 +54,7 @@ end
 
 local usableChans = {
 	PARTY = 1
+	,SAY = 1
 	,INSTANCE_CHAT = 1
 	,RAID = 1
 };
@@ -85,7 +86,7 @@ end
 local function postMsg(msg,chan)
 	chan = getChanName(chan);
 	createChanTable(chan);
-	if(chan=="SAY") then print(msg)
+	if(chan=="SAY" and not IsInGroup()) then print(msg)
 	else SendChatMessage(msg,chan) end
 	local msgFound = false
 	for k,v in pairs(LCMessageLog[chan]) do

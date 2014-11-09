@@ -1,6 +1,6 @@
 LCLang = {};
 LCLang.data = {};
-LCLang.currentLang = 'en';
+LCLang.currentLang = 0;
 LCLang.languages = {
 	en = 'English',
 	es = 'Spanish',
@@ -12,6 +12,7 @@ LCLang.loadLang = function(lang)
 	LCU.sendMsg('LostControl: '..LCLang.get(LCLang.languages[lang]),true);
 end
 LCLang.get = function(key,lang)
+	if(LCLang.currentLang==0) then LCLang.loadLang('en'); end
 	if(lang ~= nil) then
 		local cLang = LCLang.currentLang;
 		LCLang.loadLang(lang);

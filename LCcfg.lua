@@ -2,7 +2,6 @@ LCcfgStore = type(LCcfgStore)=='table' and LCcfgStore or {};
 
 LCcfg = {
 	get = function(name,ifNil)
-		
 		local ret = LCcfgStore[name];
 		if(ret==nil) then return ifNil;
 		else return ret; end

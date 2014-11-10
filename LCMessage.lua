@@ -52,12 +52,18 @@ local function createChanTable(chan)
 	if(foundChan==false) then LCMessageLog[chan] = {} end
 end
 
+local usableChans = {
+	PARTY = 1
+	,SAY = 1
+	,INSTANCE_CHAT = 1
+	,RAID = 1
+};
 --
--- Output the message
--- then update cache
+-- Get the channel to use
 --
-local function postMsg(msg,chan)
-	chan = chan or nil
+local function getChanName(chan)
+	chan = chan or nil;
+	if(chan ~= nil and usableChans[chan] == nil) then chan = nil; end
 	if(chan == nil) then
 		chan = 'SAY'
 		if(LCU.player.inInstance and LCU.player.instanceType=='raid') then
@@ -70,8 +76,17 @@ local function postMsg(msg,chan)
 		end
 		if(IsInGroup() and LCU.player.inInstance==nil) then chan = 'PARTY' end
 	end
+	return chan;
+end
+
+--
+-- Output the message
+-- then update cache
+--
+local function postMsg(msg,chan)
+	chan = getChanName(chan);
 	createChanTable(chan);
-	if(chan=="SAY") then print(msg)
+	if(chan=="SAY" and not IsInGroup()) then print(msg)
 	else SendChatMessage(msg,chan) end
 	local msgFound = false
 	for k,v in pairs(LCMessageLog[chan]) do
@@ -90,6 +105,7 @@ end
 --
 function LCMessage(msg,chan,minTimeBetweenCalls)
 	minTimeBetweenCalls = minTimeBetweenCalls or 1.5
+	chan = getChanName(chan);
 	local alreadyPosted = messageExists(msg,chan)
 	if(alreadyPosted==false) then
 		postMsg(msg,chan)

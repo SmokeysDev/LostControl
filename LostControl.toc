@@ -1,15 +1,20 @@
-## Interface: 50400
+## Interface: 60000
 ## Title:  LostControl
-## Version:  2.5
+## Version:  2.6
 ## Author: Matt Bacon
 ## X-Email: einstein.matt@gmail.com
 ## X-Date: January 25th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
 ## SavedVariablesPerCharacter: LCcfgStore
-## X-Curse-Packaged-Version: v2.5
+## X-Curse-Packaged-Version: v2.6
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol
 ## X-Curse-Repository-ID: wow/lostcontrol/mainline
+LCLang.lua
+lang\en.lua
+lang\es.lua
+lang\fr.lua
+
 LCMessage.lua
 LCcfg.lua
 LCUtils.lua

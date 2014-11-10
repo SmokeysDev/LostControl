@@ -18,4 +18,8 @@ Debuffs.addDescs('slow',{
 	,'[mM]ovement speed reduced'
 });
 
-Debuffs.addDesc('stun','teleported you out of the Silver Enclave')
+Debuffs.addDesc('stun','teleported you out of the Silver Enclave');
+
+Debuffs.addDescs('silence',{
+	'prevent.* from casting spells'
+});

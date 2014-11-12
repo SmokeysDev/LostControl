@@ -9,7 +9,7 @@ LCLang.languages = {
 LCLang.loadLang = function(lang)
 	LCLang['loadLang_'..lang]();
 	LCLang.currentLang = lang;
-	LCU.sendMsg('LostControl: '..LCLang.get(LCLang.languages[lang]),true);
+	if(LCU and LCU.sendMsg) then LCU.sendMsg('LostControl: '..LCLang.get(LCLang.languages[lang]),true); end;
 end
 LCLang.get = function(key,lang)
 	if(LCLang.currentLang==0) then LCLang.loadLang('en'); end

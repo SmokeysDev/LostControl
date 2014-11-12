@@ -118,16 +118,18 @@ function SlashCmd:status(value)
 	end
 end
 function SlashCmd:instchan(value)
-	if(value=="PARTY" or value=="INSTANCE_CHAT") then
+	if(value=="SAY" or value=="PARTY" or value=="INSTANCE_CHAT") then
 		LCcfg.set('instanceChat',value);
 	end
+	if(value=="s" or value=="S" or value=="say") then LCcfg.set('instanceChat','SAY'); end
 	if(value=="p" or value=="P" or value=="party") then LCcfg.set('instanceChat','PARTY'); end
 	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.set('instanceChat','INSTANCE_CHAT'); end
 end
 function SlashCmd:raidchan(value)
-	if(value=="PARTY" or value=="RAID") then
+	if(value=="SAY" or value=="PARTY" or value=="RAID") then
 		LCcfg.set('raidChat',value);
 	end
+	if(value=="s" or value=="S" or value=="say") then LCcfg.set('raidChat','SAY'); end
 	if(value=="p" or value=="P" or value=="party") then LCcfg.set('raidChat','PARTY'); end
 	if(value=="r" or value=="R" or value=="raid") then LCcfg.set('raidChat','RAID'); end
 end

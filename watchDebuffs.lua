@@ -6,7 +6,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
-			,message = 'is feared for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('is feared for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer feared')
 		}
 		,charm = {
@@ -14,7 +14,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Charm','Charmed'}
 			,descTerms = {'[cC]harmed'}
-			,message = 'has been charmed for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('has been charmed for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer charmed')
 		}
 		,incap = {
@@ -22,7 +22,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Polymorph','Freeze','Hex','Hibernate'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented','unable to act'}
-			,message = 'is incapacitated for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('is incapacitated for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer incapacitated')
 		}
 		,sleep = {
@@ -30,7 +30,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Sleep'}
 			,descTerms = {'[dD]eep slumber','[sS]lumber','[aA]sleep','[sS]leeping'}
-			,message = 'is asleep for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('is asleep for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer asleep')
 		}
 		,root = {
@@ -38,7 +38,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Freeze','Root','Entangling Roots','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobiliz'}
-			,message = 'has been rooted for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('has been rooted for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer rooted')
 		}
 		,silence = {
@@ -46,7 +46,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
 			,descTerms = {' ?[sS]ilence[ds]?'}
-			,message = 'has been silenced for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('has been silenced for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer silenced')
 		}
 		,slow = {
@@ -54,7 +54,7 @@ Debuffs = {
 			,enabled = false
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
 			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
-			,message = 'has been slowed for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('has been slowed for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer slowed')
 		}
 		,stun = {
@@ -62,7 +62,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Stun','Stunned','Charge','Stomp'}
 			,descTerms = {' [sS]tun','^Stun'}
-			,message = 'has been stunned for [remaining] seconds - {SPELL_LINK}'
+			,message = LCLang.dynaGet('has been stunned for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer stunned')
 		}
 	}

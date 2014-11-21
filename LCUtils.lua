@@ -10,10 +10,10 @@ LCU.player = {
 		local role = string.lower(UnitGroupRolesAssigned(who));
 		if(role == "none" and who == "player") then
 			local isLeader, isTank, isHealer, isDPS = GetLFGRoles();
-			if(isTank==true) 	then role = 'tank' end
-			if(isHealer==true)  then role = 'healer' end
-			if(isDPS==true) 	then role = 'dps' end
-			if(role=="none") 	then role = 'player' end
+			if(isTank==true) 	then role = LCLang.get('tank') end
+			if(isHealer==true)  then role = LCLang.get('healer') end
+			if(isDPS==true) 	then role = LCLang.get('dps') end
+			if(role=="none") 	then role = LCLang.get('player') end
 		end
 		LCU.player.role = role;
 		LCU.player.name = UnitName(who);
@@ -52,7 +52,7 @@ end
 
 LCU.announceStateChange = function(action)
 	LCU.player.updateRole();
-	local msgStart = LCU.player.role=='dps' and 'A DPS' or 'The '..LCU.player.role
+	local msgStart = LCU.player.role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
 	local msg = msgStart..' ('..LCU.player.name..') has '..action
 	LCU.sendMsg(msg)
 	return msg
@@ -60,7 +60,7 @@ end
 
 LCU.announcePlayer = function(action)
 	LCU.player.updateRole();
-	local msgStart = LCU.player.role=='dps' and 'A DPS' or 'The '..LCU.player.role
+	local msgStart = LCU.player.role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
 	local msg = msgStart..' ('..LCU.player.name..') '..action
 	LCU.sendMsg(msg)
 	return msg
@@ -87,10 +87,10 @@ end
 function SlashCmd:debug(value)
 	if value == "on" then
 		LCU.debugMode = true
-		print(LCU.addonName, "debugging enabled.")
+		print(LCU.addonName, LCLang.get("debugging enabled")..".")
 	elseif value == "off" then
 		LCU.debugMode = false
-		print(LCU.addonName, "debugging disabled.")
+		print(LCU.addonName, LCLang.get("debugging disabled")..".")
 	end
 end
 function SlashCmd:enable(value)
@@ -98,7 +98,7 @@ function SlashCmd:enable(value)
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = true;
 		LCcfg.disableWatch(value,false);
-		if(Debuffs.types[value].enabled and not prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been enabled'); end
+		if(Debuffs.types[value].enabled and not prevVal) then print('"'..LCU.upperFirst(value)..'" '..LCLang.get('checks have been enabled')); end
 	end
 end
 function SlashCmd:disable(value)
@@ -106,33 +106,35 @@ function SlashCmd:disable(value)
 		local prevVal = Debuffs.types[value].enabled;
 		Debuffs.types[value].enabled = false;
 		LCcfg.disableWatch(value,true);
-		if(not Debuffs.types[value].enabled and prevVal) then print('"'..LCU.upperFirst(value)..'" checks have been disabled'); end
+		if(not Debuffs.types[value].enabled and prevVal) then print('"'..LCU.upperFirst(value)..'" '..LCLang.get('checks have been disabled')); end
 	end
 end
 function SlashCmd:status(value)
 	if(type(value)=="string") then
 		if(Debuffs and Debuffs.types and Debuffs.types[value]) then
-			print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and 'enabled' or 'disabled'));
+			print('"'..LCU.upperFirst(value)..'" checks are currently '..(Debuffs.types[value].enabled and LCLang.get('enabled') or LCLang.get('disabled')));
 		end
 	else
 		print('--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---');
 		for k,v in pairs(Debuffs.types) do
-			print('"'..LCU.upperFirst(k)..'" checks are currently '..(LCcfg.watching(k) and 'enabled' or '- disabled -'));
+			print('"'..LCU.upperFirst(k)..'" checks are currently '..(LCcfg.watching(k) and LCLang.get('enabled') or LCLang.get('- disabled -')));
 		end
 		print('--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---');
 	end
 end
 function SlashCmd:instchan(value)
-	if(value=="PARTY" or value=="INSTANCE_CHAT") then
+	if(value=="SAY" or value=="PARTY" or value=="INSTANCE_CHAT") then
 		LCcfg.set('instanceChat',value);
 	end
+	if(value=="s" or value=="S" or value=="say") then LCcfg.set('instanceChat','SAY'); end
 	if(value=="p" or value=="P" or value=="party") then LCcfg.set('instanceChat','PARTY'); end
 	if(value=="i" or value=="I" or value=="instance" or value=="INSTANCE") then LCcfg.set('instanceChat','INSTANCE_CHAT'); end
 end
 function SlashCmd:raidchan(value)
-	if(value=="PARTY" or value=="RAID") then
+	if(value=="SAY" or value=="PARTY" or value=="RAID") then
 		LCcfg.set('raidChat',value);
 	end
+	if(value=="s" or value=="S" or value=="say") then LCcfg.set('raidChat','SAY'); end
 	if(value=="p" or value=="P" or value=="party") then LCcfg.set('raidChat','PARTY'); end
 	if(value=="r" or value=="R" or value=="raid") then LCcfg.set('raidChat','RAID'); end
 end

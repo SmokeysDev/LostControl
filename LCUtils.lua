@@ -44,6 +44,16 @@ LCU.bool = function(val)
   return not not val;
 end
 
+LCU.cloneTable = function(tbl)
+	local cloned = {}
+	i,v = next(tbl, nil)
+	while i do
+		cloned[i] = v
+		i,v = next(tbl,i)
+	end
+	return cloned;
+end
+
 LCU.sendMsg = function(msg,priv)
 	priv = priv or LCU.debugMode
 	if(priv == true) then print(msg)

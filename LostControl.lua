@@ -18,12 +18,26 @@ function LostControl_OnEvent(self,event,arg1)
 	end
 	if(event=="PLAYER_ENTERING_WORLD") then
 		LCU.player.updateInstanceInfo();
+		LCU.player.updateRole();
+		LCcfg.init();
+	end
+	if(event=="LFG_ROLE_UPDATE") then
+		LCU.player.updateInstanceInfo();
+		LCU.player.updateRole();
+		LCcfg.init();
+	end
+	if(event=="PLAYER_ROLES_ASSIGNED") then
+		LCU.player.updateInstanceInfo();
+		LCU.player.updateRole();
+		LCcfg.init();
 	end
 end
 
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
 LostControlFrame:RegisterEvent("ADDON_LOADED");
 LostControlFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+LostControlFrame:RegisterEvent("LFG_ROLE_UPDATE");
+LostControlFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {
 	text = "Which debuff do you want to test?",

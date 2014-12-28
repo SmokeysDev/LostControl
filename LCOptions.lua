@@ -44,6 +44,11 @@ function LCOptions(LostControlFrame)
 	OptionsPanel.elements = {};
 
 	OptionsPanel.elements.title = AddText(LCU.addonName,OptionsPanel,"GameFontNormalLarge",16,-16);
+	OptionsPanel:SetScript("OnShow", function()
+		LCU.player.updateRole();
+		local role = LCLang.get(LCU.player.role == 'player' and 'fallback' or LCU.player.role);
+		OptionsPanel.elements.title:SetText(LCU.addonName..' - '..role..' settings');
+	end);
 	local notes = GetAddOnMetadata(LCU.addonName,"Notes");
 	OptionsPanel.elements.subTitle = AddText(notes,OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.title);
 	OptionsPanel.elements.watchTypesTitle = AddText('Watch debuff types:',OptionsPanel,"GameFontNormal",0,-20,OptionsPanel.elements.subTitle);
@@ -60,6 +65,9 @@ function LCOptions(LostControlFrame)
 		local locY = i==0 and -12 or -5;
 		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, LCU.upperFirst(dbType), 'Enable watching for '..dbType..' effects', lastEl);
 		OptionsPanel.elements[elKey]:SetChecked(LCcfg.watching(dbType));
+		OptionsPanel.elements[elKey]:SetScript("OnShow", function()
+			OptionsPanel.elements[elKey]:SetChecked(LCcfg.watching(dbType));
+		end);
 		OptionsPanel.elements[elKey]:SetScript("OnClick",
 			function()
 				if(OptionsPanel.elements[elKey]:GetChecked() == 1) then LCcfg.disableWatch(dbType,false);
@@ -75,6 +83,8 @@ function LCOptions(LostControlFrame)
 			{"Any",0}
 			,{"2 sec",2}
 			,{"3 sec",3}
+			,{"4 sec",4}
+			,{"5 sec",5}
 		}
 		,(function(self) LCcfg.set('minDebuffTime',self.value) end)
 		,(function(val) return val==LCcfg.get('minDebuffTime') end)

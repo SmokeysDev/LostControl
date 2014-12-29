@@ -112,6 +112,7 @@ function LCOptions(LostControlFrame)
 		,(function(val) return val==LCcfg.get('raidChat','PARTY') end)
 		,0,-35,OptionsPanel.elements.instChat);
 
+	OptionsPanel:Hide();
 	InterfaceOptions_AddCategory(OptionsPanel);
 	return OptionsPanel;
 end

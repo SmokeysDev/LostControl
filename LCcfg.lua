@@ -43,7 +43,6 @@ LCcfg = {
 		end
 	end
 	,watching = function(dbType)
-	,init = function()
 		local role = LCcfg.getPlayerSpecRole();
 		if(role == 'unknown') then role = 'original'; end
 		if(LCcfgStore[role] == nil) then
@@ -53,9 +52,13 @@ LCcfg = {
 			return (disabledWatches[dbType]==nil or disabledWatches[dbType]==false);
 		end
 	end
+	,setDefaults = function()
 		LCcfg.setDefault('instanceChat','PARTY');
 		LCcfg.setDefault('raidChat','PARTY');
 		LCcfg.setDefault('disabledWatches',{slow=true});
-		LCcfg.setDefault('minDebuffTime',2);
+		LCcfg.setDefault('minDebuffTime',3);
+	end
+	,init = function()
+		LCcfg.setDefaults();
 	end
 }

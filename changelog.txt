@@ -1,4 +1,21 @@
 
+2014-12-29
+----------
+v: 3.0
+----------
+
+Added support for multiple languages (translations require completion)
+
+Changed storage of configs, so that they are now not only per character, but also per role (dps/healer/tank)
+
+Fixed a bug introduced in v2.6 with the 'say' channel
+
+Some behind-the-scenes improvements
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2014-11-09
 ----------
 v: 2.6

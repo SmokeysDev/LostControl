@@ -71,7 +71,7 @@ function LCOptions(LostControlFrame)
 		end);
 		OptionsPanel.elements[elKey]:SetScript("OnClick",
 			function()
-				if(OptionsPanel.elements[elKey]:GetChecked() == 1) then LCcfg.disableWatch(dbType,false);
+				if(OptionsPanel.elements[elKey]:GetChecked()) then LCcfg.disableWatch(dbType,false);
 				else LCcfg.disableWatch(dbType,true); end
 			end
 		);

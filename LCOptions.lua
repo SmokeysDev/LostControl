@@ -87,7 +87,7 @@ function LCOptions(LostControlFrame)
 			,{"5 sec",5}
 		}
 		,(function(self) LCcfg.set('minDebuffTime',self.value) end)
-		,(function(val) return val==LCcfg.get('minDebuffTime') end)
+		,(function(val) return val==LCcfg.get('minDebuffTime',3) end)
 		,-15,-40,lastEl);
 
 	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
@@ -97,7 +97,7 @@ function LCOptions(LostControlFrame)
 			,{"Instance (/i)","INSTANCE_CHAT"}
 		}
 		,(function(self) LCcfg.set('instanceChat',self.value) end)
-		,(function(val) return val==LCcfg.get('instanceChat') end)
+		,(function(val) return val==LCcfg.get('instanceChat','PARTY') end)
 		,-20,-28,OptionsPanel.elements.chanDropsTitle);
 
 	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
@@ -107,7 +107,7 @@ function LCOptions(LostControlFrame)
 			,{"Raid (/r)","RAID"}
 		}
 		,(function(self) LCcfg.set('raidChat',self.value) end)
-		,(function(val) return val==LCcfg.get('raidChat') end)
+		,(function(val) return val==LCcfg.get('raidChat','PARTY') end)
 		,0,-35,OptionsPanel.elements.instChat);
 
 	InterfaceOptions_AddCategory(OptionsPanel);

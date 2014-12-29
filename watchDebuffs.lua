@@ -152,7 +152,7 @@ Debuffs = {
 				for _,d in pairs(LCU.player.debuffs) do
 					if(d.name == debuff.name) then stillThere = true; end
 				end
-				if(debuff.remaining>0 and safeToAnnounce) then
+				if(debuff.remaining>3 and safeToAnnounce) then
 					LCU.announcePlayer(message);
 					Debuffs.types[dbType].lastAnnounce = theTime;
 				elseif(debuff.remaining<=0 or stillThere==false) then

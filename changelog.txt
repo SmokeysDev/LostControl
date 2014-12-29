@@ -1,6 +1,16 @@
 
 2014-12-29
 ----------
+v: 3.1
+----------
+
+Stopped messages appearing too close to each other near the end (avoids "1 second remaining", "no longer..." chat spam)
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+2014-12-29
+----------
 v: 3.0
 ----------
 

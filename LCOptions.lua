@@ -39,7 +39,8 @@ end
 
 function LCOptions(LostControlFrame)
 	local O = LCU.addonName .. "OptionsPanel";
-	local OptionsPanel = CreateFrame("Frame", O);
+	LCU.optionsPanel = CreateFrame("Frame", O);
+	local OptionsPanel = LCU.optionsPanel;
 	OptionsPanel.name = LCU.addonName;
 	OptionsPanel.elements = {};
 

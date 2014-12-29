@@ -2,6 +2,7 @@ LCU = {};
 LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
 LCU.debugMode = false;
+LCU.optionsPanel = nil;
 LCU.player = {
 	role = nil
 	,name = UnitName("player")

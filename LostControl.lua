@@ -34,6 +34,16 @@ function LostControl_OnEvent(self,event,arg1)
 	if(event=="ACTIVE_TALENT_GROUP_CHANGED") then
 		LCU.player.updateSpec();
 	end
+	if(event=="PLAYER_LOGOUT") then
+		-- Remove 'false' references to watches in cfg.disabledWatches
+		local roleWatches = LCU.cloneTable(LCcfg.get('disabledWatches'));
+		if(type(roleWatches)=="table") then
+			LCcfg.set('disabledWatches',{});
+			for db,v in pairs(roleWatches) do
+				if(v==true) then LCcfg.disableWatch(db,true); end
+			end
+		end
+	end
 end
 
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
@@ -42,6 +52,7 @@ LostControlFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 LostControlFrame:RegisterEvent("LFG_ROLE_UPDATE");
 LostControlFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
 LostControlFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
+LostControlFrame:RegisterEvent("PLAYER_LOGOUT");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {
 	text = "Which debuff do you want to test?",

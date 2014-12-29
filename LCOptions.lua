@@ -44,11 +44,12 @@ function LCOptions(LostControlFrame)
 	OptionsPanel.name = LCU.addonName;
 	OptionsPanel.elements = {};
 
-	OptionsPanel.elements.title = AddText(LCU.addonName,OptionsPanel,"GameFontNormalLarge",16,-16);
+	LCU.player.updateSpec();
+
+	OptionsPanel.elements.title = AddText(LCU.addonName..' - '..LCcfg.getPlayerSpecRole()..' settings ('..LCcfg.getPlayerSpecName()..')',OptionsPanel,"GameFontNormalLarge",16,-16);
 	OptionsPanel:SetScript("OnShow", function()
-		LCU.player.updateRole();
-		local role = LCLang.get(LCU.player.role == 'player' and 'fallback' or LCU.player.role);
-		OptionsPanel.elements.title:SetText(LCU.addonName..' - '..role..' settings');
+		LCU.player.updateSpec();
+		OptionsPanel.elements.title:SetText(LCU.addonName..' - '..LCcfg.getPlayerSpecRole()..' settings ('..LCcfg.getPlayerSpecName()..')');
 	end);
 	local notes = GetAddOnMetadata(LCU.addonName,"Notes");
 	OptionsPanel.elements.subTitle = AddText(notes,OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.title);

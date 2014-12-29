@@ -5,6 +5,7 @@ LCU.debugMode = false;
 LCU.optionsPanel = nil;
 LCU.player = {
 	role = nil
+	,spec = nil
 	,name = UnitName("player")
 	,updateRole = function(who)
 		who = who or "player";
@@ -20,14 +21,49 @@ LCU.player = {
 		LCU.player.name = UnitName(who);
 		return role;
 	end
+	,updateSpec = function()
+		local currentSpec = GetSpecialization();
+		local currentSpecName = nil;
+		local currentSpecRole = nil;
+		if(currentSpec ~= nil) then
+			currentSpecName = select(2, GetSpecializationInfo(currentSpec));
+			currentSpecRole = GetSpecializationRole(currentSpec);
+			currentSpecRole = (currentSpecRole~=nil and currentSpecRole~=0) and string.lower(currentSpecRole) or nil;
+			if(currentSpecRole=='damager') then currentSpecRole = 'dps'; end
+		end
+		LCU.player.spec = {
+			index = LCU.tern(currentSpec~=nil, currentSpec, nil)
+			,name = LCU.tern(currentSpecName~=nil, currentSpecName, nil)
+			,role = LCU.tern(currentSpecRole~=nil, currentSpecRole, nil)
+		};
+		-- Looking out for old config structure
+		if(LCcfgStore.disabledWatches ~= nil) then
+			local settings = LCU.cloneTable(LCcfgStore);
+			LCcfgStore = {};
+			LCcfgStore['original'] = LCU.cloneTable(settings);
+			LCcfgStore['original'].disabledWatches = {};
+			for k,v in pairs(settings.disabledWatches) do
+				LCcfgStore['original'].disabledWatches[k] = v;
+			end
+		end
+		-- If we do have configs for 'unknown' but not for our current role - copy unknown to our role specific one
+		if(type(LCcfgStore['original'])=='table' and LCU.player.spec.role and type(LCcfgStore[LCU.player.spec.role])~='table') then
+			LCcfgStore[LCU.player.spec.role] = LCU.cloneTable(LCcfgStore['original']);
+			LCcfgStore[LCU.player.spec.role].disabledWatches = {};
+			for k,v in pairs(LCcfgStore['original'].disabledWatches) do
+				LCcfgStore[LCU.player.spec.role].disabledWatches[k] = v;
+			end
+		end
+		-- If we found valid spec info, ensure our configs have their defaults set
+		if(LCU.player.spec and LCU.player.spec.role) then LCcfg.setDefaults(); end
+	end
 	,inInstance = nil
 	,instanceType = 'none'
 	,updateInstanceInfo = function()
 		LCU.player.inInstance, LCU.player.instanceType = IsInInstance();
 	end
 }
-LCU.player.updateInstanceInfo();
-LCU.player.updateRole();
+
 LCU.round = function(val, decimal)
   local exp = decimal and 10^decimal or 1;
   return math.ceil(val * exp - 0.5) / exp;
@@ -105,6 +141,11 @@ LCU.foreach = function(tbl,func,useIpairs)
 	if(useIpairs) then for k,v in ipairs(tbl) do func(v,k,tbl); end
 	else for k,v in pairs(tbl) do func(v,k,tbl); end end
 end
+
+
+LCU.player.updateInstanceInfo();
+LCU.player.updateRole();
+LCU.player.updateSpec();
 
 --------------------------------------
 --- REGISTERING CHAT SLASH COMMANDS

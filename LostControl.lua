@@ -31,6 +31,9 @@ function LostControl_OnEvent(self,event,arg1)
 		LCU.player.updateRole();
 		LCcfg.init();
 	end
+	if(event=="ACTIVE_TALENT_GROUP_CHANGED") then
+		LCU.player.updateSpec();
+	end
 end
 
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
@@ -38,6 +41,7 @@ LostControlFrame:RegisterEvent("ADDON_LOADED");
 LostControlFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 LostControlFrame:RegisterEvent("LFG_ROLE_UPDATE");
 LostControlFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
+LostControlFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {
 	text = "Which debuff do you want to test?",

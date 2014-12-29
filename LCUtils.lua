@@ -45,14 +45,38 @@ LCU.bool = function(val)
   return not not val;
 end
 
-LCU.cloneTable = function(tbl)
-	local cloned = {}
-	i,v = next(tbl, nil)
-	while i do
-		cloned[i] = v
-		i,v = next(tbl,i)
+LCU.deepcopy = function(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[orig_key] = LCU.deepcopy(orig_value)
+        end
+        setmetatable(copy, LCU.deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+LCU.cloneTable = function(tbl,deep)
+	if(type(deep)~="boolean") then deep = true; end
+	if(deep) then
+		return LCU.deepcopy(tbl);
+	else
+		local cloned = {};
+		i,v = next(tbl, nil);
+		while i do
+			cloned[i] = (type(v)=="table") and LCU.cloneTable(v) or v;
+			i,v = next(tbl,i);
+		end
+		return cloned;
 	end
-	return cloned;
+end
+
+LCU.tern = function(check,tru,fals)
+	if(check) then return tru;
+	else return fals; end
 end
 
 LCU.sendMsg = function(msg,priv)

@@ -2,15 +2,11 @@ LCcfgStore = type(LCcfgStore)=='table' and LCcfgStore or {};
 
 LCcfg = {
 	get = function(name,ifNil)
-		LCcfg.checkPlayerRole();
 		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		local ret = (type(LCcfgStore[role])=='table') and LCcfgStore[role][name] or nil;
 		if(ret==nil) then return ifNil;
 		else return ret; end
-	end
-	,checkPlayerRole = function()
-		if(LCU.player.role == LCLang.get('player')) then LCU.player.updateRole(); end
 	end
 	,checkPlayerSpec = function()
 		if(LCU.player.spec==nil or LCU.player.spec.name==nil or LCU.player.spec.role==nil) then LCU.player.updateSpec(); end
@@ -24,7 +20,6 @@ LCcfg = {
 		return (LCU.player.spec and LCU.player.spec.role) and LCU.player.spec.role or 'unknown';
 	end
 	,set = function(name,val)
-		LCcfg.checkPlayerRole();
 		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		if(role ~= 'unknown') then

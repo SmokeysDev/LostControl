@@ -134,10 +134,10 @@ Debuffs = {
 				if(info.repeatLimit) then
 					repeatLimit = info.repeatLimit;
 				else
-					repeatLimit = 5;
-					if(debuff.remaining >= 20) then repeatLimit = 7.5; end
-					if(debuff.remaining >= 30) then repeatLimit = 10; end
-					if(debuff.remaining >= 50) then repeatLimit = 15; end
+					repeatLimit = 6;
+					if(debuff.remaining >= 20) then repeatLimit = 12; end
+					if(debuff.remaining >= 30) then repeatLimit = 18; end
+					if(debuff.remaining >= 50) then repeatLimit = 18; end
 					if(debuff.remaining >= 75) then repeatLimit = 20; end
 				end
 				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);

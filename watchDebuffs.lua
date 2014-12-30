@@ -125,11 +125,13 @@ Debuffs = {
 		return ret;
 	end
 	,checkDebuffs = function()
+		local announcedDebuff = false;
 		for dbType,info in pairs(Debuffs.types) do
 			if(info.debuff ~= false) then
 				local debuff = info.debuff;
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();
+				local timeDiff = theTime - lastAnnounce;
 				local repeatLimit = nil;
 				if(info.repeatLimit) then
 					repeatLimit = info.repeatLimit;
@@ -140,7 +142,7 @@ Debuffs = {
 					if(debuff.remaining >= 50) then repeatLimit = 18; end
 					if(debuff.remaining >= 75) then repeatLimit = 20; end
 				end
-				local safeToAnnounce = (theTime - lastAnnounce >= repeatLimit or lastAnnounce==0);
+				local safeToAnnounce = (timeDiff >= repeatLimit and timeDiff >= LCcfg.get('minDebuffTime',3)) or lastAnnounce==0;
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
 				local message = Debuffs.getDebuffMessage(dbType);
 				if(type(message)=="function") then message = message(debuff); end
@@ -152,14 +154,18 @@ Debuffs = {
 				for _,d in pairs(LCU.player.debuffs) do
 					if(d.name == debuff.name) then stillThere = true; end
 				end
-				if(debuff.remaining>3 and safeToAnnounce) then
+				local announcedRecovery = info.announcedRecovery;
+				if(safeToAnnounce and debuff.remaining > 0) then
 					LCU.announcePlayer(message);
+					Debuffs.types[dbType].announcedRecovery = false;
+					announcedDebuff = true;
 					Debuffs.types[dbType].lastAnnounce = theTime;
-				elseif(debuff.remaining<=0 or stillThere==false) then
-					LCU.announcePlayer(recoverMessage);
-					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-1);
-					--Debuffs.types[dbType].lastAnnounce = theTime;
+				elseif((debuff.remaining<=0.5 or stillThere==false) and announcedRecovery~=true) then
 					Debuffs.types[dbType].debuff = false;
+					Debuffs.types[dbType].announcedRecovery = true;
+					LCU.announcePlayer(recoverMessage);
+					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-2);
+					--Debuffs.types[dbType].lastAnnounce = theTime;
 				end
 			end
 		end

@@ -6,6 +6,7 @@ LCU.optionsPanel = nil;
 LCU.player = {
 	role = nil
 	,spec = nil
+	,hasControl = true
 	,name = UnitName("player")
 	,updateRole = function(who)
 		who = who or "player";

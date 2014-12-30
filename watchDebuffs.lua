@@ -169,6 +169,30 @@ Debuffs = {
 				end
 			end
 		end
+		local hadControl = LCU.player.hasControl;
+		LCU.player.hasControl = HasFullControl();
+		if(LCU.debugMode) then
+			if(announcedDebuff == false and (hadControl and not LCU.player.hasControl)) then
+				LCU.announcePlayer('has lost control of their character.');
+				--[[
+				TEMPORARY
+				--]]
+				if(not LCcfg.get('missingDebuffs')) then LCcfg.set('missingDebuffs',{}); end
+				for dbType,info in pairs(Debuffs.types) do
+					if(info.debuff ~= false) then
+						local debuff = info.debuff;
+						local missing = LCcfg.get('missingDebuffs');
+						if(LCU.debugMode) then print('Missed: '..debuff.name..' __ '..debuff.description); end
+						missing[debuff.name] = debuff.description;
+					end
+				end
+				--[[
+				TEMPORARY
+				--]]
+			elseif(LCU.player.hasControl and not hadControl) then
+				LCU.announcePlayer('has regained control of their character.');
+			end
+		end
 	end
 	,getLink = function(debuff)
 		if(type(debuff)=="number") then
@@ -212,7 +236,7 @@ Debuffs = {
 				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
 				debuffs[#debuffs+1] = debuff;
 				local dbType = Debuffs.getType(debuff);
-				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
+				--if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
 				if(dbType~=false) then
 					local currD = Debuffs.types[dbType].debuff;
 					if(currD==false or (type(currD)=='table' and not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime')))) then
@@ -233,6 +257,7 @@ Debuffs = {
 		local tests = {
 			slow = 31589 --Slow
 			,fear = 5782 --Fear
+			--,charm = 3384 --Mass Charm
 			--,incap = 115078 --Paralysis
 			,incap = 115877 --Fully Petrified
 			,stun = 853 --Hammer of Justice

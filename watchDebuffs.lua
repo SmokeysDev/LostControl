@@ -20,8 +20,8 @@ Debuffs = {
 		,incap = {
 			debuff = false
 			,enabled = true
-			,names = {'Polymorph','Freeze','Hex','Hibernate'}
-			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented','unable to act'}
+			,names = {'Polymorph','Freeze','Hex','Hibernate','Choking','Choking Vines'}
+			,descTerms = {' [iI]ncapacitat','^Incapacitated','Disoriented','unable to act','[cC]hoke','[cC]hoking'}
 			,message = LCLang.dynaGet('is incapacitated for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer incapacitated')
 		}
@@ -45,7 +45,7 @@ Debuffs = {
 			debuff = false
 			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
-			,descTerms = {' ?[sS]ilence[ds]?'}
+			,descTerms = {'Silenced',' ?[sS]ilence[ds]?','[cC]annot cast spells','[pP]acified'}
 			,message = LCLang.dynaGet('has been silenced for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer silenced')
 		}

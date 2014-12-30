@@ -1,4 +1,14 @@
 
+2014-12-30
+----------
+v: 3.2
+----------
+
+Fixed numerous messaging issues, including requiring a group to use the SAY channel and missing/repeated callouts
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
 2014-12-29
 ----------
 v: 3.1

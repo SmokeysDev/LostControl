@@ -11,6 +11,15 @@ local function CreateCheckButton(parent, checkBoxName, posX, posY, displayText, 
 	return checkButton;
 end
 
+local function CreateEditBox(parent, editBoxName, posX, posY, relativeTo)
+	local editBox = CreateFrame("EditBox", editBoxName, parent, "InputBoxTemplate");
+	if(relativeTo == nil) then editBox:SetPoint("TOPLEFT", posX, posY);
+	else editBox:SetPoint("TOPLEFT",relativeTo,"BOTTOMLEFT",posX,posY); end
+	editBox:SetWidth(150)
+	editBox:SetHeight(30)
+	return editBox;
+end
+
 local function AddText(text,parent,font,locx,locy,relTo)
 	local textEl = parent:CreateFontString(nil,"ARTWORK",font);
 	textEl:SetText(text);

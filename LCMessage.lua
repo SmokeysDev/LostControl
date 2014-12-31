@@ -62,9 +62,9 @@ local usableChans = {
 -- Get the channel to use
 --
 local function getChanName(chan)
-	chan = chan or nil;
-	if(chan ~= nil and usableChans[chan] == nil) then chan = nil; end
-	if(chan == nil) then
+	chan = chan or 'nil';
+	if(chan ~= 'nil' and usableChans[chan] == nil) then chan = 'nil'; end
+	if(chan == 'nil') then
 		if(IsInRaid()) then
 			if(LCcfg.get('raidChat')=='SAY') then chan = 'SAY'; end
 			if(LCcfg.get('raidChat')=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
@@ -78,7 +78,7 @@ local function getChanName(chan)
 		end
 		if(IsInGroup() and LCU.player.inInstance==nil) then chan = 'PARTY' end
 	end
-	return chan;
+	return LCU.str(chan);
 end
 
 --
@@ -88,7 +88,7 @@ end
 local function postMsg(msg,chan)
 	chan = getChanName(chan);
 	createChanTable(chan);
-	if(chan==nil) then print(msg)
+	if(chan=='nil') then print(msg)
 	else SendChatMessage(msg,chan) end
 	local msgFound = false
 	for k,v in pairs(LCMessageLog[chan]) do

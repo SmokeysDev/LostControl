@@ -1,11 +1,12 @@
 LCcfgStore = type(LCcfgStore)=='table' and LCcfgStore or {};
 
 LCcfg = {
-	get = function(name,ifNil)
+	get = function(name,ifNil,allowBlankString)
+		if(type(allowBlankString)~='boolean') then allowBlankString = true; end
 		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		local ret = (type(LCcfgStore[role])=='table') and LCcfgStore[role][name] or nil;
-		if(ret==nil) then return ifNil;
+		if(ret==nil or (type(ret)=='string' and allowBlankString==false and LCU.trim(ret)=='')) then return ifNil;
 		else return ret; end
 	end
 	,checkPlayerSpec = function()

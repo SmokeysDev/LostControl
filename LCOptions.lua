@@ -123,5 +123,91 @@ function LCOptions(LostControlFrame)
 
 	OptionsPanel:Hide();
 	InterfaceOptions_AddCategory(OptionsPanel);
+
+	OptionsPanel.childCategories = {};
+
+	OptionsPanel.childCategories.messages = nil;
+
+	local messageOptionsPanel = CreateFrame("Frame",LCU.addonName..'MessagesOptionsPanel');
+	messageOptionsPanel.name = 'Custom Announcements';
+	messageOptionsPanel.parent = LCU.addonName;
+	messageOptionsPanel.elements = {};
+
+	messageOptionsPanel.elements.title = AddText(LCU.addonName..' - Custom Announcements ('..LCcfg.getPlayerSpecRole()..')',messageOptionsPanel,"GameFontNormalLarge",16,-16);
+	messageOptionsPanel:SetScript("OnShow", function()
+		LCU.player.updateSpec();
+		messageOptionsPanel.elements.title:SetText(LCU.addonName..' - Custom Announcements ('..LCcfg.getPlayerSpecRole()..')');
+	end);
+	messageOptionsPanel.elements.subTitle = AddText('Use the inputs below to customise the announcements. Leave blank to use the defaults.',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.title);
+	messageOptionsPanel.elements.subTitle2 = AddText('Special replacements: %TR = time remaining on the debuff, %SL = spell link',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.subTitle);
+
+	lastEl = messageOptionsPanel.elements.subTitle2;
+
+	messageOptionsPanel.elements.labelsColTitle = AddText('Debuff type',messageOptionsPanel,"GameFontNormal",0,-20,lastEl);
+	messageOptionsPanel.elements.messageColTitle = AddText('Warn message',messageOptionsPanel,"GameFontNormal",100,-20,lastEl);
+	messageOptionsPanel.elements.recoverMessageColTitle = AddText('Recover message',messageOptionsPanel,"GameFontNormal",300,-20,lastEl);
+
+	lastEl = messageOptionsPanel.elements.labelsColTitle;
+
+	-- Loop through debuff types and create watch checkboxes for them
+	local i = 0;
+	local debuffNames = {}
+	for dbType in pairs(Debuffs.types) do table.insert(debuffNames,dbType); end
+	table.sort(debuffNames);
+	for _,dbType in ipairs(debuffNames) do
+		local elKey = dbType..'Message';
+		local locY = i==0 and -15 or -15;
+
+		messageOptionsPanel.elements[elKey..'Label'] = AddText(LCU.upperFirst(dbType),messageOptionsPanel,"GameFontHighlight",0,locY,lastEl);
+		lastEl = messageOptionsPanel.elements[elKey..'Label'];
+
+		messageOptionsPanel.elements[elKey] = CreateEditBox(messageOptionsPanel, "LCO_"..elKey, 105, 20, lastEl);
+		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get(dbType..'Message'),''));
+		messageOptionsPanel.elements[elKey]:SetScript("OnShow", function(self)
+			self:SetText(LCU.str(LCcfg.get(dbType..'Message','',false)));
+		end);
+		local updateValue = function(self)
+			local theText = self:GetText();
+			theText = LCU.trim(theText);
+			local old = LCcfg.get(dbType..'Message',nil,false);
+			if(theText == '' and old==nil) then
+				return nil;
+			else
+				if(theText == '' or theText == 'nil') then theText = nil; end
+				LCcfg.set(dbType..'Message',theText);
+			end
+		end
+		messageOptionsPanel.elements[elKey]:SetScript("OnChar",updateValue);
+		messageOptionsPanel.elements[elKey]:SetScript("OnHide",updateValue);
+		messageOptionsPanel.elements[elKey]:SetScript("OnEditFocusLost",updateValue);
+
+		elKey = dbType..'RecoverMessage';
+		messageOptionsPanel.elements[elKey] = CreateEditBox(messageOptionsPanel, "LCO_"..elKey, 305, 20, lastEl);
+		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get(dbType..'RecoverMessage'),''));
+		messageOptionsPanel.elements[elKey]:SetScript("OnShow", function(self)
+			self:SetText(LCU.str(LCcfg.get(dbType..'RecoverMessage','',false)));
+		end);
+		local updateValue = function(self)
+			local theText = self:GetText();
+			theText = LCU.trim(theText);
+			local old = LCcfg.get(dbType..'RecoverMessage',nil,false);
+			if(theText == '' and old==nil) then
+				return nil;
+			else
+				if(theText == '' or theText == 'nil') then theText = nil; end
+				LCcfg.set(dbType..'RecoverMessage',theText);
+			end
+		end
+		messageOptionsPanel.elements[elKey]:SetScript("OnChar",updateValue);
+		messageOptionsPanel.elements[elKey]:SetScript("OnHide",updateValue);
+		messageOptionsPanel.elements[elKey]:SetScript("OnEditFocusLost",updateValue);
+
+		i = i+1;
+	end
+
+	messageOptionsPanel:Hide();
+
+	OptionsPanel.childCategories.messages = messageOptionsPanel;
+	InterfaceOptions_AddCategory(OptionsPanel.childCategories.messages);
 	return OptionsPanel;
 end

@@ -129,7 +129,7 @@ Debuffs = {
 	,checkDebuffs = function()
 		local announcedDebuff = false;
 		for dbType,info in pairs(Debuffs.types) do
-			if(info.debuff ~= false) then
+			if(info.debuff ~= false and info.enabled==true) then
 				local debuff = info.debuff;
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();

@@ -78,6 +78,10 @@ LCU.str = function(val)
 	return tostring(val);
 end
 
+LCU.trim = function(s)
+	return (LCU.str(s):gsub("^%s*(.-)%s*$", "%1"));
+end
+
 LCU.bool = function(val)
   return not not val;
 end

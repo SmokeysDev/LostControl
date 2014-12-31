@@ -162,19 +162,19 @@ function LCOptions(LostControlFrame)
 		lastEl = messageOptionsPanel.elements[elKey..'Label'];
 
 		messageOptionsPanel.elements[elKey] = CreateEditBox(messageOptionsPanel, "LCO_"..elKey, 105, 20, lastEl);
-		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get(dbType..'Message'),''));
+		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get('db_message_'..dbType),''));
 		messageOptionsPanel.elements[elKey]:SetScript("OnShow", function(self)
-			self:SetText(LCU.str(LCcfg.get(dbType..'Message','',false)));
+			self:SetText(LCU.str(LCcfg.get('db_message_'..dbType,'',false)));
 		end);
 		local updateValue = function(self)
 			local theText = self:GetText();
 			theText = LCU.trim(theText);
-			local old = LCcfg.get(dbType..'Message',nil,false);
+			local old = LCcfg.get('db_message_'..dbType,nil,false);
 			if(theText == '' and old==nil) then
 				return nil;
 			else
 				if(theText == '' or theText == 'nil') then theText = nil; end
-				LCcfg.set(dbType..'Message',theText);
+				LCcfg.set('db_message_'..dbType,theText);
 			end
 		end
 		messageOptionsPanel.elements[elKey]:SetScript("OnChar",updateValue);
@@ -183,19 +183,19 @@ function LCOptions(LostControlFrame)
 
 		elKey = dbType..'RecoverMessage';
 		messageOptionsPanel.elements[elKey] = CreateEditBox(messageOptionsPanel, "LCO_"..elKey, 305, 20, lastEl);
-		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get(dbType..'RecoverMessage'),''));
+		messageOptionsPanel.elements[elKey]:SetText(LCU.str(LCcfg.get('db_recovermessage_'..dbType),''));
 		messageOptionsPanel.elements[elKey]:SetScript("OnShow", function(self)
-			self:SetText(LCU.str(LCcfg.get(dbType..'RecoverMessage','',false)));
+			self:SetText(LCU.str(LCcfg.get('db_recovermessage_'..dbType,'',false)));
 		end);
 		local updateValue = function(self)
 			local theText = self:GetText();
 			theText = LCU.trim(theText);
-			local old = LCcfg.get(dbType..'RecoverMessage',nil,false);
+			local old = LCcfg.get('db_recovermessage_'..dbType,nil,false);
 			if(theText == '' and old==nil) then
 				return nil;
 			else
 				if(theText == '' or theText == 'nil') then theText = nil; end
-				LCcfg.set(dbType..'RecoverMessage',theText);
+				LCcfg.set('db_recovermessage_'..dbType,theText);
 			end
 		end
 		messageOptionsPanel.elements[elKey]:SetScript("OnChar",updateValue);

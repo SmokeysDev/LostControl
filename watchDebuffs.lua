@@ -293,6 +293,7 @@ Debuffs = {
 			,sleep = 31298 --Sleep
 			,root = 339 --Entangling Roots
 			,silence = 15487 --Silence
+			,spellLock = 53550 --Mind Freeze
 		}
 		if(tests[dbType] and Debuffs.types[dbType].debuff==false) then
 			local dbid = tests[dbType];
@@ -300,6 +301,17 @@ Debuffs = {
 			local spName,spRank = GetSpellInfo(dbid);
 			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
 			Debuffs.addFakeAura('HARMFUL',debuff);
+			if(dbType=='spellLock') then
+				local intSpellSchool = 8;
+				local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
+				LCU.player.lastInterrupt = {
+					bySpellID = 53550,
+					bySpellName = 'Mind Freeze',
+					onSpellID = 61882,
+					onSpellName = 'Earthquake',
+					onSpellSchool = intSpellSchoolName,
+				};
+			end
 		end
 	end
 }

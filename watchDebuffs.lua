@@ -148,6 +148,10 @@ Debuffs = {
 		newMsg = newMsg:gsub('%%RL',role);
 		newMsg = newMsg:gsub('%%rl',string.lower(role));
 		newMsg = newMsg:gsub('%%REF',ref);
+		local spellSchool = '';
+		if(LCU.player.lastInterrupt~=nil and LCU.player.lastInterrupt.onSpellSchool) then spellSchool = LCU.player.lastInterrupt.onSpellSchool; end
+		newMsg = newMsg:gsub('%%SCH',spellSchool);
+		newMsg = newMsg:gsub('%%sch',string.lower(spellSchool));
 		return newMsg;
 	end
 	,checkDebuffs = function()

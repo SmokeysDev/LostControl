@@ -67,11 +67,11 @@ Debuffs = {
 		}
 		,spellLock = { --UNIT_SPELLCAST_INTERRUPTED , UNIT_SPELLCAST_STOP , UNIT_SPELLCAST_FAILED , UNIT_SPELLCAST_FAILED_QUIET
 			debuff = false
-			,enabled = false
+			,enabled = true
 			,names = {}
-			,descTerms = {'locked','spell school'}
-			,message = LCLang.dynaGet('%REF has been spell locked for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('%REF is no longer spell locked')
+			,descTerms = {'preventing any spell in that school','preventing any spell from that school'}
+			,message = LCLang.dynaGet('%REF has been spell locked (%SCH) for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer spell locked (%SCH)')
 			--[[
 			School can be checked with:
 			List of one spell for each spell school per class & spec

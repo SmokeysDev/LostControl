@@ -119,12 +119,21 @@ Debuffs = {
 		return false;
 	end
 	,fillMsg = function(msg,debuff)
-		local ret = msg;
-		ret = ret:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
-		ret = ret:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
-		ret = ret:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
-		ret = ret:gsub('%%SL',(GetSpellLink(debuff.id)));
-		return ret;
+		local role = LCcfg.getPlayerSpecRole();
+		if(role=='dps') then role = 'DPS';
+		else role = LCU.upperFirst(role); end
+		local ref = role=='DPS' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
+		ref = ref..' ('..LCU.player.name..')';
+		local newMsg = msg;
+		newMsg = newMsg:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
+		newMsg = newMsg:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
+		newMsg = newMsg:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
+		newMsg = newMsg:gsub('%%SL',(GetSpellLink(debuff.id)));
+		newMsg = newMsg:gsub('%%NM',LCU.player.name);
+		newMsg = newMsg:gsub('%%RL',role);
+		newMsg = newMsg:gsub('%%rl',string.lower(role));
+		newMsg = newMsg:gsub('%%REF',ref);
+		return newMsg;
 	end
 	,checkDebuffs = function()
 		local announcedDebuff = false;

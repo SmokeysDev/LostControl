@@ -70,8 +70,8 @@ Debuffs = {
 			,enabled = false
 			,names = {}
 			,descTerms = {'locked','spell school'}
-			,message = LCLang.dynaGet('has been spell locked for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer spell locked')
+			,message = LCLang.dynaGet('%REF has been spell locked for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer spell locked')
 			--[[
 			School can be checked with:
 			List of one spell for each spell school per class & spec

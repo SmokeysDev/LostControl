@@ -1,4 +1,22 @@
 
+2015-01-01
+----------
+v: 3.3
+----------
+
+Fixed possible error in messaging code
+
+Moved Charge as a named debuff from stun to root
+
+Fixed detection of phrases disoriented and sapped under incap
+
+Fixed usage of the min debuff time config
+
+Added ability to customise the second part of the announcements (i.e. The healer (Shamlot) {your text here})
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
 2014-12-30
 ----------
 v: 3.2

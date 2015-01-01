@@ -65,6 +65,21 @@ Debuffs = {
 			,message = LCLang.dynaGet('has been stunned for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('is no longer stunned')
 		}
+		,spellLock = { --UNIT_SPELLCAST_INTERRUPTED , UNIT_SPELLCAST_STOP , UNIT_SPELLCAST_FAILED , UNIT_SPELLCAST_FAILED_QUIET
+			debuff = false
+			,enabled = false
+			,names = {}
+			,descTerms = {'locked','spell school'}
+			,message = LCLang.dynaGet('has been spell locked for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('is no longer spell locked')
+			--[[
+			School can be checked with:
+			List of one spell for each spell school per class & spec
+			Check last interrupted spellID with IsUsableSpell (returns: usable, nomana)
+			Check last interrupted spellID isn't on cooldown with GetSpellCooldown (returns: start, duration, enabled)
+			(maybe check GetSpellDescription ?)
+			--]]
+		}
 	}
 	,addName = function(dbType,name)
 		if(Debuffs.types[dbType]==nil) then return false; end

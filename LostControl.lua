@@ -11,8 +11,9 @@ LostControlFrame:Hide();
 function LostControlOptions_OnLoad()
 end
 
-function LostControl_OnEvent(self,event,arg1)
-	if(event=="ADDON_LOADED" and arg1==LCU.addonName) then
+function LostControl_OnEvent(self,event,...)
+	local args = {...};
+	if(event=="ADDON_LOADED" and args[1]==LCU.addonName) then
 		LCcfg.init();
 		LCU.optionsPanel = LCOptions(LostControlFrame);
 	end
@@ -44,6 +45,38 @@ function LostControl_OnEvent(self,event,arg1)
 			end
 		end
 	end
+	if(event=="UNIT_SPELLCAST_INTERRUPTED" and args[1]=="player") then
+		local intInfoObj = {
+			spellName = LCU.str(args[2]),
+			spellCount = args[4],
+			spellID = args[5],
+		};
+		LCU.player.lastInterrupt = intInfoObj;
+		--print('Player cast interrupted');
+		--print((GetSpellLink(intInfoObj.spellID)));
+	end
+	if(event=="COMBAT_LOG_EVENT_UNFILTERED") then
+		local event = args[2];
+		local srcGUID = args[4];
+		local srcName = args[5];
+		local srcUnitFlag = args[6];
+		local srcUnitFlag2 = args[7];
+		local destGUID = args[8];
+		local destme = args[9];
+		local destUnitFlag = args[10];
+		local destUnitFlag2 = args[11];
+		-- spell damage
+		--[[
+		args[12] = spellID
+		args[13] = spellName
+		args[14] = spellSchool (number)
+		--]]
+		local printStr = 'Combat log event: ';
+		for k,v in ipairs(args) do
+			printStr = printStr .. '_ (#'..k..') ' .. LCU.str(v);
+		end
+		print(printStr..' - end ('..LCU.str(args.n)..')');
+	end
 end
 
 LostControlFrame:SetScript("OnEvent",LostControl_OnEvent);
@@ -53,6 +86,8 @@ LostControlFrame:RegisterEvent("LFG_ROLE_UPDATE");
 LostControlFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
 LostControlFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 LostControlFrame:RegisterEvent("PLAYER_LOGOUT");
+LostControlFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
+LostControlFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {
 	text = "Which debuff do you want to test?",

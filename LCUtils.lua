@@ -8,6 +8,7 @@ LCU.player = {
 	,spec = nil
 	,hasControl = true
 	,name = UnitName("player")
+	,lastInterrupt = nil
 	,updateRole = function(who)
 		who = who or "player";
 		local role = string.lower(UnitGroupRolesAssigned(who));

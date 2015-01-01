@@ -126,14 +126,6 @@ LCU.sendMsg = function(msg,priv)
 	else LCMessage(msg) end
 end
 
-LCU.announceStateChange = function(action)
-	LCU.player.updateRole();
-	local msgStart = LCU.player.role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
-	local msg = msgStart..' ('..LCU.player.name..') has '..action
-	LCU.sendMsg(msg)
-	return msg
-end
-
 LCU.announcePlayer = function(action)
 	LCU.player.updateRole();
 	local msgStart = LCU.player.role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);

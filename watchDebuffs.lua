@@ -6,64 +6,64 @@ Debuffs = {
 			,enabled = true
 			,names = {'Fear','Feared','Scare','Scared','Psychic Scream'}
 			,descTerms = {' [fF]ear','^Fear','[sS]cared','flee in terror'}
-			,message = LCLang.dynaGet('is feared for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer feared')
+			,message = LCLang.dynaGet('%REF is feared for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer feared')
 		}
 		,charm = {
 			debuff = false
 			,enabled = true
 			,names = {'Charm','Charmed'}
 			,descTerms = {'[cC]harmed'}
-			,message = LCLang.dynaGet('has been charmed for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer charmed')
+			,message = LCLang.dynaGet('%REF has been charmed for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer charmed')
 		}
 		,incap = {
 			debuff = false
 			,enabled = true
 			,names = {'Polymorph','Freeze','Hex','Hibernate','Choking','Choking Vines'}
 			,descTerms = {' [iI]ncapacitat','^Incapacitated','[dD]isoriented','[sS]apped','unable to act','[cC]hoke','[cC]hoking'}
-			,message = LCLang.dynaGet('is incapacitated for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer incapacitated')
+			,message = LCLang.dynaGet('%REF is incapacitated for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer incapacitated')
 		}
 		,sleep = {
 			debuff = false
 			,enabled = true
 			,names = {'Sleep'}
 			,descTerms = {'[dD]eep slumber','[sS]lumber','[aA]sleep','[sS]leeping'}
-			,message = LCLang.dynaGet('is asleep for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer asleep')
+			,message = LCLang.dynaGet('%REF is asleep for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer asleep')
 		}
 		,root = {
 			debuff = false
 			,enabled = true
 			,names = {'Freeze','Root','Entangling Roots','Charge','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobiliz'}
-			,message = LCLang.dynaGet('has been rooted for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer rooted')
+			,message = LCLang.dynaGet('%REF has been rooted for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer rooted')
 		}
 		,silence = {
 			debuff = false
 			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
 			,descTerms = {'Silenced',' ?[sS]ilence[ds]?','[cC]annot cast spells','[pP]acified'}
-			,message = LCLang.dynaGet('has been silenced for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer silenced')
+			,message = LCLang.dynaGet('%REF has been silenced for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer silenced')
 		}
 		,slow = {
 			debuff = false
 			,enabled = false
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
 			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
-			,message = LCLang.dynaGet('has been slowed for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer slowed')
+			,message = LCLang.dynaGet('%REF has been slowed for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer slowed')
 		}
 		,stun = {
 			debuff = false
 			,enabled = true
 			,names = {'Stun','Stunned','Stomp'}
 			,descTerms = {' [sS]tun','^Stun'}
-			,message = LCLang.dynaGet('has been stunned for [remaining] seconds - {SPELL_LINK}')
-			,recoverMessage = LCLang.dynaGet('is no longer stunned')
+			,message = LCLang.dynaGet('%REF has been stunned for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer stunned')
 		}
 		,spellLock = { --UNIT_SPELLCAST_INTERRUPTED , UNIT_SPELLCAST_STOP , UNIT_SPELLCAST_FAILED , UNIT_SPELLCAST_FAILED_QUIET
 			debuff = false
@@ -134,12 +134,21 @@ Debuffs = {
 		return false;
 	end
 	,fillMsg = function(msg,debuff)
-		local ret = msg;
-		ret = ret:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
-		ret = ret:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
-		ret = ret:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
-		ret = ret:gsub('%%SL',(GetSpellLink(debuff.id)));
-		return ret;
+		local role = LCcfg.getPlayerSpecRole();
+		if(role=='dps') then role = 'DPS';
+		else role = LCU.upperFirst(role); end
+		local ref = role=='DPS' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
+		ref = ref..' ('..LCU.player.name..')';
+		local newMsg = msg;
+		newMsg = newMsg:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
+		newMsg = newMsg:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
+		newMsg = newMsg:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
+		newMsg = newMsg:gsub('%%SL',(GetSpellLink(debuff.id)));
+		newMsg = newMsg:gsub('%%NM',LCU.player.name);
+		newMsg = newMsg:gsub('%%RL',role);
+		newMsg = newMsg:gsub('%%rl',string.lower(role));
+		newMsg = newMsg:gsub('%%REF',ref);
+		return newMsg;
 	end
 	,checkDebuffs = function()
 		local announcedDebuff = false;
@@ -173,16 +182,15 @@ Debuffs = {
 				end
 				local announcedRecovery = info.announcedRecovery;
 				if(safeToAnnounce and debuff.remaining > 0) then
-					LCU.announcePlayer(message);
+					LCU.sendMsg(message);
 					Debuffs.types[dbType].announcedRecovery = false;
 					announcedDebuff = true;
 					Debuffs.types[dbType].lastAnnounce = theTime;
 				elseif((debuff.remaining<=0.5 or stillThere==false) and announcedRecovery~=true) then
 					Debuffs.types[dbType].debuff = false;
 					Debuffs.types[dbType].announcedRecovery = true;
-					LCU.announcePlayer(recoverMessage);
+					LCU.sendMsg(recoverMessage);
 					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-2);
-					--Debuffs.types[dbType].lastAnnounce = theTime;
 				end
 			end
 		end

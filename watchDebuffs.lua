@@ -176,7 +176,6 @@ Debuffs = {
 					Debuffs.types[dbType].announcedRecovery = true;
 					LCU.announcePlayer(recoverMessage);
 					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-2);
-					--Debuffs.types[dbType].lastAnnounce = theTime;
 				end
 			end
 		end

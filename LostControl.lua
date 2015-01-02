@@ -45,16 +45,6 @@ function LostControl_OnEvent(self,event,...)
 			end
 		end
 	end
-	if(event=="UNIT_SPELLCAST_INTERRUPTED" and args[1]=="player") then
-		local intInfoObj = {
-			spellName = LCU.str(args[2]),
-			spellCount = args[4],
-			spellID = args[5],
-		};
-		LCU.player.lastInterrupt = intInfoObj;
-		--print('Player cast interrupted');
-		--print((GetSpellLink(intInfoObj.spellID)));
-	end
 	if(event=="COMBAT_LOG_EVENT_UNFILTERED") then
 		local event = args[2];
 		local srcGUID = args[4];
@@ -86,7 +76,6 @@ LostControlFrame:RegisterEvent("LFG_ROLE_UPDATE");
 LostControlFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
 LostControlFrame:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED");
 LostControlFrame:RegisterEvent("PLAYER_LOGOUT");
-LostControlFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
 LostControlFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 
 StaticPopupDialogs["LC_DEBUFF_TEST"] = {

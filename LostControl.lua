@@ -52,20 +52,22 @@ function LostControl_OnEvent(self,event,...)
 		local srcUnitFlag = args[6];
 		local srcUnitFlag2 = args[7];
 		local destGUID = args[8];
-		local destme = args[9];
+		local destName = args[9];
 		local destUnitFlag = args[10];
 		local destUnitFlag2 = args[11];
-		-- spell damage
-		--[[
-		args[12] = spellID
-		args[13] = spellName
-		args[14] = spellSchool (number)
-		--]]
-		local printStr = 'Combat log event: ';
-		for k,v in ipairs(args) do
-			printStr = printStr .. '_ (#'..k..') ' .. LCU.str(v);
+		if(event=='SPELL_INTERRUPT' and destName==LCU.player.name and intSpellSchool~=nil and intSpellSchool>0) then
+			local intSpellID = args[15];
+			local intSpellName = args[16];
+			local intSpellSchool = args[17];
+			local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
+			LCU.player.lastInterrupt = {
+				bySpellID = args[12],
+				bySpellName = args[13],
+				onSpellID = intSpellID,
+				onSpellName = intSpellName,
+				onSpellSchool = intSpellSchoolName,
+			};
 		end
-		print(printStr..' - end ('..LCU.str(args.n)..')');
 	end
 end
 

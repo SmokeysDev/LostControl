@@ -1,4 +1,17 @@
 
+2015-01-03
+----------
+v: 3.4
+----------
+
+Made it possible to customise the whole announcement message, not just the second part
+
+(If you have already customised the second part of the message, to make it look like before start the message with "%REF ")
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2015-01-01
 ----------
 v: 3.3
@@ -17,6 +30,7 @@ Added ability to customise the second part of the announcements (i.e. The healer
 
 -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 
+
 2014-12-30
 ----------
 v: 3.2
@@ -27,6 +41,7 @@ Fixed numerous messaging issues, including requiring a group to use the SAY chan
 
 -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
 
+
 2014-12-29
 ----------
 v: 3.1
@@ -36,6 +51,7 @@ Stopped messages appearing too close to each other near the end (avoids "1 secon
 
 
 -/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
 
 2014-12-29
 ----------

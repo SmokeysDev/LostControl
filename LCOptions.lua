@@ -139,9 +139,10 @@ function LCOptions(LostControlFrame)
 		messageOptionsPanel.elements.title:SetText(LCU.addonName..' - Custom Announcements ('..LCcfg.getPlayerSpecRole()..')');
 	end);
 	messageOptionsPanel.elements.subTitle = AddText('Use the inputs below to customise the announcements. Leave blank to use the defaults.',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.title);
-	messageOptionsPanel.elements.subTitle2 = AddText('Special replacements: %TR = time remaining on the debuff, %SL = spell link',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.subTitle);
+	messageOptionsPanel.elements.subTitle2 = AddText('%TR = time remaining | %SL = spell link | %NM = char name | %RL = role',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.subTitle);
+	messageOptionsPanel.elements.subTitle3 = AddText('%REF = role and name e.g. "A DPS (charName)" or "The tank (charname)"',messageOptionsPanel,"GameFontHighlightSmall",0,-4,messageOptionsPanel.elements.subTitle2);
 
-	lastEl = messageOptionsPanel.elements.subTitle2;
+	lastEl = messageOptionsPanel.elements.subTitle3;
 
 	messageOptionsPanel.elements.labelsColTitle = AddText('Debuff type',messageOptionsPanel,"GameFontNormal",0,-20,lastEl);
 	messageOptionsPanel.elements.messageColTitle = AddText('Warn message',messageOptionsPanel,"GameFontNormal",100,-20,lastEl);
@@ -204,6 +205,8 @@ function LCOptions(LostControlFrame)
 
 		i = i+1;
 	end
+
+	messageOptionsPanel.elements.defaultFormatNote = AddText('An example format from the defaults (fear): %REF is feared for %TR seconds - %SL',messageOptionsPanel,"GameFontHighlightSmall",0,-12,lastEl);
 
 	messageOptionsPanel:Hide();
 

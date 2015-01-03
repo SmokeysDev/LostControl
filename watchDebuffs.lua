@@ -243,7 +243,7 @@ Debuffs = {
 			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or '';
-				local debuff = {name=n,rank=rank,["type"]=(dbType or 'null'),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
+				local debuff = {name=n,rank=rank,["type"]=(dbType or ''),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
 				debuffs[#debuffs+1] = debuff;
 				local dbType = Debuffs.getType(debuff);
 				--if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end

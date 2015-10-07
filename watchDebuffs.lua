@@ -12,7 +12,7 @@ Debuffs = {
 		,charm = {
 			debuff = false
 			,enabled = true
-			,names = {'Charm','Charmed'}
+			,names = {'Charm','Charmed','Mind Control'}
 			,descTerms = {'[cC]harmed'}
 			,message = LCLang.dynaGet('%REF has been charmed for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer charmed')
@@ -64,6 +64,21 @@ Debuffs = {
 			,descTerms = {' [sS]tun','^Stun'}
 			,message = LCLang.dynaGet('%REF has been stunned for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer stunned')
+		}
+		,spellLock = { --UNIT_SPELLCAST_INTERRUPTED , UNIT_SPELLCAST_STOP , UNIT_SPELLCAST_FAILED , UNIT_SPELLCAST_FAILED_QUIET
+			debuff = false
+			,enabled = true
+			,names = {}
+			,descTerms = {'preventing any spell in that school','preventing any spell from that school'}
+			,message = LCLang.dynaGet('%REF has been spell locked (%SCH) for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer spell locked (%SCH)')
+			--[[
+			School can be checked with:
+			List of one spell for each spell school per class & spec
+			Check last interrupted spellID with IsUsableSpell (returns: usable, nomana)
+			Check last interrupted spellID isn't on cooldown with GetSpellCooldown (returns: start, duration, enabled)
+			(maybe check GetSpellDescription ?)
+			--]]
 		}
 	}
 	,addName = function(dbType,name)
@@ -133,6 +148,10 @@ Debuffs = {
 		newMsg = newMsg:gsub('%%RL',role);
 		newMsg = newMsg:gsub('%%rl',string.lower(role));
 		newMsg = newMsg:gsub('%%REF',ref);
+		local spellSchool = '';
+		if(LCU.player.lastInterrupt~=nil and LCU.player.lastInterrupt.onSpellSchool) then spellSchool = LCU.player.lastInterrupt.onSpellSchool; end
+		newMsg = newMsg:gsub('%%SCH',spellSchool);
+		newMsg = newMsg:gsub('%%sch',string.lower(spellSchool));
 		return newMsg;
 	end
 	,checkDebuffs = function()
@@ -274,6 +293,7 @@ Debuffs = {
 			,sleep = 31298 --Sleep
 			,root = 339 --Entangling Roots
 			,silence = 15487 --Silence
+			,spellLock = 53550 --Mind Freeze
 		}
 		if(tests[dbType] and Debuffs.types[dbType].debuff==false) then
 			local dbid = tests[dbType];
@@ -281,6 +301,17 @@ Debuffs = {
 			local spName,spRank = GetSpellInfo(dbid);
 			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
 			Debuffs.addFakeAura('HARMFUL',debuff);
+			if(dbType=='spellLock') then
+				local intSpellSchool = 8;
+				local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
+				LCU.player.lastInterrupt = {
+					bySpellID = 53550,
+					bySpellName = 'Mind Freeze',
+					onSpellID = 61882,
+					onSpellName = 'Earthquake',
+					onSpellSchool = intSpellSchoolName,
+				};
+			end
 		end
 	end
 }

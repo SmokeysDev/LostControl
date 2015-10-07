@@ -1,6 +1,6 @@
 @ECHO OFF
 
-cd /d "E:\personal\wow addon_dev\LostControl"
+cd /d "D:\WoW Addons\LostControl"
 
-robocopy "E:\personal\wow addon_dev\LostControl" "E:\personal\World of Warcraft\interface\addons\LostControl" *.* /E /XD .git x /PURGE
+robocopy "D:\WoW Addons\LostControl" "C:\World of Warcraft\interface\addons\LostControl" *.* /E /XD .git x /PURGE
 ::robocopy "./" "./test/" *.lua *.txt /PURGE

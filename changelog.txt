@@ -1,4 +1,15 @@
 
+2015-10-07
+----------
+v: 3.5
+----------
+
+Minor change - reduced sensitivity of "player is airborne" message and updated interface number to stop the addon seeming out of date
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2015-01-03
 ----------
 v: 3.4

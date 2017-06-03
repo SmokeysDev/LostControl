@@ -55,18 +55,42 @@ function LostControl_OnEvent(self,event,...)
 		local destName = args[9];
 		local destUnitFlag = args[10];
 		local destUnitFlag2 = args[11];
-		if(event=='SPELL_INTERRUPT' and destName==LCU.player.name and intSpellSchool~=nil and intSpellSchool>0) then
+		local spellId = args[12];
+		local spellName = args[13];
+		local spellSchool = args[14];
+		local spellSchoolName = LCU.spellSchoolByNum(spellSchool);
+		if(event=='SPELL_CAST_FAILED' and (destName==LCU.player.name or srcName==LCU.player.name)) then
+			local failType = args[15];
+			print('Spell fail ('..LCU.str(spellName)..' - '..LCU.str(spellSchoolName)..') because: '..LCU.str(failtype)..'['..LCU.str(srcName)..']['..LCU.str(destName)..']');
+		end
+		if(event=='SPELL_INTERRUPT' and destName==LCU.player.name) then
+			print('Spell interrupt ('..LCU.str(spellName)..' - '..LCU.str(spellSchoolName)..') re: ['..LCU.str(srcName)..']['..LCU.str(destName)..']');
 			local intSpellID = args[15];
 			local intSpellName = args[16];
 			local intSpellSchool = args[17];
 			local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
-			LCU.player.lastInterrupt = {
-				bySpellID = args[12],
-				bySpellName = args[13],
-				onSpellID = intSpellID,
-				onSpellName = intSpellName,
-				onSpellSchool = intSpellSchoolName,
-			};
+			local offensiveSpellDesc = GetSpellDescription(args[12]);
+			local lockTime = LCU.trim((string.match(offensiveSpellDesc,'for %d%d? sec'):gsub('[a-z]','')));
+			print('By '..LCU.str(intSpellName)..' : '..LCU.str(offensiveSpellDesc));
+			--local cooldownStart,cooldownTime = GetSpellCooldown(intSpellID);
+			--if(cooldownStart <= GetTime() and cooldownTime > 1) then
+			if(lockTime > 1 and intSpellSchoolName) then
+				--local expires = cooldownStart+cooldownTime;
+				local expires = GetTime()+lockTime;
+				LCU.player.lastInterrupt = {
+					bySpellID = args[12],
+					bySpellName = args[13],
+					onSpellID = intSpellID,
+					onSpellName = intSpellName,
+					onSpellSchool = intSpellSchoolName,
+				};
+				local debuff = {name='Spell Lock',rank='',["type"]='',length=lockTime,remaining=LCU.round(expires-GetTime()),desc=GetSpellDescription(19647),id=19647,extraInfo=''};
+				Debuffs.types.spellLock.debuff = debuff;
+			else
+				print(lockTime..' not greater than 1, from '..offensiveSpellDesc);
+				print('or failed checking school name: '..LCU.str(intSpellSchoolName));
+			end
+			--end
 		end
 	end
 end

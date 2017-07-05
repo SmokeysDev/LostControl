@@ -172,7 +172,7 @@ Debuffs = {
 					if(debuff.remaining >= 50) then repeatLimit = 18; end
 					if(debuff.remaining >= 75) then repeatLimit = 20; end
 				end
-				local safeToAnnounce = (timeDiff >= repeatLimit and debuff.remaining >= LCcfg.get('minDebuffTime',3)) or lastAnnounce==0;
+				local safeToAnnounce = (timeDiff >= repeatLimit or lastAnnounce==0) and debuff.remaining >= LCcfg.get('minDebuffTime',3);
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
 				local message = Debuffs.getDebuffMessage(dbType);
 				if(type(message)=="function") then message = message(debuff); end

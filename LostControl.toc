@@ -2,7 +2,7 @@
 ## Title: LostControl
 ## Version: 3.7
 ## Author: Matt Bacon
-## X-Email: einstein.matt@gmail.com
+## X-Email: matt@mdev.me
 ## X-Date: January 25th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
 ## SavedVariablesPerCharacter: LCcfgStore

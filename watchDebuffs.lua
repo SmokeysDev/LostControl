@@ -184,19 +184,18 @@ Debuffs = {
 				for _,d in pairs(LCU.player.debuffs) do
 					if(d.name == debuff.name) then stillThere = true; end
 				end
-				local announcedRecovery = info.announcedRecovery;
 				if(safeToAnnounce and debuff.remaining > 0) then
 					LCU.sendMsg(message);
-					Debuffs.types[dbType].announcedRecovery = false;
-					Debuffs.types[dbType].announcedDebuff = true;
+					info.announcedRecovery = false;
+					info.announcedDebuff = true;
 					announcedDebuff = true;
-					Debuffs.types[dbType].lastAnnounce = theTime;
-				elseif(Debuffs.types[dbType].announcedDebuff ~= true and (debuff.remaining<=0.5 or stillThere==false) and announcedRecovery~=true) then
-					Debuffs.types[dbType].debuff = false;
-					Debuffs.types[dbType].announcedRecovery = true;
+					info.lastAnnounce = theTime;
+				elseif(info.announcedDebuff ~= true and (debuff.remaining<=0.5 or stillThere==false) and info.announcedRecovery~=true) then
+					info.debuff = false;
+					info.announcedRecovery = true;
 					LCU.sendMsg(recoverMessage);
-					Debuffs.types[dbType].announcedDebuff = false;
-					Debuffs.types[dbType].lastAnnounce = GetTime()-(repeatLimit-2);
+					info.announcedDebuff = false;
+					info.lastAnnounce = GetTime()-(repeatLimit-2);
 				end
 			end
 		end

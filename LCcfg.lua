@@ -1,5 +1,10 @@
 LCcfgStore = type(LCcfgStore)=='table' and LCcfgStore or {};
 
+local defaultDisabledWatches = {
+	slow = true,
+	falling = true
+}
+
 LCcfg = {
 	get = function(name,ifNil,allowBlankString)
 		if(type(allowBlankString)~='boolean') then allowBlankString = true; end
@@ -34,7 +39,7 @@ LCcfg = {
 	,disableWatch = function(dbType,val)
 		local role = LCcfg.getPlayerSpecRole();
 		if(role ~= 'unknown') then
-			if(LCcfgStore[role]['disabledWatches']==nil) then LCcfgStore[role]['disabledWatches'] = {slow=true}; end
+			if(LCcfgStore[role]['disabledWatches']==nil) then LCcfgStore[role]['disabledWatches'] = defaultDisabledWatches; end
 			LCcfgStore[role]['disabledWatches'][dbType] = val;
 		end
 	end
@@ -44,14 +49,14 @@ LCcfg = {
 		if(LCcfgStore[role] == nil) then
 			return true;
 		else
-			local disabledWatches = LCU.tern(type(LCcfgStore[role]['disabledWatches'])=='table', LCcfgStore[role]['disabledWatches'], {slow=true});
+			local disabledWatches = LCU.tern(type(LCcfgStore[role]['disabledWatches'])=='table', LCcfgStore[role]['disabledWatches'], defaultDisabledWatches);
 			return (disabledWatches[dbType]==nil or disabledWatches[dbType]==false);
 		end
 	end
 	,setDefaults = function()
 		LCcfg.setDefault('instanceChat','PARTY');
 		LCcfg.setDefault('raidChat','PARTY');
-		LCcfg.setDefault('disabledWatches',{slow=true});
+		LCcfg.setDefault('disabledWatches',defaultDisabledWatches);
 		LCcfg.setDefault('minDebuffTime',3);
 	end
 	,init = function()

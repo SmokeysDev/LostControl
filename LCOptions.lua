@@ -206,7 +206,7 @@ function LCOptions(LostControlFrame)
 		i = i+1;
 	end
 
-	messageOptionsPanel.elements.defaultFormatNote = AddText('An example format from the defaults (fear): %REF is feared for %TR seconds - %SL',messageOptionsPanel,"GameFontHighlightSmall",0,-12,lastEl);
+	messageOptionsPanel.elements.defaultFormatNote = AddText('An example format from the defaults (fear): %REF is feared for %TR seconds - %SL',messageOptionsPanel,"GameFontHighlightSmall",0,-25,lastEl);
 
 	messageOptionsPanel:Hide();
 

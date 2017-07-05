@@ -1,3 +1,12 @@
+2017-07-05
+----------
+v: 3.7
+----------
+
+Fixed bug with 'player is airborne' alert introduced by an API change at some point
+
+Added ability to toggle the falling message in the options panel
+
 
 2017-06-03
 ----------

@@ -333,7 +333,7 @@ function checkDebuffs()
 			debuffMsg = debuffMsg..' ['..debuff.id..'] '
 			debuffMsg = debuffMsg..' ('..debuff.type..') '
 			debuffMsg = debuffMsg..' '..tostring(debuff.remaining)..' secs remaining.'
-			LCMessage(debuffMsg,nil,LCU.round(debuff.remaining/2));
+			LCMessage(debuffMsg,'PRINT',LCU.round(debuff.remaining/2));
 		end
 		lastDebuffMessage = GetTime()
 	end

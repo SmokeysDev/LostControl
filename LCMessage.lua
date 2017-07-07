@@ -57,6 +57,7 @@ local usableChans = {
 	,SAY = 1
 	,INSTANCE_CHAT = 1
 	,RAID = 1
+	,PRINT = 1
 };
 --
 -- Get the channel to use
@@ -88,7 +89,7 @@ end
 local function postMsg(msg,chan)
 	chan = getChanName(chan);
 	createChanTable(chan);
-	if(chan=='nil') then print(msg)
+	if(chan=='nil' or chan=='PRINT') then print(msg)
 	else SendChatMessage(msg,chan) end
 	local msgFound = false
 	for k,v in pairs(LCMessageLog[chan]) do

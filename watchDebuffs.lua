@@ -329,7 +329,7 @@ function checkDebuffs()
 	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
 		for k,debuff in pairs(LCU.player.debuffs) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'
-			debuffMsg = debuffMsg..' "'..debuff.name..'" '
+			debuffMsg = debuffMsg .. GetSpellLink(debuff.id)
 			debuffMsg = debuffMsg..' ['..debuff.id..'] '
 			debuffMsg = debuffMsg..' ('..debuff.type..') '
 			debuffMsg = debuffMsg..' '..tostring(debuff.remaining)..' secs remaining.'

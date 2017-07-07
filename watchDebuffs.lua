@@ -212,7 +212,7 @@ Debuffs = {
 					if(info.debuff ~= false) then
 						local debuff = info.debuff;
 						local missing = LCcfg.get('missingDebuffs');
-						if(LCU.debugMode) then print('Missed: '..debuff.name..' __ '..debuff.description); end
+						if(LCU.debugMode) then print('Missed: '..debuff.name..' __ '..(debuff.description or '(no description)')); end
 						missing[debuff.name] = debuff.description;
 					end
 				end

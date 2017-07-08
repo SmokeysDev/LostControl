@@ -191,11 +191,11 @@ Debuffs = {
 					info.announcedDebuff = true;
 					announcedDebuff = true;
 					info.lastAnnounce = theTime;
-				elseif(info.announcedDebuff ~= true and (debuff.remaining<=0.5 or stillThere==false) and info.announcedRecovery~=true) then
+				elseif(info.announcedDebuff == true and (debuff.remaining<=0.5 or stillThere==false) and info.announcedRecovery~=true) then
 					info.debuff = false;
 					info.announcedRecovery = true;
-					LCU.sendMsg(recoverMessage);
 					info.announcedDebuff = false;
+					LCU.sendMsg(recoverMessage);
 					info.lastAnnounce = GetTime()-(repeatLimit-2);
 				end
 			end

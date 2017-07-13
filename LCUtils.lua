@@ -38,24 +38,6 @@ LCU.player = {
 			,name = LCU.tern(currentSpecName~=nil, currentSpecName, nil)
 			,role = LCU.tern(currentSpecRole~=nil, currentSpecRole, nil)
 		};
-		-- Looking out for old config structure
-		if(LCcfgStore.disabledWatches ~= nil) then
-			local settings = LCU.cloneTable(LCcfgStore);
-			LCcfgStore = {};
-			LCcfgStore['original'] = LCU.cloneTable(settings);
-			LCcfgStore['original'].disabledWatches = {};
-			for k,v in pairs(settings.disabledWatches) do
-				LCcfgStore['original'].disabledWatches[k] = v;
-			end
-		end
-		-- If we do have configs for 'unknown' but not for our current role - copy unknown to our role specific one
-		if(type(LCcfgStore['original'])=='table' and LCU.player.spec.role and type(LCcfgStore[LCU.player.spec.role])~='table') then
-			LCcfgStore[LCU.player.spec.role] = LCU.cloneTable(LCcfgStore['original']);
-			LCcfgStore[LCU.player.spec.role].disabledWatches = {};
-			for k,v in pairs(LCcfgStore['original'].disabledWatches) do
-				LCcfgStore[LCU.player.spec.role].disabledWatches[k] = v;
-			end
-		end
 		-- If we found valid spec info, ensure our configs have their defaults set
 		if(LCU.player.spec and LCU.player.spec.role) then LCcfg.setDefaults(); end
 	end

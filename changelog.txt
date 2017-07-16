@@ -1,3 +1,19 @@
+2017-07-16
+----------
+v: 3.8
+----------
+
+Fixed bug that meant the first report of a problem ignored your min debuff time configuration
+
+Fixed bug that meant the recovery message could be sent when the initial message wasn't
+
+Fixed bug that meant some debug messages ended up in chat
+
+Improved logic around when to say the recovery message
+
+Added spec & role updates to a couple of game events to ensure I'm working with the correct role
+
+
 2017-07-05
 ----------
 v: 3.7

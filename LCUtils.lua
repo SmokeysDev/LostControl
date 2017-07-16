@@ -110,8 +110,8 @@ LCU.sendMsg = function(msg,priv)
 end
 
 LCU.announcePlayer = function(action)
-	LCU.player.updateRole();
-	local msgStart = LCU.player.role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
+	local role = LCcfg.getPlayerSpecRole();
+	local msgStart = role=='dps' and LCLang.get('A DPS') or LCLang.get('The '..role);
 	local msg = msgStart..' ('..LCU.player.name..') '..action
 	LCU.sendMsg(msg)
 	return msg

@@ -37,8 +37,10 @@ LCcfg = {
 		if(LCcfg.get(name)==nil) then LCcfg.set(name,val); end
 	end
 	,disableWatch = function(dbType,val)
+		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		if(role ~= 'unknown') then
+			if(LCcfgStore[role]==nil) then LCcfgStore[role] = {}; end
 			if(LCcfgStore[role]['disabledWatches']==nil) then LCcfgStore[role]['disabledWatches'] = defaultDisabledWatches; end
 			LCcfgStore[role]['disabledWatches'][dbType] = val;
 		end

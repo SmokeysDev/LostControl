@@ -38,14 +38,6 @@ function LostControl_OnEvent(self,event,...)
 		LCU.player.updateSpec();
 	end
 	if(event=="PLAYER_LOGOUT") then
-		-- Remove 'false' references to watches in cfg.disabledWatches
-		local roleWatches = LCU.cloneTable(LCcfg.get('disabledWatches'));
-		if(type(roleWatches)=="table") then
-			LCcfg.set('disabledWatches',{});
-			for db,v in pairs(roleWatches) do
-				if(v==true) then LCcfg.disableWatch(db,true); end
-			end
-		end
 	end
 	if(event=="COMBAT_LOG_EVENT_UNFILTERED") then
 		local event = args[2];

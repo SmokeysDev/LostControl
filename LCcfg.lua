@@ -34,28 +34,23 @@ LCcfg = {
 	,setDefault = function(name,val)
 		if(LCcfg.get(name)==nil) then LCcfg.set(name,val); end
 	end
-	,disableWatch = function(dbType,val)
-		local role = LCcfg.getPlayerSpecRole();
-		if(role ~= 'unknown') then
-			if(LCcfgStore[role]==nil) then LCcfgStore[role] = {}; end
-			if(LCcfgStore[role]['disabledWatches']==nil) then LCcfgStore[role]['disabledWatches'] = defaultDisabledWatches; end
-			LCcfgStore[role]['disabledWatches'][dbType] = val;
+	,getDisabledWatches = function()
+		local disabledWatches = LCcfg.get('disabledWatches');
+		if(disabledWatches == nil) then
+			disabledWatches = LCU.cloneTable(defaultDisabledWatches);
+			LCcfg.set('disabledWatches', disabledWatches);
 		end
+		return disabledWatches;
+	end
+	,disableWatch = function(dbType,val)
+		LCcfg.getDisabledWatches()[dbType] = LCU.tern(val == true, true, nil);
 	end
 	,watching = function(dbType)
-		local role = LCcfg.getPlayerSpecRole();
-		if(role == 'unknown') then role = 'original'; end
-		if(LCcfgStore[role] == nil) then
-			return true;
-		else
-			local disabledWatches = LCU.tern(type(LCcfgStore[role]['disabledWatches'])=='table', LCcfgStore[role]['disabledWatches'], defaultDisabledWatches);
-			return (disabledWatches[dbType]==nil or disabledWatches[dbType]==false);
-		end
+		return LCcfg.getDisabledWatches()[dbType] ~= true;
 	end
 	,setDefaults = function()
 		LCcfg.setDefault('instanceChat','PARTY');
 		LCcfg.setDefault('raidChat','PARTY');
-		LCcfg.setDefault('disabledWatches',defaultDisabledWatches);
 		LCcfg.setDefault('minDebuffTime',3);
 	end
 	,init = function()

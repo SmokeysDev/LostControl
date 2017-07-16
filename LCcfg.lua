@@ -8,7 +8,6 @@ local defaultDisabledWatches = {
 LCcfg = {
 	get = function(name,ifNil,allowBlankString)
 		if(type(allowBlankString)~='boolean') then allowBlankString = true; end
-		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		local ret = (type(LCcfgStore[role])=='table') and LCcfgStore[role][name] or nil;
 		if(ret==nil or (type(ret)=='string' and allowBlankString==false and LCU.trim(ret)=='')) then return ifNil;
@@ -26,7 +25,6 @@ LCcfg = {
 		return (LCU.player.spec and LCU.player.spec.role) and LCU.player.spec.role or 'unknown';
 	end
 	,set = function(name,val)
-		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		if(role ~= 'unknown') then
 			if(LCcfgStore[role]==nil) then LCcfgStore[role] = {}; end
@@ -37,7 +35,6 @@ LCcfg = {
 		if(LCcfg.get(name)==nil) then LCcfg.set(name,val); end
 	end
 	,disableWatch = function(dbType,val)
-		LCcfg.checkPlayerSpec();
 		local role = LCcfg.getPlayerSpecRole();
 		if(role ~= 'unknown') then
 			if(LCcfgStore[role]==nil) then LCcfgStore[role] = {}; end

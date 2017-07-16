@@ -25,11 +25,13 @@ function LostControl_OnEvent(self,event,...)
 	if(event=="LFG_ROLE_UPDATE") then
 		LCU.player.updateInstanceInfo();
 		LCU.player.updateRole();
+		LCU.player.updateSpec();
 		LCcfg.init();
 	end
 	if(event=="PLAYER_ROLES_ASSIGNED") then
 		LCU.player.updateInstanceInfo();
 		LCU.player.updateRole();
+		LCU.player.updateSpec();
 		LCcfg.init();
 	end
 	if(event=="ACTIVE_TALENT_GROUP_CHANGED") then

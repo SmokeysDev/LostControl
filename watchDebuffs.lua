@@ -137,7 +137,7 @@ Debuffs = {
 		local role = LCcfg.getPlayerSpecRole();
 		if(role=='dps') then role = 'DPS';
 		else role = LCU.upperFirst(role); end
-		local ref = role=='DPS' and LCLang.get('A DPS') or LCLang.get('The '..LCU.player.role);
+		local ref = role=='DPS' and LCLang.get('A DPS') or LCLang.get('The '..role);
 		ref = ref..' ('..LCU.player.name..')';
 		local newMsg = msg;
 		newMsg = newMsg:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));

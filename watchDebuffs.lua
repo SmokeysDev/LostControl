@@ -119,13 +119,19 @@ Debuffs = {
 	end
 	,isType = function(debuff,dbType)
 		if(Debuffs.types[dbType]==nil or not LCcfg.watching(dbType)) then return false; end
+		local ret = false;
 		for k,v in pairs(Debuffs.types[dbType].names) do
-			if(debuff.name == v) then return true; end
+			if(debuff.name == v) then ret = true; end
 		end
 		for k,v in pairs(Debuffs.types[dbType].descTerms) do
-			if(string.match(debuff.desc,v)~=nil) then return true; end
+			if(string.match(debuff.desc,v)~=nil) then ret = true; end
 		end
-		return false;
+		if(ret == true) then
+			for k,v in pairs(Debuffs.types[dbType].ignoreNames or {}) do
+				if(debuff.name == v) then ret = false; end
+			end
+		end
+		return ret;
 	end
 	,getType = function(debuff)
 		for dbType in pairs(Debuffs.types) do

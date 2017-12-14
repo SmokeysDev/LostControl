@@ -1,4 +1,4 @@
-## Interface: 70200
+## Interface: 70300
 ## Title: LostControl
 ## Version: 3.9
 ## Author: Matt Bacon

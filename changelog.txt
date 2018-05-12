@@ -1,3 +1,16 @@
+2018-05-12
+----------
+v: 3.10
+----------
+
+Changed default chat channels away from party
+
+Improved detection of spell school locking
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2017-12-14
 ----------
 v: 3.9.1

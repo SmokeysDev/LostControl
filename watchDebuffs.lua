@@ -1,5 +1,24 @@
 LCU.player.debuffs = {};
 Debuffs = {
+	getLockedSchools = function()
+		local locEvents = C_LossOfControl.GetNumEvents();
+		for i=1, locEvents, 1
+		do
+			local effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType = C_LossOfControl.GetEventInfo(i);
+			--print('effect '..i..' - '..effectType);
+			-- SILENCE, SCHOOL_INTERRUPT
+			-- FEAR_MECHANIC, FEAR, STUN_MECHANIC, STUN, PACIFYSILENCE, PACIFY, CHARM, DISARM, ROOT, CONFUSE, POSSESS
+			if (effectType == 'SCHOOL_INTERRUPT' and lockoutSchool ~= 0) then
+				schoolName = GetSchoolString(lockoutSchool);
+				if (schoolName == 'Unknown') then schoolName = nil;
+				else
+					local desc = GetSpellDescription(spellID);
+					local debuff = {name=effectName,rank=1,["type"]='spellLock',length=duration,remaining=LCU.round(timeRemaining),desc=desc,id=spellID,extraInfo=schoolName};
+					Debuffs.types.spellLock.debuff = debuff;
+				end
+			end
+		end
+	end,
 	types = {
 		fear = {
 			debuff = false
@@ -155,10 +174,8 @@ Debuffs = {
 		newMsg = newMsg:gsub('%%RL',role);
 		newMsg = newMsg:gsub('%%rl',string.lower(role));
 		newMsg = newMsg:gsub('%%REF',ref);
-		local spellSchool = '';
-		if(LCU.player.lastInterrupt~=nil and LCU.player.lastInterrupt.onSpellSchool) then spellSchool = LCU.player.lastInterrupt.onSpellSchool; end
-		newMsg = newMsg:gsub('%%SCH',spellSchool);
-		newMsg = newMsg:gsub('%%sch',string.lower(spellSchool));
+		newMsg = newMsg:gsub('%%SCH',debuff.extraInfo);
+		newMsg = newMsg:gsub('%%sch',string.lower(debuff.extraInfo));
 		return newMsg;
 	end
 	,checkDebuffs = function()
@@ -310,17 +327,11 @@ Debuffs = {
 			local desc = GetSpellDescription(dbid);
 			local spName,spRank = GetSpellInfo(dbid);
 			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
-			Debuffs.addFakeAura('HARMFUL',debuff);
 			if(dbType=='spellLock') then
-				local intSpellSchool = 8;
-				local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
-				LCU.player.lastInterrupt = {
-					bySpellID = 53550,
-					bySpellName = 'Mind Freeze',
-					onSpellID = 61882,
-					onSpellName = 'Earthquake',
-					onSpellSchool = intSpellSchoolName,
-				};
+				debuff.extraInfo = 'Nature';
+				Debuffs.types.spellLock.debuff = debuff;
+			else
+				Debuffs.addFakeAura('HARMFUL',debuff);
 			end
 		end
 	end
@@ -330,6 +341,7 @@ local lastDebuffMessage = 0
 function checkDebuffs()
 	local who = 'player';
 	Debuffs.get(who)
+	Debuffs.getLockedSchools();
 	Debuffs.checkDebuffs()
 	for dbType,db in pairs(Debuffs.types) do
 		if(db.debuff and db.debuff.type == 'test') then db.debuff.remaining = db.debuff.remaining-0.25; end

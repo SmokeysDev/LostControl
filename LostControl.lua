@@ -40,28 +40,6 @@ function LostControl_OnEvent(self,event,...)
 	if(event=="PLAYER_LOGOUT") then
 	end
 	if(event=="COMBAT_LOG_EVENT_UNFILTERED") then
-		local event = args[2];
-		local srcGUID = args[4];
-		local srcName = args[5];
-		local srcUnitFlag = args[6];
-		local srcUnitFlag2 = args[7];
-		local destGUID = args[8];
-		local destName = args[9];
-		local destUnitFlag = args[10];
-		local destUnitFlag2 = args[11];
-		if(event=='SPELL_INTERRUPT' and destName==LCU.player.name and intSpellSchool~=nil and intSpellSchool>0) then
-			local intSpellID = args[15];
-			local intSpellName = args[16];
-			local intSpellSchool = args[17];
-			local intSpellSchoolName = LCU.spellSchoolByNum(intSpellSchool);
-			LCU.player.lastInterrupt = {
-				bySpellID = args[12],
-				bySpellName = args[13],
-				onSpellID = intSpellID,
-				onSpellName = intSpellName,
-				onSpellSchool = intSpellSchoolName,
-			};
-		end
 	end
 end
 

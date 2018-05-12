@@ -5,11 +5,18 @@ local defaultDisabledWatches = {
 	falling = true
 }
 
+local defaultCfgs = {
+	instanceChat = 'INSTANCE_CHAT',
+	raidChat = 'RAID',
+	minDebuffTime = 3
+}
+
 LCcfg = {
 	get = function(name,ifNil,allowBlankString)
 		if(type(allowBlankString)~='boolean') then allowBlankString = true; end
 		local role = LCcfg.getPlayerSpecRole();
 		local ret = (type(LCcfgStore[role])=='table') and LCcfgStore[role][name] or nil;
+		if(ret==nil) then ret = defaultCfgs[name]; end
 		if(ret==nil or (type(ret)=='string' and allowBlankString==false and LCU.trim(ret)=='')) then return ifNil;
 		else return ret; end
 	end
@@ -49,9 +56,6 @@ LCcfg = {
 		return LCcfg.getDisabledWatches()[dbType] ~= true;
 	end
 	,setDefaults = function()
-		LCcfg.setDefault('instanceChat','PARTY');
-		LCcfg.setDefault('raidChat','PARTY');
-		LCcfg.setDefault('minDebuffTime',3);
 	end
 	,init = function()
 		LCcfg.setDefaults();

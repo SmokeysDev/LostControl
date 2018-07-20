@@ -1,12 +1,12 @@
 ## Interface: 80000
 ## Title: LostControl
-## Version: 3.10
+## Version: 3.11
 ## Author: Matt Bacon
 ## X-Email: matt@mdev.me
 ## X-Date: January 25th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
 ## SavedVariablesPerCharacter: LCcfgStore
-## X-Curse-Packaged-Version: v3.10
+## X-Curse-Packaged-Version: v3.11
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol
 ## X-Curse-Repository-ID: wow/lostcontrol/mainline

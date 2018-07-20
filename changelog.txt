@@ -1,3 +1,16 @@
+2018-07-20
+----------
+v: 3.11
+----------
+
+Fixed bug following game API update
+
+Updated interface number to remove 'out of date addon' warnings
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2018-05-12
 ----------
 v: 3.10

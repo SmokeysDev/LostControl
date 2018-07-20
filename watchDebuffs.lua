@@ -13,7 +13,7 @@ Debuffs = {
 				if (schoolName == 'Unknown') then schoolName = nil;
 				else
 					local desc = GetSpellDescription(spellID);
-					local debuff = {name=effectName,rank=1,["type"]='spellLock',length=duration,remaining=LCU.round(timeRemaining),desc=desc,id=spellID,extraInfo=schoolName};
+					local debuff = {name=effectName,icon=nil,["type"]='spellLock',length=duration,remaining=LCU.round(timeRemaining),desc=desc,id=spellID,extraInfo=schoolName};
 					Debuffs.types.spellLock.debuff = debuff;
 				end
 			end
@@ -251,11 +251,10 @@ Debuffs = {
 	end
 	,getLink = function(debuff)
 		if(type(debuff)=="number") then
-			local name,rank = GetSpellInfo(debuff);
-			debuff = {id=debuff,name=name,rank=rank};
+			local name = GetSpellInfo(debuff);
+			debuff = {id=debuff,name=name};
 		end
-		if(debuff.rank~='') then debuff.rank = ' '..tostring(debuff.rank); end
-		return "|Hspell:" .. debuff.id .."|h|r|cff71d5ff[" .. debuff.name .. debuff.rank .. "]|r|h";
+		return GetSpellLink(debuff.id);
 	end
 	,_fakeAura = false
 	,addFakeAura = function(type,auraData)
@@ -264,19 +263,19 @@ Debuffs = {
 	,getAura = function(who,i,auraType)
 		local a = UnitAura(who,i,auraType);
 		if(a==nil and Debuffs._fakeAura) then
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id;
+			local n,icon,_,dbType,duration,expires,_,_,_,id;
 			local fakeA = Debuffs._fakeAura;
 			n = fakeA.name;
-			rank = fakeA.rank;
+			icon = fakeA.icon;
 			dbType = fakeA.type;
 			duration = fakeA.length;
 			expires = GetTime()+fakeA.remaining;
 			id = fakeA.id;
 			Debuffs._fakeAura = false;
-			return n,rank,_,_,dbType,duration,expires,_,_,_,id;
+			return n,icon,_,dbType,duration,expires,_,_,_,id;
 		else
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
-			return n,rank,_,_,dbType,duration,expires,_,_,_,id;
+			local n,icon,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
+			return n,icon,_,dbType,duration,expires,_,_,_,id;
 		end
 	end
 	,get = function(who)
@@ -285,10 +284,10 @@ Debuffs = {
 		local scanAuras = true;
 		local auraI = 1;
 		while(scanAuras==true) do
-			local n,rank,_,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
+			local n,icon,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
 			if(n ~= nil and expires ~= nil) then
 				local desc = GetSpellDescription(id) or '';
-				local debuff = {name=n,rank=rank,["type"]=(dbType or ''),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
+				local debuff = {name=n,icon=icon,["type"]=(dbType or ''),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
 				debuffs[#debuffs+1] = debuff;
 				local dbType = Debuffs.getType(debuff);
 				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
@@ -325,8 +324,8 @@ Debuffs = {
 		if(tests[dbType] and Debuffs.types[dbType].debuff==false) then
 			local dbid = tests[dbType];
 			local desc = GetSpellDescription(dbid);
-			local spName,spRank = GetSpellInfo(dbid);
-			local debuff = {name=spName,rank=spRank,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
+			local spName = GetSpellInfo(dbid);
+			local debuff = {name=spName,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
 			if(dbType=='spellLock') then
 				debuff.extraInfo = 'Nature';
 				Debuffs.types.spellLock.debuff = debuff;

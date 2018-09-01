@@ -219,7 +219,9 @@ Debuffs = {
 					info.debuff = false;
 					info.announcedRecovery = true;
 					info.announcedDebuff = false;
-					LCU.sendMsg(recoverMessage);
+					if(recoverMessage ~= '-') then
+						LCU.sendMsg(recoverMessage);
+					end
 					info.lastAnnounce = GetTime()-(repeatLimit-2);
 				end
 			end

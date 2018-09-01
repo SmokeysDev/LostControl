@@ -1,3 +1,16 @@
+2018-09-01
+----------
+v: 3.12
+----------
+
+Added yell support
+
+A custom recovery message of "-" now disables the recovery announcement
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2018-07-20
 ----------
 v: 3.11

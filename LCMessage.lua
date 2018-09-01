@@ -68,14 +68,17 @@ local function getChanName(chan)
 	if(chan == 'nil') then
 		if(IsInRaid()) then
 			if(LCcfg.get('raidChat')=='SAY') then chan = 'SAY'; end
+			if(LCcfg.get('raidChat')=='YELL') then chan = 'YELL'; end
 			if(LCcfg.get('raidChat')=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
 			if(LCcfg.get('raidChat')=='RAID') then chan = 'RAID'; end
 		elseif(IsInGroup()) then
 			if(LCcfg.get('instanceChat')=='SAY') then chan = 'SAY'; end
+			if(LCcfg.get('instanceChat')=='YELL') then chan = 'YELL'; end
 			if(LCcfg.get('instanceChat')=='PARTY' and IsInGroup()) then chan = 'PARTY'; end
 			if(LCcfg.get('instanceChat')=='INSTANCE_CHAT') then chan = 'INSTANCE_CHAT'; end
 		else
 			if(LCcfg.get('instanceChat')=='SAY') then chan = 'SAY'; end
+			if(LCcfg.get('instanceChat')=='YELL') then chan = 'YELL'; end
 		end
 		if(IsInGroup() and LCU.player.inInstance==nil) then chan = 'PARTY' end
 	end

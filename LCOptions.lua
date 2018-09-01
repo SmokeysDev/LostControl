@@ -104,6 +104,7 @@ function LCOptions(LostControlFrame)
 	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
 		{
 			{"Say (/s)","SAY"}
+			,{"Yell (/yell)","YELL"}
 			,{"Party (/p)","PARTY"}
 			,{"Instance (/i)","INSTANCE_CHAT"}
 		}
@@ -114,6 +115,7 @@ function LCOptions(LostControlFrame)
 	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
 		{
 			{"Say (/s)","SAY"}
+			,{"Yell (/yell)","YELL"}
 			,{"Party (/p)","PARTY"}
 			,{"Raid (/r)","RAID"}
 		}

@@ -36,6 +36,14 @@ Debuffs = {
 			,message = LCLang.dynaGet('%REF has been charmed for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer charmed')
 		}
+		,disarm = {
+			debuff = false
+			,enabled = true
+			,names = {'Disarm','Disarmed'}
+			,descTerms = {'[dD]isarm'}
+			,message = LCLang.dynaGet('%REF has been disarmed for [remaining] seconds - {SPELL_LINK}')
+			,recoverMessage = LCLang.dynaGet('%REF is no longer disarmed')
+		}
 		,incap = {
 			debuff = false
 			,enabled = true
@@ -316,6 +324,7 @@ Debuffs = {
 			--,charm = 3384 --Mass Charm
 			--,incap = 115078 --Paralysis
 			--,incap = 115877 --Fully Petrified
+			,disarm = 236077
 			,incap = 182234 --Unbreakable will
 			,stun = 853 --Hammer of Justice
 			,sleep = 31298 --Sleep

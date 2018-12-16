@@ -41,7 +41,7 @@ Debuffs = {
 			,enabled = true
 			,names = {'Polymorph','Freeze','Hex','Hibernate','Choking','Choking Vines'}
 			,ignoreNames = {'Unbreakable Will'}
-			,descTerms = {' [iI]ncapacitat','^Incapacitated','[dD]isoriented','[sS]apped','unable to act','[cC]hoke','[cC]hoking'}
+			,descTerms = {' [iI]ncapacitat','^Incapacitated','[dD]isorient','[sS]apped','unable to act','[cC]hoke','[cC]hoking'}
 			,message = LCLang.dynaGet('%REF is incapacitated for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer incapacitated')
 		}

@@ -1,3 +1,18 @@
+2018-12-16
+----------
+v: 3.13
+----------
+
+Added disarm debuff support
+
+Improved disorientation detection
+
+Updated interface number to remove 'out of date addon' warnings
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2018-09-01
 ----------
 v: 3.12

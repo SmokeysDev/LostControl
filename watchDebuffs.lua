@@ -1,7 +1,12 @@
 LCU.player.debuffs = {};
 Debuffs = {
 	getLockedSchools = function()
-		local locEvents = C_LossOfControl.GetNumEvents();
+		local locEvents = 0
+		if(type(C_LossOfControl.GetNumEvents)=="function") then
+			locEvents = C_LossOfControl.GetNumEvents();
+		elseif(type(C_LossOfControl.GetActiveLossOfControlDataCount)=="function") then
+			locEvents = C_LossOfControl.GetActiveLossOfControlDataCount();
+		end
 		for i=1, locEvents, 1
 		do
 			local effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType = C_LossOfControl.GetEventInfo(i);

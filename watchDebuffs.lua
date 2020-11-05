@@ -9,7 +9,22 @@ Debuffs = {
 		end
 		for i=1, locEvents, 1
 		do
-			local effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType = C_LossOfControl.GetEventInfo(i);
+			local effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType;
+			if(type(C_LossOfControl.GetEventInfo)=="function") then
+				effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType = C_LossOfControl.GetEventInfo(i);
+			elseif(type(C_LossOfControl.GetActiveLossOfControlData)=="function") then
+				local ev = C_LossOfControl.GetActiveLossOfControlData(i);
+				effectType = ev.locType;
+				spellID = ev.spellID;
+				effectName = ev.displayText;
+				iconTexture = ev.iconTexture;
+				startTime = ev.startTime;
+				timeRemaining = ev.timeRemaining;
+				duration = ev.duration;
+				lockoutSchool = ev.lockoutSchool;
+				priority = ev.priority;
+				displayType = ev.displayType;
+			end
 			--print('effect '..i..' - '..effectType);
 			-- SILENCE, SCHOOL_INTERRUPT
 			-- FEAR_MECHANIC, FEAR, STUN_MECHANIC, STUN, PACIFYSILENCE, PACIFY, CHARM, DISARM, ROOT, CONFUSE, POSSESS

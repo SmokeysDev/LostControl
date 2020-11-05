@@ -1,3 +1,16 @@
+2020-11-05
+----------
+v: 3.15
+----------
+
+Updated interface number to remove 'out of date addon' warnings
+
+Fixed errors caused by updates to the game API
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2019-09-15
 ----------
 v: 3.14

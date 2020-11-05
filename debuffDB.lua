@@ -14,12 +14,14 @@ Debuffs.addDescs('incap',{
 });
 
 Debuffs.addDescs('slow',{
-	'[rR]educes ?.* movement speed'
+	'[rR]educes ?.- movement speed'
+	,'decreasing ?.- movement speed'
 	,'[mM]ovement speed reduced'
 });
 
 Debuffs.addDesc('stun','teleported you out of the Silver Enclave');
 
 Debuffs.addDescs('silence',{
-	'prevent.* from casting spells'
+	'prevent.- from casting spells'
+	,'prevents casting'
 });

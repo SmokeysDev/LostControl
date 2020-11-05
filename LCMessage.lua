@@ -93,7 +93,14 @@ local function postMsg(msg,chan)
 	chan = getChanName(chan);
 	createChanTable(chan);
 	if(chan=='nil' or chan=='PRINT') then print(msg)
-	else SendChatMessage(msg,chan) end
+	else
+		if (LCU.player.inInstance==nil or LCU.player.inInstance==false) and (chan==nil or chan=='SAY' or chan=='YELL' or chan=='CHANNEL') then
+			print(chan, ' not allowed: ', msg)
+		else
+			print('Sending msg: ', chan, ' - ', msg)
+			SendChatMessage(msg,chan)
+		end
+	end
 	local msgFound = false
 	for k,v in pairs(LCMessageLog[chan]) do
 		if(v.msg == msg) then

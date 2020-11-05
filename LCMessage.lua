@@ -95,7 +95,7 @@ local function postMsg(msg,chan)
 	if(chan=='nil' or chan=='PRINT') then print(msg)
 	else
 		if (LCU.player.inInstance==nil or LCU.player.inInstance==false) and (chan==nil or chan=='SAY' or chan=='YELL' or chan=='CHANNEL') then
-			print(chan, ' not allowed: ', msg)
+			print(chan, 'not allowed: ', msg)
 		else
 			print('Sending msg: ', chan, ' - ', msg)
 			SendChatMessage(msg,chan)

@@ -125,6 +125,7 @@ function LCOptions(LostControlFrame)
 	OptionsPanel.elements.subTitle = AddText(notes,OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.title);
 	OptionsPanel.elements.watchTypesTitle = AddText('Watch debuff types:',OptionsPanel,"GameFontNormal",0,-20,OptionsPanel.elements.subTitle);
 	OptionsPanel.elements.chanDropsTitle = AddText('Channel Selections:',OptionsPanel,"GameFontNormal",180,12,OptionsPanel.elements.watchTypesTitle);
+	OptionsPanel.elements.chanDropsNotice = AddText('Note: WoW now stops AddOns using SAY / YELL outside instances',OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.chanDropsTitle);
 
 	local lastEl = OptionsPanel.elements.watchTypesTitle;
 	-- Loop through debuff types and create watch checkboxes for them
@@ -226,7 +227,7 @@ function LCOptions(LostControlFrame)
 		}
 		,(function(self) LCcfg.set('instanceChat',self.value) end)
 		,(function(val) return val==LCcfg.get('instanceChat','PARTY') end)
-		,-20,-28,OptionsPanel.elements.chanDropsTitle);
+		,-20,-25,OptionsPanel.elements.chanDropsNotice);
 
 	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
 		{

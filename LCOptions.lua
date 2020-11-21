@@ -204,6 +204,19 @@ function LCOptions(LostControlFrame)
 		,(function(val) return val==LCcfg.get('minDebuffTime',3) end)
 		,-15,-40,lastEl);
 
+	local watchFallingKey = 'watchFalling';
+	OptionsPanel.elements[watchFallingKey] = CreateCheckButton(OptionsPanel, "LCO_"..watchFallingKey, 12, -10, 'Falling alert', 'Enable watching for your player falling', OptionsPanel.elements.debuffTime);
+	OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
+	OptionsPanel.elements[watchFallingKey]:SetScript("OnShow", function()
+		OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
+	end);
+	OptionsPanel.elements[watchFallingKey]:SetScript("OnClick",
+		function()
+			if(OptionsPanel.elements[watchFallingKey]:GetChecked()) then LCcfg.disableWatch('falling',false);
+			else LCcfg.disableWatch('falling',true); end
+		end
+	);
+
 	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
 		{
 			{"Say (/s)","SAY"}
@@ -225,19 +238,6 @@ function LCOptions(LostControlFrame)
 		,(function(self) LCcfg.set('raidChat',self.value) end)
 		,(function(val) return val==LCcfg.get('raidChat','PARTY') end)
 		,0,-35,OptionsPanel.elements.instChat);
-
-	local watchFallingKey = 'watchFalling';
-	OptionsPanel.elements[watchFallingKey] = CreateCheckButton(OptionsPanel, "LCO_"..watchFallingKey, 12, -10, 'Falling alert', 'Enable watching for your player falling', OptionsPanel.elements.raidChat);
-	OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
-	OptionsPanel.elements[watchFallingKey]:SetScript("OnShow", function()
-		OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
-	end);
-	OptionsPanel.elements[watchFallingKey]:SetScript("OnClick",
-		function()
-			if(OptionsPanel.elements[watchFallingKey]:GetChecked()) then LCcfg.disableWatch('falling',false);
-			else LCcfg.disableWatch('falling',true); end
-		end
-	);
 
 	OptionsPanel:Hide();
 	InterfaceOptions_AddCategory(OptionsPanel);

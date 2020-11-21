@@ -7,6 +7,7 @@ local defaultDisabledWatches = {
 
 local defaultCfgs = {
 	instanceChat = 'INSTANCE_CHAT',
+	oomBreakpoint = 15,
 	raidChat = 'RAID',
 	minDebuffTime = 3
 }

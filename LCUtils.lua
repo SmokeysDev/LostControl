@@ -3,6 +3,7 @@ LCU.addonName = "LostControl"
 LCU.addonVer = GetAddOnMetadata("LostControl","Version");
 LCU.debugMode = false;
 LCU.optionsPanel = nil;
+LCU.debuffs = {};
 LCU.player = {
 	role = nil
 	,spec = nil

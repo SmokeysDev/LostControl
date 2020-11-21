@@ -19,6 +19,10 @@ Debuffs.addDescs('slow',{
 	,'[mM]ovement speed reduced'
 });
 
+Debuffs.addDescs('root',{
+	'preventing them from moving'
+});
+
 Debuffs.addDesc('stun','teleported you out of the Silver Enclave');
 
 Debuffs.addDescs('silence',{

@@ -11,12 +11,49 @@ local function CreateCheckButton(parent, checkBoxName, posX, posY, displayText, 
 	return checkButton;
 end
 
-local function CreateEditBox(parent, editBoxName, posX, posY, relativeTo)
+local function CreateEditBox(parent, editBoxName, posX, posY, relativeTo, width, height)
 	local editBox = CreateFrame("EditBox", editBoxName, parent, "InputBoxTemplate");
 	if(relativeTo == nil) then editBox:SetPoint("TOPLEFT", posX, posY);
 	else editBox:SetPoint("TOPLEFT",relativeTo,"BOTTOMLEFT",posX,posY); end
-	editBox:SetWidth(150)
-	editBox:SetHeight(30)
+	if(type(width)~='number') then
+		width = 150;
+	end
+	if(type(height)~='number') then
+		height = 30;
+	end
+	editBox:SetWidth(width)
+	editBox:SetHeight(height)
+	return editBox;
+end
+
+local function CreateNumberInput(parent, editBoxName, posX, posY, relativeTo, width, height)
+	local editBox = CreateFrame("EditBox", editBoxName, parent, "NumericInputSpinnerTemplate");
+	if(relativeTo == nil) then editBox:SetPoint("TOPLEFT", posX, posY);
+	else editBox:SetPoint("TOPLEFT",relativeTo,"BOTTOMLEFT",posX,posY); end
+	if(type(width)~='number') then
+		width = 150;
+	end
+	if(type(height)~='number') then
+		height = 30;
+	end
+	editBox:SetWidth(width)
+	editBox:SetHeight(height)
+	return editBox;
+end
+
+local function CreateSliderInput(parent, editBoxName, posX, posY, relativeTo, width, height, min, max)
+	local editBox = CreateFrame("SLIDER", editBoxName, parent, "HorizontalSliderTemplate");
+	if(relativeTo == nil) then editBox:SetPoint("TOPLEFT", posX, posY);
+	else editBox:SetPoint("TOPLEFT",relativeTo,"BOTTOMLEFT",posX,posY); end
+	if(type(width)~='number') then
+		width = 100;
+	end
+	if(type(height)~='number') then
+		height = 30;
+	end
+	editBox:SetWidth(width)
+	editBox:SetHeight(height)
+	editBox:SetMinMaxValues(min, max)
 	return editBox;
 end
 
@@ -72,9 +109,51 @@ function LCOptions(LostControlFrame)
 	for dbType in pairs(Debuffs.types) do table.insert(debuffNames,dbType); end
 	table.sort(debuffNames);
 	for _,dbType in ipairs(debuffNames) do
-		local elKey = 'watch'..LCU.upperFirst(dbType);
+		local isOom = dbType == 'oom';
+		local typeName = LCU.upperFirst(dbType);
+		local elKey = 'watch'..typeName;
+		local typeDesc = dbType..' effects';
+		if(isOom) then
+			typeName = 'OOM';
+			typeDesc = 'OOM';
+		end
 		local locY = i==0 and -12 or -5;
-		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, LCU.upperFirst(dbType), 'Enable watching for '..dbType..' effects', lastEl);
+		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, typeName, 'Enable watching for '..typeDesc, lastEl);
+		if(isOom) then
+			OptionsPanel.elements[elKey].tooltipText = 'Out Of Mana';
+			OptionsPanel.elements[elKey].tooltipRequirement = OptionsPanel.elements[elKey].tooltipRequirement..'\nUse slider to select breakpoint';
+			local extraElKey = 'oomBreakpoint';
+			OptionsPanel.elements[extraElKey] = CreateSliderInput(OptionsPanel, "LCO_"..extraElKey, 125, -3, lastEl, 85, 25, 1, 99);
+			local getCurrVal = function()
+				return tonumber(LCcfg.get(extraElKey, 15, false));
+			end
+			local currValue = getCurrVal();
+			local sliderLabel = AddText(currValue, OptionsPanel, 'GameFontHighlight', 96, -9, lastEl);
+			OptionsPanel.elements[extraElKey]:SetValue(currValue);
+			OptionsPanel.elements[extraElKey]:SetScript("OnShow", function(self)
+				currValue = getCurrVal();
+				self:SetValue(currValue);
+				sliderLabel:SetText(currValue..'%');
+			end);
+			local updateValue = function(self, value)
+				local old = LCcfg.get(extraElKey,nil,false);
+				if(value == nil and old==nil) then
+					return nil;
+				else
+					if(value == nil or value == 'nil') then
+						value = nil;
+					else
+						value = tonumber(value);
+					end
+					value = LCU.round(value);
+					if (tonumber(old) ~= value) then
+						sliderLabel:SetText(value..'%');
+						LCcfg.set(extraElKey,LCU.str(value));
+					end
+				end
+			end
+			OptionsPanel.elements[extraElKey]:SetScript("OnValueChanged",updateValue);
+		end
 		OptionsPanel.elements[elKey]:SetChecked(LCcfg.watching(dbType));
 		OptionsPanel.elements[elKey]:SetScript("OnShow", function()
 			OptionsPanel.elements[elKey]:SetChecked(LCcfg.watching(dbType));
@@ -156,12 +235,14 @@ function LCOptions(LostControlFrame)
 	messageOptionsPanel.elements.subTitle = AddText('Use the inputs below to customise the announcements. Leave blank to use the defaults.',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.title);
 	messageOptionsPanel.elements.subTitle2 = AddText('%TR = time remaining | %SL = spell link | %NM = char name | %RL = role',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.subTitle);
 	messageOptionsPanel.elements.subTitle3 = AddText('%REF = role and name e.g. "A DPS (charName)" or "The tank (charname)"',messageOptionsPanel,"GameFontHighlightSmall",0,-4,messageOptionsPanel.elements.subTitle2);
+	-- TODO: Add note about setting recovery message to "-" to disable it
 
 	lastEl = messageOptionsPanel.elements.subTitle3;
 
 	messageOptionsPanel.elements.labelsColTitle = AddText('Debuff type',messageOptionsPanel,"GameFontNormal",0,-20,lastEl);
 	messageOptionsPanel.elements.messageColTitle = AddText('Warn message',messageOptionsPanel,"GameFontNormal",100,-20,lastEl);
 	messageOptionsPanel.elements.recoverMessageColTitle = AddText('Recover message',messageOptionsPanel,"GameFontNormal",300,-20,lastEl);
+	messageOptionsPanel.elements.recoverMessageHint = AddText('Enter a dash (-) to disable',messageOptionsPanel,"GameFontHighlightSmall",420,-22,lastEl);
 
 	lastEl = messageOptionsPanel.elements.labelsColTitle;
 
@@ -174,7 +255,11 @@ function LCOptions(LostControlFrame)
 		local elKey = dbType..'Message';
 		local locY = i==0 and -15 or -15;
 
-		messageOptionsPanel.elements[elKey..'Label'] = AddText(LCU.upperFirst(dbType),messageOptionsPanel,"GameFontHighlight",0,locY,lastEl);
+		local labelText = LCU.upperFirst(dbType);
+		if(labelText == 'Oom') then
+			labelText = 'OOM';
+		end
+		messageOptionsPanel.elements[elKey..'Label'] = AddText(labelText,messageOptionsPanel,"GameFontHighlight",0,locY,lastEl);
 		lastEl = messageOptionsPanel.elements[elKey..'Label'];
 
 		messageOptionsPanel.elements[elKey] = CreateEditBox(messageOptionsPanel, "LCO_"..elKey, 105, 20, lastEl);

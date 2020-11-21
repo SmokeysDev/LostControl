@@ -1,45 +1,118 @@
-LCU.player.debuffs = {};
 Debuffs = {
-	getLockedSchools = function()
-		local locEvents = 0
-		if(type(C_LossOfControl.GetNumEvents)=="function") then
-			locEvents = C_LossOfControl.GetNumEvents();
-		elseif(type(C_LossOfControl.GetActiveLossOfControlDataCount)=="function") then
+	locEffectTypeMap = {
+		CONFUSE = 'incap',
+		STUN_MECHANIC = 'stun',
+		STUN = 'stun',
+		SILENCE = 'silence',
+		PACIFYSILENCE = 'silence',
+		PACIFY = 'silence',
+		FEAR_MECHANIC = 'fear',
+		FEAR = 'fear',
+		CHARM = 'charm',
+		POSSESS = 'charm',
+		DISARM = 'disarm',
+		ROOT = 'root',
+		SCHOOL_INTERRUPT = 'interrupt'
+	},
+	getByLocAPI = function(who)
+		local who = who or "player";
+		local debuffs = {};
+		local locEvents = 0;
+		if (who == 'player') then
 			locEvents = C_LossOfControl.GetActiveLossOfControlDataCount();
+		else
+			locEvents = C_LossOfControl.GetActiveLossOfControlDataCountByUnit(who) or 0;
 		end
 		for i=1, locEvents, 1
 		do
-			local effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType;
-			if(type(C_LossOfControl.GetEventInfo)=="function") then
-				effectType, spellID, effectName, iconTexture, startTime, timeRemaining, duration, lockoutSchool, priority, displayType = C_LossOfControl.GetEventInfo(i);
-			elseif(type(C_LossOfControl.GetActiveLossOfControlData)=="function") then
-				local ev = C_LossOfControl.GetActiveLossOfControlData(i);
-				effectType = ev.locType;
-				spellID = ev.spellID;
-				effectName = ev.displayText;
-				iconTexture = ev.iconTexture;
-				startTime = ev.startTime;
-				timeRemaining = ev.timeRemaining;
-				duration = ev.duration;
-				lockoutSchool = ev.lockoutSchool;
-				priority = ev.priority;
-				displayType = ev.displayType;
+			local ev = nil;
+			if (who == 'player') then
+				ev = C_LossOfControl.GetActiveLossOfControlData(i);
+			else
+				ev = C_LossOfControl.GetActiveLossOfControlDataByUnit(who, i);
 			end
-			--print('effect '..i..' - '..effectType);
+
 			-- SILENCE, SCHOOL_INTERRUPT
 			-- FEAR_MECHANIC, FEAR, STUN_MECHANIC, STUN, PACIFYSILENCE, PACIFY, CHARM, DISARM, ROOT, CONFUSE, POSSESS
-			if (effectType == 'SCHOOL_INTERRUPT' and lockoutSchool ~= 0) then
-				schoolName = GetSchoolString(lockoutSchool);
-				if (schoolName == 'Unknown') then schoolName = nil;
-				else
-					local desc = GetSpellDescription(spellID);
-					local debuff = {name=effectName,icon=nil,["type"]='spellLock',length=duration,remaining=LCU.round(timeRemaining),desc=desc,id=spellID,extraInfo=schoolName};
-					Debuffs.types.spellLock.debuff = debuff;
+			-- missing = slow, incapacitated, sleep
+			-- confuse = polymorph (incap?)
+
+			local dbType = Debuffs.locEffectTypeMap[ev.locType];
+			if (dbType ~= nil) then
+				local debuff = {
+					name = ev.displayText,
+					icon = nil,
+					["type"] = dbType,
+					length = ev.duration,
+					remaining = LCU.round(ev.timeRemaining),
+					desc = desc,
+					id = ev.spellID,
+					source = 'api',
+					extraInfo = ''
+				};
+				local desc = GetSpellDescription(ev.spellID);
+				if (dbType == 'interrupt') then
+					if (ev.lockoutSchool == 0) then
+						debuff.type = nil;
+					else
+						--print('get locked school'..LCU.str(ev.lockoutSchool));
+						local schoolName = GetSchoolString(ev.lockoutSchool);
+						if (schoolName == 'Unknown') then
+							--print('unknown school')
+							debuff.type = nil;
+						else
+							debuff.type = 'spellLock';
+							debuff.extraInfo = schoolName;
+							--print('spell lock '..schoolName);
+						end
+					end
 				end
+				if (debuff.type ~= nil and ev.timeRemaining > 0) then
+					local currDb = Debuffs.types[dbType].debuff;
+					if (currDb == false) then
+						debuffs[dbType] = debuff;
+					elseif (debuff.remaining > currDb.remaining or currDb.id == debuff.id) then
+						debuffs[dbType] = debuff;
+					end
+				end
+			-- else
+			-- 	LCMessage('unknown effect ' .. i .. ' - ' .. ev.locType .. ev.displayText .. LCU.str(ev.timeRemaining) .. GetSpellLink(ev.spellID), 'PRINT', LCU.round(ev.timeRemaining/2))
 			end
 		end
-	end,
-	types = {
+		return debuffs;
+	end
+	,getByDebuffs = function(who)
+		who = who or 'player';
+		local debuffs = {};
+		local scanAuras = true;
+		local auraI = 1;
+		while(scanAuras==true) do
+			local n,icon,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
+			if(n ~= nil and expires ~= nil) then
+				local desc = GetSpellDescription(id) or '';
+				local debuff = {
+					name = n,
+					icon = icon,
+					["type"] = (dbType or ''),
+					length = duration,
+					remaining = LCU.round(expires-GetTime()),
+					desc = desc,
+					id = id,
+					extraInfo = '',
+					source = 'debuff'
+				};
+				local dbType = Debuffs.getType(debuff);
+				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
+				if(dbType~=false) then
+					debuffs[dbType] = debuff;
+				end
+			end
+			if(n == nil or auraI >= 40) then scanAuras = false; end
+			auraI = auraI+1;
+		end
+		return debuffs;
+	end
+	,types = {
 		fear = {
 			debuff = false
 			,enabled = true
@@ -81,10 +154,18 @@ Debuffs = {
 			,message = LCLang.dynaGet('%REF is asleep for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer asleep')
 		}
+		,oom = {
+			debuff = false
+			,enabled = true
+			,names = {}
+			,descTerms = {}
+			,message = LCLang.dynaGet('%REF is out of mana!')
+			,recoverMessage = LCLang.dynaGet('%REF has mana again')
+		}
 		,root = {
 			debuff = false
 			,enabled = true
-			,names = {'Freeze','Root','Entangling Roots','Charge','Frozen'}
+			,names = {'Freeze','Root','Entangling Roots','Frozen'}
 			,descTerms = {' [rR]oot','^Rooted','[fF]rozen','[iI]mmobiliz'}
 			,message = LCLang.dynaGet('%REF has been rooted for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer rooted')
@@ -93,15 +174,16 @@ Debuffs = {
 			debuff = false
 			,enabled = true
 			,names = {'Silence','Solar Beam','Strangulate','Arcane Torrent','Silencing Shot'}
+			,ignoreNames = {'Unstable Afflication'}
 			,descTerms = {'Silenced',' ?[sS]ilence[ds]?','[cC]annot cast spells','[pP]acified'}
 			,message = LCLang.dynaGet('%REF has been silenced for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer silenced')
 		}
 		,slow = {
 			debuff = false
-			,enabled = false
+			,enabled = true
 			,names = {'Dazed','Daze','Slow','Slowed','Hamstring','Ice Trap'}
-			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','speed reduced'}
+			,descTerms = {' [sS]low','^Slow',' [dD]azed?','^Dazed?','movement speed reduced'}
 			,message = LCLang.dynaGet('%REF has been slowed for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer slowed')
 		}
@@ -109,6 +191,7 @@ Debuffs = {
 			debuff = false
 			,enabled = true
 			,names = {'Stun','Stunned','Stomp'}
+			,ignoreNames = {'Rake'}
 			,descTerms = {' [sS]tun','^Stun'}
 			,message = LCLang.dynaGet('%REF has been stunned for [remaining] seconds - {SPELL_LINK}')
 			,recoverMessage = LCLang.dynaGet('%REF is no longer stunned')
@@ -171,8 +254,17 @@ Debuffs = {
 		for k,v in pairs(Debuffs.types[dbType].names) do
 			if(debuff.name == v) then ret = true; end
 		end
+		-- These are basic protection against unwanted matches where effects say "At 5 stacks they are stunned"/"if dispelled"
+		local excludeTerms = {'[dD]ispel','stack','application'};
 		for k,v in pairs(Debuffs.types[dbType].descTerms) do
-			if(string.match(debuff.desc,v)~=nil) then ret = true; end
+			if(string.match(debuff.desc,v)~=nil and string.match(debuff.desc,'stack')==nil) then
+				ret = true;
+				for i,term in pairs(excludeTerms) do
+					if(ret == true and string.match(debuff.desc,term)~=nil) then
+						ret = false;
+					end
+				end
+			end
 		end
 		if(ret == true) then
 			for k,v in pairs(Debuffs.types[dbType].ignoreNames or {}) do
@@ -196,8 +288,8 @@ Debuffs = {
 		local newMsg = msg;
 		newMsg = newMsg:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
 		newMsg = newMsg:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
-		newMsg = newMsg:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id)));
-		newMsg = newMsg:gsub('%%SL',(GetSpellLink(debuff.id)));
+		newMsg = newMsg:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id) or ''));
+		newMsg = newMsg:gsub('%%SL',(GetSpellLink(debuff.id) or ''));
 		newMsg = newMsg:gsub('%%NM',LCU.player.name);
 		newMsg = newMsg:gsub('%%RL',role);
 		newMsg = newMsg:gsub('%%rl',string.lower(role));
@@ -206,23 +298,35 @@ Debuffs = {
 		newMsg = newMsg:gsub('%%sch',string.lower(debuff.extraInfo));
 		return newMsg;
 	end
-	,checkDebuffs = function()
+	,checkDebuffs = function(debuffs, who)
+		who = who or 'player';
+		if (type(LCU.debuffs[who]) ~= 'table') then
+			LCU.debuffs[who] = {};
+		end
 		local announcedDebuff = false;
 		for dbType,info in pairs(Debuffs.types) do
-			if(info.debuff ~= false and info.enabled==true) then
-				local debuff = info.debuff;
+			if(LCcfg.watching(dbType) and (LCU.debuffs[who][dbType] ~= nil or debuffs[dbType] ~= nil)) then
+				local currDebuff = LCU.debuffs[who][dbType];
+				local debuff = debuffs[dbType];
+				local hasGone = false;
+				if(debuff == nil) then
+					debuff = currDebuff;
+					hasGone = true;
+				end
 				local lastAnnounce = info.lastAnnounce or 0;
 				local theTime = GetTime();
 				local timeDiff = theTime - lastAnnounce;
 				local repeatLimit = nil;
 				if(info.repeatLimit) then
 					repeatLimit = info.repeatLimit;
-				else
+				elseif(hasGone == false) then
 					repeatLimit = 6;
 					if(debuff.remaining >= 20) then repeatLimit = 12; end
 					if(debuff.remaining >= 30) then repeatLimit = 18; end
 					if(debuff.remaining >= 50) then repeatLimit = 18; end
 					if(debuff.remaining >= 75) then repeatLimit = 20; end
+				else
+					repeatLimit = 9;
 				end
 				local safeToAnnounce = (timeDiff >= repeatLimit or lastAnnounce==0) and debuff.remaining >= LCcfg.get('minDebuffTime',3);
 				if(LCU.debugMode and debuff.remaining > 0 and debuff.remaining < LCcfg.get('minDebuffTime',3)) then print(dbType .. ' warning stopped due to min debuff time config: ' .. debuff.remaining .. ' < ' .. LCcfg.get('minDebuffTime',3)); end
@@ -233,18 +337,14 @@ Debuffs = {
 				if(type(recoverMessage)=="function") then recoverMessage = recoverMessage(debuff); end
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
-				local stillThere = debuff.type=='test';
-				for _,d in pairs(LCU.player.debuffs) do
-					if(d.name == debuff.name) then stillThere = true; end
-				end
-				if(safeToAnnounce and debuff.remaining > 0) then
+				if(safeToAnnounce and debuff.remaining > 0 and hasGone == false) then
 					LCU.sendMsg(message);
 					info.announcedRecovery = false;
 					info.announcedDebuff = true;
 					announcedDebuff = true;
 					info.lastAnnounce = theTime;
-				elseif(info.announcedDebuff == true and (debuff.remaining<=0.5 or stillThere==false) and info.announcedRecovery~=true) then
-					info.debuff = false;
+				elseif(info.announcedDebuff == true and (debuff.remaining<=0.2 or hasGone==true) and info.announcedRecovery~=true) then
+					debuffs[dbType] = nil;
 					info.announcedRecovery = true;
 					info.announcedDebuff = false;
 					if(recoverMessage ~= '-') then
@@ -301,41 +401,14 @@ Debuffs = {
 			duration = fakeA.length;
 			expires = GetTime()+fakeA.remaining;
 			id = fakeA.id;
-			Debuffs._fakeAura = false;
+			if (fakeA.remaining <= 0.1) then
+				Debuffs._fakeAura = false;
+			end
 			return n,icon,_,dbType,duration,expires,_,_,_,id;
 		else
 			local n,icon,_,dbType,duration,expires,_,_,_,id = UnitAura(who,i,auraType);
 			return n,icon,_,dbType,duration,expires,_,_,_,id;
 		end
-	end
-	,get = function(who)
-		who = who or "player";
-		local debuffs = {};
-		local scanAuras = true;
-		local auraI = 1;
-		while(scanAuras==true) do
-			local n,icon,_,dbType,duration,expires,_,_,_,id = Debuffs.getAura(who,auraI,'HARMFUL');
-			if(n ~= nil and expires ~= nil) then
-				local desc = GetSpellDescription(id) or '';
-				local debuff = {name=n,icon=icon,["type"]=(dbType or ''),length=duration,remaining=LCU.round(expires-GetTime()),desc=desc,id=id,extraInfo=''};
-				debuffs[#debuffs+1] = debuff;
-				local dbType = Debuffs.getType(debuff);
-				if(dbType==false and LCU.debugMode) then LCU.sendMsg('Couldnt find type for "'..debuff.name..'" = "'..debuff.desc..'"') end
-				if(dbType~=false) then
-					local currD = Debuffs.types[dbType].debuff;
-					if(currD==false or (type(currD)=='table' and not (currD.id ~= debuff.id and debuff.remaining<LCcfg.get('minDebuffTime')))) then
-						if(currD==false or currD.remaining < debuff.remaining or (debuff.remaining<currD.remaining and debuff.id==currD.id)) then
-							Debuffs.types[dbType].debuff = debuff;
-						end
-					end
-				end
-			end
-			if(n == nil or auraI >= 40) then scanAuras = false; end
-			auraI = auraI+1;
-		end
-		if(not LCU[who]) then LCU[who] = {}; end
-		LCU[who]['debuffs'] = debuffs;
-		return debuffs;
 	end
 	,test = function(dbType)
 		local tests = {
@@ -359,7 +432,7 @@ Debuffs = {
 			local debuff = {name=spName,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
 			if(dbType=='spellLock') then
 				debuff.extraInfo = 'Nature';
-				Debuffs.types.spellLock.debuff = debuff;
+				Debuffs.addFakeAura('HARMFUL',debuff);
 			else
 				Debuffs.addFakeAura('HARMFUL',debuff);
 			end
@@ -370,15 +443,75 @@ Debuffs = {
 local lastDebuffMessage = 0
 function checkDebuffs()
 	local who = 'player';
-	Debuffs.get(who)
-	Debuffs.getLockedSchools();
-	Debuffs.checkDebuffs()
-	for dbType,db in pairs(Debuffs.types) do
-		if(db.debuff and db.debuff.type == 'test') then db.debuff.remaining = db.debuff.remaining-0.25; end
+	local apiDbs = Debuffs.getByLocAPI(who);
+	local dbDbs = Debuffs.getByDebuffs(who);
+	local debuffs = {};
+
+	if (type(LCU.debuffs[who]) ~= 'table') then
+		LCU.debuffs[who] = {};
 	end
-	if(Debuffs._fakeAura ~= false) then Debuffs._fakeAura.remaining = Debuffs._fakeAura.remaining-0.25; end
-	if(#LCU.player.debuffs > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
-		for k,debuff in pairs(LCU.player.debuffs) do
+
+	for dbType,_ in pairs(Debuffs.types) do
+		debuffs[dbType] = nil;
+		local dbVal = dbDbs[dbType];
+		local apiVal = apiDbs[dbType];
+		if (dbVal ~= nil or apiVal ~= nil) then
+			if (type(dbVal)=='table') then
+				debuffs[dbType] = dbVal;
+			end
+			if (type(apiVal)=='table' and (debuffs[dbType] == nil or debuffs[dbType].remaining < apiVal.remaining + 0.1)) then
+				debuffs[dbType] = apiVal;
+			end
+		end
+	end
+
+	-- check for debuff found debuff, matching a spell on a different type by the api
+	-- debuff description matching probs more accurate, so drop api version of same spell id
+	for dbType,db in pairs(debuffs) do
+		if (db ~= nil) then
+			for dbType2,db2 in pairs(debuffs) do
+				if (db2 ~= nil and dbType2 ~= dbType and db2.id == db.id) then
+					if (db.source == 'api' and db2.source == 'debuff') then
+						debuffs[dbType] = nil;
+					elseif (db.source == 'debuff' and db2.source == 'api') then
+						debuffs[dbType2] = nil;
+					end
+				end
+			end
+		end
+	end
+
+	local maxMana = UnitPowerMax(who, Enum.PowerType.Mana) or 0;
+	if (maxMana > 0) then
+		local mana = UnitPower(who, Enum.PowerType.Mana);
+		local perc = (mana / maxMana) * 100;
+		if (perc < tonumber(LCcfg.get('oomBreakpoint', 15, false))) then
+			debuffs.oom = {
+				name = 'Out of mana',
+				icon = nil,
+				["type"] = 'oom',
+				length = 10,
+				remaining = 10,
+				desc = 'Out of mana',
+				id = 0,
+				extraInfo = '',
+				source = 'oom'
+			};
+		end
+	end
+
+	Debuffs.checkDebuffs(debuffs, who);
+
+	for dbType,_ in pairs(Debuffs.types) do
+		LCU.debuffs[who][dbType] = debuffs[dbType];
+	end
+
+	if(Debuffs._fakeAura ~= false) then
+		Debuffs._fakeAura.remaining = Debuffs._fakeAura.remaining-0.25;
+	end
+
+	if(#LCU.debuffs[who] > 0 and GetTime()-lastDebuffMessage >= 8 and LCU.debugMode==true) then
+		for k,debuff in pairs(LCU.debuffs[who]) do
 			local debuffMsg = 'Debuff #'..tostring(k)..':'
 			debuffMsg = debuffMsg .. GetSpellLink(debuff.id)
 			debuffMsg = debuffMsg..' ['..debuff.id..'] '

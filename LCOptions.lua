@@ -235,7 +235,6 @@ function LCOptions(LostControlFrame)
 	messageOptionsPanel.elements.subTitle = AddText('Use the inputs below to customise the announcements. Leave blank to use the defaults.',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.title);
 	messageOptionsPanel.elements.subTitle2 = AddText('%TR = time remaining | %SL = spell link | %NM = char name | %RL = role',messageOptionsPanel,"GameFontHighlightSmall",0,-8,messageOptionsPanel.elements.subTitle);
 	messageOptionsPanel.elements.subTitle3 = AddText('%REF = role and name e.g. "A DPS (charName)" or "The tank (charname)"',messageOptionsPanel,"GameFontHighlightSmall",0,-4,messageOptionsPanel.elements.subTitle2);
-	-- TODO: Add note about setting recovery message to "-" to disable it
 
 	lastEl = messageOptionsPanel.elements.subTitle3;
 

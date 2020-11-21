@@ -69,17 +69,41 @@ local function AddDropdown(parent,name,title,data,selFunc,checkedFunc,locx,locy,
 	local dropDown = CreateFrame("Frame", "LCO_"..name, parent, "UIDropDownMenuTemplate")
 	if(relTo) then dropDown:SetPoint("TOPLEFT", relTo, "TOPLEFT", locx, locy)
 	else dropDown:SetPoint("TOPLEFT", locx, locy) end
+	local dropDownValue = AddText("", parent, "GameFontHighlight", 155, 25, dropDown);
+	dropDown.setLabel = function(text)
+		getglobal(dropDown:GetName() .. 'Text'):SetText(text);
+	end
+	dropDown.showCurrentValue = function(text)
+		dropDownValue:SetText("= "..text);
+	end
+	dropDown.setLabel(title);
+
+	local updateCurrentValue = function()
+		for k,d in ipairs(data) do
+			local text = d[1];
+			local value = d[2];
+			if (checkedFunc(value) == true) then
+				dropDown.showCurrentValue(text);
+				return;
+			end
+		end
+	end
+	dropDown:SetScript("OnShow", function(self)
+		updateCurrentValue();
+	end);
 	dropDown.initialize = function()
 		local info = {};
 		for k,d in ipairs(data) do
 			info.text = d[1];
 			info.value = d[2];
-			info.func = selFunc;
+			info.func = function(self)
+				selFunc(self);
+				updateCurrentValue();
+			end
 			info.checked = checkedFunc(d[2]);
 			UIDropDownMenu_AddButton(info);
 		end
 	end
-	getglobal(dropDown:GetName() .. 'Text'):SetText(title)
 	return dropDown;
 end
 

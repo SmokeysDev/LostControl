@@ -55,24 +55,21 @@ Debuffs = {
 					if (ev.lockoutSchool == 0) then
 						debuff.type = nil;
 					else
-						--print('get locked school'..LCU.str(ev.lockoutSchool));
 						local schoolName = GetSchoolString(ev.lockoutSchool);
 						if (schoolName == 'Unknown') then
-							--print('unknown school')
 							debuff.type = nil;
 						else
 							debuff.type = 'spellLock';
 							debuff.extraInfo = schoolName;
-							--print('spell lock '..schoolName);
 						end
 					end
 				end
 				if (debuff.type ~= nil and ev.timeRemaining > 0) then
-					local currDb = Debuffs.types[dbType].debuff;
+					local currDb = Debuffs.types[debuff.type].debuff;
 					if (currDb == false) then
-						debuffs[dbType] = debuff;
+						debuffs[debuff.type] = debuff;
 					elseif (debuff.remaining > currDb.remaining or currDb.id == debuff.id) then
-						debuffs[dbType] = debuff;
+						debuffs[debuff.type] = debuff;
 					end
 				end
 			-- else

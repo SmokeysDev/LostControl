@@ -67,9 +67,10 @@ end
 
 local function AddDropdown(parent,name,title,data,selFunc,checkedFunc,locx,locy,relTo)
 	local dropDown = CreateFrame("Frame", "LCO_"..name, parent, "UIDropDownMenuTemplate")
+	UIDropDownMenu_SetWidth(dropDown, 90);
 	if(relTo) then dropDown:SetPoint("TOPLEFT", relTo, "TOPLEFT", locx, locy)
 	else dropDown:SetPoint("TOPLEFT", locx, locy) end
-	local dropDownValue = AddText("", parent, "GameFontHighlight", 155, 25, dropDown);
+	local dropDownValue = AddText("", parent, "GameFontHighlight", 128, 25, dropDown);
 	dropDown.setLabel = function(text)
 		getglobal(dropDown:GetName() .. 'Text'):SetText(text);
 	end
@@ -124,8 +125,8 @@ function LCOptions(LostControlFrame)
 	local notes = GetAddOnMetadata(LCU.addonName,"Notes");
 	OptionsPanel.elements.subTitle = AddText(notes,OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.title);
 	OptionsPanel.elements.watchTypesTitle = AddText('Watch debuff types:',OptionsPanel,"GameFontNormal",0,-20,OptionsPanel.elements.subTitle);
-	OptionsPanel.elements.chanDropsTitle = AddText('Channel Selections:',OptionsPanel,"GameFontNormal",180,12,OptionsPanel.elements.watchTypesTitle);
-	OptionsPanel.elements.chanDropsNotice = AddText('Note: WoW now stops AddOns using SAY / YELL outside instances',OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.chanDropsTitle);
+	OptionsPanel.elements.chanDropsTitle = AddText('Channel Selections:',OptionsPanel,"GameFontNormal",310,12,OptionsPanel.elements.watchTypesTitle);
+	OptionsPanel.elements.chanDropsNotice = AddText('AddOns can no longer SAY / YELL outside instances',OptionsPanel,"GameFontHighlightSmall",0,-8,OptionsPanel.elements.chanDropsTitle);
 
 	local lastEl = OptionsPanel.elements.watchTypesTitle;
 	-- Loop through debuff types and create watch checkboxes for them
@@ -148,12 +149,12 @@ function LCOptions(LostControlFrame)
 			OptionsPanel.elements[elKey].tooltipText = 'Out Of Mana';
 			OptionsPanel.elements[elKey].tooltipRequirement = OptionsPanel.elements[elKey].tooltipRequirement..'\nUse slider to select breakpoint';
 			local extraElKey = 'oomBreakpoint';
-			OptionsPanel.elements[extraElKey] = CreateSliderInput(OptionsPanel, "LCO_"..extraElKey, 125, -3, lastEl, 85, 25, 1, 99);
+			OptionsPanel.elements[extraElKey] = CreateSliderInput(OptionsPanel, "LCO_"..extraElKey, 125, -4, lastEl, 85, 25, 1, 99);
 			local getCurrVal = function()
 				return tonumber(LCcfg.get(extraElKey, 15, false));
 			end
 			local currValue = getCurrVal();
-			local sliderLabel = AddText(currValue, OptionsPanel, 'GameFontHighlight', 96, -9, lastEl);
+			local sliderLabel = AddText(currValue, OptionsPanel, 'GameFontHighlight', 96, -10, lastEl);
 			OptionsPanel.elements[extraElKey]:SetValue(currValue);
 			OptionsPanel.elements[extraElKey]:SetScript("OnShow", function(self)
 				currValue = getCurrVal();
@@ -191,22 +192,27 @@ function LCOptions(LostControlFrame)
 		);
 		lastEl = OptionsPanel.elements[elKey];
 		i = i+1;
+
+		-- Add the min debuff dropdown
+		if (not isOom) then
+			local dbTimeElKey = elKey..'_minDebuffTime';
+			OptionsPanel.elements[dbTimeElKey] = AddDropdown(OptionsPanel, 'LCO_'..dbTimeElKey, "Min length",
+			{
+				{"Global",nil}
+				,{"Any",0}
+				,{"2 sec",2}
+				,{"3 sec",3}
+				,{"4 sec",4}
+				,{"5 sec",5}
+			}
+			,(function(self) LCcfg.setMinDebuffTime(self.value, dbType) end)
+			,(function(val) return val==LCcfg.getMinDebuffTime(dbType, false) end)
+			,85,2,lastEl);
+		end
 	end
 
-	OptionsPanel.elements.debuffTime = AddDropdown(OptionsPanel,"debuffTime","Min Debuff Time",
-		{
-			{"Any",0}
-			,{"2 sec",2}
-			,{"3 sec",3}
-			,{"4 sec",4}
-			,{"5 sec",5}
-		}
-		,(function(self) LCcfg.set('minDebuffTime',self.value) end)
-		,(function(val) return val==LCcfg.get('minDebuffTime',3) end)
-		,-15,-40,lastEl);
-
 	local watchFallingKey = 'watchFalling';
-	OptionsPanel.elements[watchFallingKey] = CreateCheckButton(OptionsPanel, "LCO_"..watchFallingKey, 12, -10, 'Falling alert', 'Enable watching for your player falling', OptionsPanel.elements.debuffTime);
+	OptionsPanel.elements[watchFallingKey] = CreateCheckButton(OptionsPanel, "LCO_"..watchFallingKey, 0, -5, 'Falling alert', 'Enable watching for your player falling', lastEl);
 	OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
 	OptionsPanel.elements[watchFallingKey]:SetScript("OnShow", function()
 		OptionsPanel.elements[watchFallingKey]:SetChecked(LCcfg.watching('falling'));
@@ -217,8 +223,22 @@ function LCOptions(LostControlFrame)
 			else LCcfg.disableWatch('falling',true); end
 		end
 	);
+	lastEl = OptionsPanel.elements[watchFallingKey];
 
-	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","5-Man Channel",
+	OptionsPanel.elements.globalDebuffTimeLabel = AddText("Global", OptionsPanel,"GameFontHighlight",0,-20,lastEl);
+	OptionsPanel.elements.debuffTime = AddDropdown(OptionsPanel,"debuffTime","Min length",
+		{
+			{"Any",0}
+			,{"2 sec",2}
+			,{"3 sec",3}
+			,{"4 sec",4}
+			,{"5 sec",5}
+		}
+		,(function(self) LCcfg.setMinDebuffTime(self.value) end)
+		,(function(val) return val==LCcfg.getMinDebuffTime() end)
+		, 40, 8, OptionsPanel.elements.globalDebuffTimeLabel);
+
+	OptionsPanel.elements.instChat = AddDropdown(OptionsPanel,"instChat","Instances",
 		{
 			{"Say (/s)","SAY"}
 			,{"Yell (/yell)","YELL"}
@@ -229,7 +249,7 @@ function LCOptions(LostControlFrame)
 		,(function(val) return val==LCcfg.get('instanceChat','PARTY') end)
 		,-20,-25,OptionsPanel.elements.chanDropsNotice);
 
-	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raid Channel",
+	OptionsPanel.elements.raidChat = AddDropdown(OptionsPanel,"raidChat","Raids",
 		{
 			{"Say (/s)","SAY"}
 			,{"Yell (/yell)","YELL"}

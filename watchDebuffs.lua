@@ -325,8 +325,9 @@ Debuffs = {
 				else
 					repeatLimit = 9;
 				end
-				local safeToAnnounce = (timeDiff >= repeatLimit or lastAnnounce==0) and debuff.remaining >= LCcfg.get('minDebuffTime',3);
-				if(LCU.debugMode and debuff.remaining > 0 and debuff.remaining < LCcfg.get('minDebuffTime',3)) then print(dbType .. ' warning stopped due to min debuff time config: ' .. debuff.remaining .. ' < ' .. LCcfg.get('minDebuffTime',3)); end
+				local minDebuffTime = LCcfg.getMinDebuffTime(dbType);
+				local safeToAnnounce = (timeDiff >= repeatLimit or lastAnnounce==0) and debuff.remaining >= minDebuffTime;
+				if(LCU.debugMode and debuff.remaining > 0 and debuff.remaining < minDebuffTime) then print(dbType .. ' warning stopped due to min debuff time config: ' .. debuff.remaining .. ' < ' .. minDebuffTime); end
 				if(type(info.extraInfo)=="function") then debuff.extraInfo = info.extraInfo(debuff); end
 				local message = Debuffs.getDebuffMessage(dbType);
 				if(type(message)=="function") then message = message(debuff); end

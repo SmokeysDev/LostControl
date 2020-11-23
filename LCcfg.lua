@@ -12,6 +12,14 @@ local defaultCfgs = {
 	minDebuffTime = 3
 }
 
+local getDebuffTimeKey = function(dbType)
+	local key = 'minDebuffTime';
+	if (dbType == nil or dbType == '') then
+		return key;
+	end
+	return key..'_'..LCU.str(dbType);
+end
+
 LCcfg = {
 	get = function(name,ifNil,allowBlankString)
 		if(type(allowBlankString)~='boolean') then allowBlankString = true; end
@@ -52,6 +60,32 @@ LCcfg = {
 	end
 	,disableWatch = function(dbType,val)
 		LCcfg.getDisabledWatches()[dbType] = LCU.tern(val == true, true, nil);
+	end
+	,setMinDebuffTime = function(value, dbType)
+		if (dbType == nil or dbType == '') then
+			if (type(value)~='number') then
+				value = defaultCfgs.minDebuffTime;
+			end
+			LCcfg.set(getDebuffTimeKey(), value);
+		end
+		if (string.lower(LCU.str(value)) == 'global') then
+			value = nil;
+		end
+		dbType = LCU.str(dbType);
+		LCcfg.set(getDebuffTimeKey(dbType), value);
+	end
+	,getMinDebuffTime = function(dbType, globalFallback)
+		local globalCfg = LCcfg.get(getDebuffTimeKey(), 3);
+		if (dbType == nil or dbType == '') then
+			return globalCfg;
+		end
+		dbType = LCU.str(dbType);
+		local typeCfg = LCcfg.get(getDebuffTimeKey(dbType), nil);
+		if (typeCfg ~= nil or globalFallback == false) then
+			return typeCfg;
+		elseif (globalFallback ~= false) then
+			return globalCfg;
+		end
 	end
 	,watching = function(dbType)
 		return LCcfg.getDisabledWatches()[dbType] ~= true;

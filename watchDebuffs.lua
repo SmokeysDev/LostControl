@@ -64,7 +64,10 @@ Debuffs = {
 						end
 					end
 				end
-				if (debuff.type ~= nil and ev.timeRemaining > 0) then
+				if (debuff.remaining == nil) then
+					debuff.remaining = 999;
+				end
+				if (debuff.type ~= nil and debuff.remaining > 0) then
 					local currDb = Debuffs.types[debuff.type].debuff;
 					if (currDb == false) then
 						debuffs[debuff.type] = debuff;

@@ -143,6 +143,9 @@ function LCOptions(LostControlFrame)
 			typeName = 'OOM';
 			typeDesc = 'OOM';
 		end
+		if(typeName == 'SpellLock') then
+			typeName = 'Spell lock';
+		end
 		local locY = i==0 and -12 or -5;
 		OptionsPanel.elements[elKey] = CreateCheckButton(OptionsPanel, "LCO_"..elKey, 0, locY, typeName, 'Enable watching for '..typeDesc, lastEl);
 		if(isOom) then
@@ -302,6 +305,9 @@ function LCOptions(LostControlFrame)
 		local labelText = LCU.upperFirst(dbType);
 		if(labelText == 'Oom') then
 			labelText = 'OOM';
+		end
+		if(labelText == 'SpellLock') then
+			labelText = 'Spell lock';
 		end
 		messageOptionsPanel.elements[elKey..'Label'] = AddText(labelText,messageOptionsPanel,"GameFontHighlight",0,locY,lastEl);
 		lastEl = messageOptionsPanel.elements[elKey..'Label'];

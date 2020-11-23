@@ -199,7 +199,7 @@ function LCOptions(LostControlFrame)
 		-- Add the min debuff dropdown
 		if (not isOom) then
 			local dbTimeElKey = elKey..'_minDebuffTime';
-			OptionsPanel.elements[dbTimeElKey] = AddDropdown(OptionsPanel, 'LCO_'..dbTimeElKey, "Min length",
+			OptionsPanel.elements[dbTimeElKey] = AddDropdown(OptionsPanel, dbTimeElKey, "Min length",
 			{
 				{"Global",nil}
 				,{"Any",0}

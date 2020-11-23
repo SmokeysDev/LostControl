@@ -1,3 +1,26 @@
+2020-11-23
+----------
+v: 4.0
+----------
+
+Updated interface number to remove 'out of date addon' warnings
+
+Updated CC detection with major overhaul, should see less false positives and missed debuffs
+
+Added OOM option with custom mana% level
+
+Added ability to set min length per debuff type (defaults to inherit from global setting)
+
+Added currently selected value next to dropdowns in options UI
+
+Added notes in options UI about SAY/YELL limitations, and disabling recovery message
+
+Moved falling option from under chat channel config to under debuffs
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2020-11-05
 ----------
 v: 3.15

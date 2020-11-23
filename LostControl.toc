@@ -1,11 +1,11 @@
 ## Interface: 90002
 ## Title: LostControl
-## Version: 3.15
+## Version: 4.0
 ## Author: smokeys_13
 ## X-Date: January 25th, 2014
 ## Notes: Attempts to automatically detect loss of control and tell the party/raid about it
 ## SavedVariablesPerCharacter: LCcfgStore
-## X-Curse-Packaged-Version: v3.15
+## X-Curse-Packaged-Version: v4.0
 ## X-Curse-Project-Name: LostControl
 ## X-Curse-Project-ID: lostcontrol
 ## X-Curse-Repository-ID: wow/lostcontrol/mainline

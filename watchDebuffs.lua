@@ -426,7 +426,7 @@ Debuffs = {
 			local dbid = tests[dbType];
 			local desc = GetSpellDescription(dbid);
 			local spName = GetSpellInfo(dbid);
-			local debuff = {name=spName,["type"]='test',length=9,remaining=8,desc=desc,id=dbid,extraInfo=''};
+			local debuff = {name=spName,["type"]='test',length=9,remaining=3,desc=desc,id=dbid,extraInfo=''};
 			if(dbType=='spellLock') then
 				debuff.extraInfo = 'Nature';
 				Debuffs.addFakeAura('HARMFUL',debuff);

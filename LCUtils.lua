@@ -50,7 +50,7 @@ LCU.player = {
 }
 
 LCU.round = function(val, decimal)
-  if (type(val) ~= 'number') return nil;
+  if (type(val) ~= 'number') then return nil; end
   local exp = decimal and 10^decimal or 1;
   return math.ceil(val * exp - 0.5) / exp;
 end

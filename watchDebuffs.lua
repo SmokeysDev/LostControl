@@ -286,6 +286,9 @@ Debuffs = {
 		local ref = role=='DPS' and LCLang.get('A DPS') or LCLang.get('The '..role);
 		ref = ref..' ('..LCU.player.name..')';
 		local newMsg = msg;
+		if(debuff.remaining == nil or debuff.remaining > 100) then
+			newMsg = newMsg:gsub(' for %[remaining%] seconds', '');
+		end
 		newMsg = newMsg:gsub('%[remaining%]',tostring(LCU.round(debuff.remaining)));
 		newMsg = newMsg:gsub('%%TR',tostring(LCU.round(debuff.remaining)));
 		newMsg = newMsg:gsub('%{SPELL_LINK%}',(GetSpellLink(debuff.id) or ''));

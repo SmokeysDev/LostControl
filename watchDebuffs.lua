@@ -342,7 +342,9 @@ Debuffs = {
 				message = Debuffs.fillMsg(message,debuff);
 				recoverMessage = Debuffs.fillMsg(recoverMessage,debuff);
 				if(safeToAnnounce and debuff.remaining > 0 and hasGone == false) then
-					LCU.sendMsg(message);
+					if info.announcedDebuff == false or debuff.remaining > 0.75 then
+						LCU.sendMsg(message);
+					end
 					info.announcedRecovery = false;
 					info.announcedDebuff = true;
 					announcedDebuff = true;

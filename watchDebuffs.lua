@@ -491,13 +491,16 @@ function checkDebuffs()
 	if (maxMana > 0) then
 		local mana = UnitPower(who, Enum.PowerType.Mana);
 		local perc = (mana / maxMana) * 100;
-		if (perc < tonumber(LCcfg.get('oomBreakpoint', 15, false))) then
+		local brkPnt = tonumber(LCcfg.get('oomBreakpoint', 15, false));
+		local underBreakpoint = perc < brkPnt;
+		local almostRecovered = (LCU.debuffs[who].oom ~= nil and perc < brkPnt * 1.5 and perc < 95);
+		if (underBreakpoint or almostRecovered) then
 			debuffs.oom = {
 				name = 'Out of mana',
 				icon = nil,
 				["type"] = 'oom',
-				length = 10,
-				remaining = 10,
+				length = 20,
+				remaining = LCU.tern(almostRecovered, 0.5, 20),
 				desc = 'Out of mana',
 				id = 0,
 				extraInfo = '',

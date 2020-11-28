@@ -1,4 +1,4 @@
-Lost Control v4.0
+Lost Control v4.1
 
 Sometimes party members are unaware of you being stunned/silenced or otherwise incapacitated and unable to heal/tank/dps effectively.
 

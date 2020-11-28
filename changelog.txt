@@ -1,3 +1,16 @@
+2020-11-28
+----------
+v: 4.1
+----------
+
+Updated handling of long/channelled/timeless debuffs
+
+Updated OOM tracking to use breakpoint x 1.5 as the recovery instead
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2020-11-23
 ----------
 v: 4.0

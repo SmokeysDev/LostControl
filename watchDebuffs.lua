@@ -255,7 +255,7 @@ Debuffs = {
 			if(debuff.name == v) then ret = true; end
 		end
 		-- These are basic protection against unwanted matches where effects say "At 5 stacks they are stunned"/"if dispelled"
-		local excludeTerms = {'[dD]ispel','stack','application'};
+		local excludeTerms = {'[dD]ispel','stack','application','%d yards','nearby enem'};
 		for k,v in pairs(Debuffs.types[dbType].descTerms) do
 			if(string.match(debuff.desc,v)~=nil and string.match(debuff.desc,'stack')==nil) then
 				ret = true;

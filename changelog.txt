@@ -1,3 +1,14 @@
+2020-12-12
+----------
+v: 4.2
+----------
+
+Fixed some false positives where the debuff only applies "within x yards" or "to nearby enemies"
+
+
+-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+
+
 2020-11-28
 ----------
 v: 4.1
